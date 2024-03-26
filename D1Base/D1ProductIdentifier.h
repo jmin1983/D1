@@ -30,11 +30,11 @@ namespace BnD {
             SITE_DEFAULT = SITE_AMHS_DEFAULT,
         };
         enum TYPE {
-            TYPE_HOIST = 0,
+            TYPE_STANDARD_EQ = 0,
             TYPE_STANDARD_SERVICE,
 
             TYPE_COUNTS,
-            TYPE_DEFAULT = TYPE_HOIST,
+            TYPE_DEFAULT = TYPE_STANDARD_EQ,
         };
     protected:
         SITE _site;
