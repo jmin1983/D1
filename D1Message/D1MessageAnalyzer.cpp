@@ -34,7 +34,7 @@ bool D1MessageAnalyzer::implInitialize()
         return false;
     }
 #define INSERT_TABLE_VALUE(c) table->insert(std::make_pair(c::messageString().copy(), MAKE_MSG_ENUM(c)));
-    std::map<B1String, int32>* table = &_messageTable;
+    auto table = &_messageTable;
     INSERT_TABLE_VALUE(D1MSMsgKeepAliveReq);
     INSERT_TABLE_VALUE(D1MSMsgKeepAliveResp);
 

@@ -16,7 +16,11 @@
 #pragma once
 #endif
 
+#if defined(_USE_MESSAGE_ANALYZER_STD_MAP)
 #include <map>
+#else
+#include <unordered_map>
+#endif
 
 namespace BnD {
     class D1BaseMessage;
@@ -46,7 +50,11 @@ namespace BnD {
             MESSAGE_IGNORED,        //  message can not be handled in this analyzer.
         };
     protected:
+#if defined(_USE_MESSAGE_ANALYZER_STD_MAP)
         std::map<B1String, int32> _messageTable;
+#else
+        std::unordered_map<B1String, int32> _messageTable;
+#endif
         D1MessageAnalyzerListener* _listener;
     protected:
         virtual bool implInitialize();
