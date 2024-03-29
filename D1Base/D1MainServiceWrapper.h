@@ -103,13 +103,13 @@ namespace BnD {
             if (_service) {
                 _service->wait();
             }
+            B1LOG("%s stopped", _service->toString().cString());
         }
         void stop()
         {
             if (_service) {
                 B1LOG("stopping %s", _service->toString().cString());
                 _service->stop();
-                B1LOG("%s stopped", _service->toString().cString());
             }
         }
         bool isStopped() const
