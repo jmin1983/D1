@@ -21,36 +21,45 @@ namespace BnD {
     class D1ProductIdentifier {
     public:
         D1ProductIdentifier();
+        virtual ~D1ProductIdentifier();
     public:
         enum SITE {
-            SITE_AMHS_DEFAULT = 0,
-            SITE_DIA,
+            SITE_UNKNOWN = -1,
+            SITE_STANDARD_AMHS = 0,
+            SITE_STANDARD_IBSEM,
+            SITE_STANDARD_STOCKERSEM,
+            SITE_SOLUTION,
 
             SITE_COUNTS,
-            SITE_DEFAULT = SITE_AMHS_DEFAULT,
+
+            SITE_RESERVED_BEGIN = 1001,
         };
         enum TYPE {
+            TYPE_UNKNOWN = -1,
             TYPE_STANDARD_EQ = 0,
             TYPE_STANDARD_SERVICE,
 
             TYPE_COUNTS,
-            TYPE_DEFAULT = TYPE_STANDARD_EQ,
+
+            TYPE_RESERVED_BEGIN = 1001,
         };
     protected:
-        SITE _site;
-        TYPE _type;
-    public:
-        SITE site() const { return _site; }
-        TYPE type() const { return _type; }
-
-        void initialize(SITE site, TYPE type);
-        B1String toString() const;
-
+        int32 _site;
+        int32 _type;
+    protected:
         static const B1String& productInfoKey();
-        static SITE getProductSite(D1RedisClientInterface* redisReader);
-        static TYPE getProductType(D1RedisClientInterface* redisReader);
-        static B1String toProductSiteString(SITE site);
-        static B1String toProductTypeString(TYPE type);
+    protected:
+        virtual bool implGetProductSite(const B1String& siteString);
+        virtual bool implGetProductType(const B1String& typeString);
+        virtual bool implToProductSiteString(B1String* result) const;
+        virtual bool implToProductTypeString(B1String* result) const;
+    public:
+        bool getProductInfo(D1RedisClientInterface* redisReader);
+        B1String toProductSiteString() const;
+        B1String toProductTypeString() const;
+        B1String toString() const;
+        int32 site() const { return _site; }
+        int32 type() const { return _type; }
     };
 }   //  !BnD
 

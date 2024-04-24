@@ -55,7 +55,8 @@ namespace BnD {
             }
         }
     protected:
-        virtual T* createMainService(D1ProductIdentifier::SITE site, D1ProductIdentifier::TYPE type) = 0;
+        virtual T* createMainService(int32 site, int32 type) = 0;
+        virtual D1ProductIdentifier* createProductIdentifier() = 0;
     public:
         bool start(const B1String& address, uint16 port, int32 db, const B1String& logFilePath, int32 logCounts)
         {
@@ -76,12 +77,12 @@ namespace BnD {
                     B1LOG("unable to connect Administration Service: address[%s], port[%d], db[%d]", address.cString(), port, db);
                     return false;
                 }
+                std::unique_ptr<D1ProductIdentifier> productIdentifier(createProductIdentifier());
                 D1RedisClientInterface clientInterface(&client);
-                auto site = D1ProductIdentifier::getProductSite(&clientInterface);
-                auto type = D1ProductIdentifier::getProductType(&clientInterface);
-                B1LOG("find product type done! disconnecting Administration Service: site[%d], type[%d]", site, type);
+                productIdentifier->getProductInfo(&clientInterface);
+                B1LOG("find product type done! disconnecting Administration Service: site[%d], type[%d]", productIdentifier->site(), productIdentifier->type());
                 client.finalize();
-                _service.reset(createMainService(site, type));
+                _service.reset(createMainService(productIdentifier->site(), productIdentifier->type()));
             }
             if (_service == NULL) {
                 printf("create control service failed");
