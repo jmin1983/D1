@@ -33,13 +33,13 @@ namespace BnD {
         std::shared_ptr<T> _service;
         std::shared_ptr<B1FileLog> _fileLog;
     protected:
-        bool initFileLog(B1String&& logFilePath, int32 logCounts)
+        bool initFileLog(B1String&& logFilePath, B1String&& fileName, int32 logCounts)
         {
             if (_fileLog != NULL) {
                 return false;
             }
             _fileLog.reset(new B1FileLog());
-            if (_fileLog->start(std::move(logFilePath), "log", logCounts) != true) {
+            if (_fileLog->start(std::move(logFilePath), std::move(fileName), logCounts) != true) {
                 _fileLog.reset();
                 return false;
             }
@@ -57,16 +57,17 @@ namespace BnD {
     protected:
         virtual T* createMainService(int32 site, int32 type) = 0;
         virtual D1ProductIdentifier* createProductIdentifier() = 0;
+        virtual void onMainServiceStartBefore() {}
     public:
-        bool start(const B1String& address, uint16 port, int32 db, const B1String& logFilePath, int32 logCounts)
+        bool start(const B1String& address, uint16 port, int32 db, const B1String& logFilePath, const B1String& logFileName, int32 logCounts)
         {
             if (_service) {
                 printf("already started");
                 assert(false);
                 return false;
             }
-            if (initFileLog(logFilePath.copy(), logCounts) != true) {
-                printf("unable to start log file[%s]\n", logFilePath.cString());
+            if (initFileLog(logFilePath.copy(), logFileName.copy(), logCounts) != true) {
+                printf("unable to start log file[%s/%s]\n", logFilePath.cString(), logFileName.cString());
                 assert(false);
                 return false;
             }
@@ -91,11 +92,13 @@ namespace BnD {
             }
 
             B1LOG("starting %s", _service->toString().cString());
+            onMainServiceStartBefore();
             if (_service->start() != true) {
                 v2log("start failed %s", _service->toString().cString());
                 _service->stop();
                 return false;
             }
+            //onMainServiceStartAfter();
             B1LOG("%s started", _service->toString().cString());
             return true;
         }

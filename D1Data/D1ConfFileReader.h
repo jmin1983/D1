@@ -16,47 +16,42 @@
 #pragma once
 #endif
  
-#include <boost/property_tree/ptree.hpp>
+#include <D1Data/D1RawFileReader.h>
 
 namespace BnD {
-    class D1ConfFileReader {
+    class D1ConfFileReader : public D1RawFileReader {
     public:
         D1ConfFileReader();
         virtual ~D1ConfFileReader();
     protected:
-        boost::property_tree::ptree _pt;
         B1String _logPath;
-        B1String _redisAddress;
+        B1String _adminAddress;
         int32 _logDays;
-        int32 _redisPort;
-        int32 _redisDB;
+        int32 _adminPort;
+        int32 _adminDB;
     protected:
-        virtual B1String implToString() const;
         virtual B1String implConfigFilePath() const;
-        virtual bool implLoad(const B1String& filePath);
-        virtual bool implSave(const B1String& filePath);
-        virtual bool validate() const;
-        virtual bool readData();
-        virtual bool writeData();
         virtual B1String defaultLogPath(const B1String& serviceNameInLowerCase) const;
         virtual int32 defaultLogDays() const;
+    protected:
+        virtual B1String implToString() const override;
+        virtual bool validate() const override;
+        virtual bool readData() override;
+        virtual bool writeData() override;
     public:
-        B1String toString() const;
         B1String configFilePath() const;
-        bool load();
-        bool load(const B1String& filePath);
-        bool save(const B1String& filePath);
-        const B1String &redisAddress() const { return _redisAddress; }
+        bool loadDefault();
+        const B1String& adminAddress() const { return _adminAddress; }
         B1String logPath(const B1String& serviceName) const;
         int32 logCounts() const;
-        int32 redisPort() const { return _redisPort; }
-        int32 redisDB() const { return _redisDB; }
+        int32 adminPort() const { return _adminPort; }
+        int32 adminDB() const { return _adminDB; }
 
         void setLogPath(B1String&& path) { _logPath = std::move(path); }
-        void setRedisAddress(B1String&& address) { _redisAddress = std::move(address); }
+        void setAdminAddress(B1String&& address) { _adminAddress = std::move(address); }
         void setLogDays(int32 days) { _logDays = days; }
-        void setRedisPort(int32 port) { _redisPort = port; }
-        void setRedisDB(int32 db) { _redisDB = db; }
+        void setAdminPort(int32 port) { _adminPort = port; }
+        void setAdminDB(int32 db) { _adminDB = db; }
     };
 }   //  !BnD
 
