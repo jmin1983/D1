@@ -57,10 +57,10 @@ bool D1RedisClientInterface::exists(const B1String& key)
     return false;
 }
 
-bool D1RedisClientInterface::subscribe(const std::set<B1String>& channels)
+bool D1RedisClientInterface::subscribe(std::set<B1String>&& channels)
 {
     if (_redisDirectClient) {
-        return _redisDirectClient->subscribe(channels);
+        return _redisDirectClient->subscribe(std::move(channels));
     }
     return false;
 }
