@@ -38,7 +38,7 @@ namespace BnD {
         virtual void implOnProtocolTypeNotifyID(int32 id) override;
     protected:  //  B1BaseServerSession
         void onReadComplete(uint8* data, size_t dataSize) final;
-        virtual void implOnDisconnected(int32 reason) override;
+        virtual void implOnServerSessionDisconnected(int32 reason) override;
         virtual void implProcessConnected(bool firstConnectedProcess) override;
     protected:
         D1BaseServer* owner() const { return _owner; }

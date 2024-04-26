@@ -60,13 +60,12 @@ void D1BaseServerSession::onReadComplete(uint8* data, size_t dataSize)
     }
 }
 
-void D1BaseServerSession::implOnDisconnected(int32 reason)
+void D1BaseServerSession::implOnServerSessionDisconnected(int32 reason)
 {
     B1LOG("remove handle: id[%d]", _id);
     if (_id > -1) {
         owner()->handleManager()->removeID(_id);
     }
-    B1ArrayBufferServerSession::implOnDisconnected(reason);
 }
 
 void D1BaseServerSession::implProcessConnected(bool firstConnectedProcess)
