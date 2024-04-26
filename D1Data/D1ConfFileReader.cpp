@@ -105,6 +105,11 @@ bool D1ConfFileReader::loadDefault()
     return implLoad(configFilePath());
 }
 
+bool D1ConfFileReader::saveDefault()
+{
+    return implSave(configFilePath());
+}
+
 B1String D1ConfFileReader::logPath(const B1String& serviceName) const
 {
     B1String lower(serviceName.copy());

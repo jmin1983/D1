@@ -41,6 +41,7 @@ namespace BnD {
     public:
         B1String configFilePath() const;
         bool loadDefault();
+        bool saveDefault();
         const B1String& adminAddress() const { return _adminAddress; }
         B1String logPath(const B1String& serviceName) const;
         int32 logCounts() const;
