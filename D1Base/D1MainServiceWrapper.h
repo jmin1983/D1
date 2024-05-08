@@ -94,7 +94,7 @@ namespace BnD {
             B1LOG("starting %s", _service->toString().cString());
             onMainServiceStartBefore();
             if (_service->start() != true) {
-                v2log("start failed %s", _service->toString().cString());
+                b1log("start failed %s", _service->toString().cString());
                 _service->stop();
                 return false;
             }

@@ -73,10 +73,10 @@ bool D1RedisClientInterface::hmget(const B1String& key, const std::vector<B1Stri
     return false;
 }
 
-B1String D1RedisClientInterface::hmget(const B1String& key, B1String&& field)
+B1String D1RedisClientInterface::hmget(const B1String& key, const B1String& field)
 {
     if (_redisDirectClient) {
-        return _redisDirectClient->hmget(std::move(key), std::move(field));
+        return _redisDirectClient->hmget(key, field);
     }
     return "";
 }
