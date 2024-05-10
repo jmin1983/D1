@@ -106,8 +106,8 @@ namespace BnD {
         {
             if (_service) {
                 _service->wait();
+                B1LOG("%s stopped", _service->toString().cString());
             }
-            B1LOG("%s stopped", _service->toString().cString());
         }
         void stop()
         {
