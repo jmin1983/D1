@@ -24,6 +24,7 @@ namespace BnD {
     public:
         std::vector<uint8> makeDataNotifyID(int32 id);
         std::vector<uint8> makeDataTextMessage(const B1String& message);
+        std::vector<uint8> makeDataTextMessageBunch(int32 index, int32 indexCount, const B1String& message);
     };
 }   //  !BnD
 

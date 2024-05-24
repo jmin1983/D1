@@ -23,12 +23,14 @@ namespace BnD {
     protected:
         virtual void implOnProtocolTypeAliveCheck() {}
         virtual void implOnProtocolTypeNotifyID(int32 id) {}
-        virtual void implOnProtocolTypeTextMessage(const B1String& message) {}
+        virtual void implOnProtocolTypeTextMessage(B1String&& message) {}
+        virtual void implOnProtocolTypeTextMessageBunch(int32 index, int32 indexCount, B1String&& message) {}
     protected:
         ANALYZE_RESULT implAnalyzeData(uint8* data, size_t size, size_t* pos) final;
     protected:
         ANALYZE_RESULT analyzeProtocolTypeNotifyID(uint8* data, size_t size, size_t* pos);
         ANALYZE_RESULT analyzeProtocolTypeTextMessage(uint8* data, size_t size, size_t* pos);
+        ANALYZE_RESULT analyzeProtocolTypeTextMessageBunch(uint8* data, size_t size, size_t* pos);
     };
 }   //  !BnD
 

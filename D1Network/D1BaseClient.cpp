@@ -31,17 +31,17 @@ D1BaseClient::~D1BaseClient()
 {
 }
 
-B1BaseClientSession* D1BaseClient::createD1BaseClientSession(B1ClientSocket* clientSocket)
+auto D1BaseClient::createD1BaseClientSession(B1ClientSocket* clientSocket) -> B1BaseClientSession*
 {
     return new D1BaseClientSession(clientSocket, this, _packetMaker.get(), _maxAliveCount);
 }
 
-B1BaseSessionManager* D1BaseClient::createSessionManager()
+auto D1BaseClient::createSessionManager() -> B1BaseSessionManager*
 {
     return new B1BaseSessionManager(_aliveInterval);
 }
 
-B1BaseClientSession* D1BaseClient::createSession(B1ClientSocket* clientSocket, void* param)
+auto D1BaseClient::createSession(B1ClientSocket* clientSocket, void* param) -> B1BaseClientSession*
 {
     return createD1BaseClientSession(clientSocket);
 }
@@ -93,10 +93,23 @@ bool D1BaseClient::isConnected(int32 id, int32* reason) const
     }
 }
 
-D1BaseClient::SEND_RESULT D1BaseClient::sendTextMessage(int32 id, const B1String& message)
+auto D1BaseClient::sendTextMessage(int32 id, const B1String& message) -> SEND_RESULT
 {
     if (auto session = sessionManager()->getSessionByHandleID<D1BaseClientSession>(id)) {
         if (session->sendData(packetMaker()->makeDataTextMessage(message)) != true) {
+            return SEND_RESULT_NETWORK_ERROR;
+        }
+        return SEND_RESULT_SUCCESS;
+    }
+    else {
+        return SEND_RESULT_NO_ID_FOUND;
+    }
+}
+
+auto D1BaseClient::sendTextMessageBunch(int32 id, int32 index, int32 indexCount, const B1String& message) -> SEND_RESULT
+{
+    if (auto session = sessionManager()->getSessionByHandleID<D1BaseClientSession>(id)) {
+        if (session->sendData(packetMaker()->makeDataTextMessageBunch(index, indexCount, message)) != true) {
             return SEND_RESULT_NETWORK_ERROR;
         }
         return SEND_RESULT_SUCCESS;

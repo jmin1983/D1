@@ -17,7 +17,7 @@
 
 using namespace BnD;
 
-B1BasePacketAnalyzer::ANALYZE_RESULT D1BasePacketAnalyzer::implAnalyzeData(uint8* data, size_t size, size_t* pos)
+auto D1BasePacketAnalyzer::implAnalyzeData(uint8* data, size_t size, size_t* pos) -> ANALYZE_RESULT
 {
     D1BaseProtocol::Header::TYPE type = D1BaseProtocol::Header::TYPE_UNKNOWN;
     {
@@ -38,6 +38,8 @@ B1BasePacketAnalyzer::ANALYZE_RESULT D1BasePacketAnalyzer::implAnalyzeData(uint8
             return analyzeProtocolTypeNotifyID(data + (*pos), size - (*pos), pos);
         case D1BaseProtocol::Header::TYPE_TEXT_MESSAGE:
             return analyzeProtocolTypeTextMessage(data + (*pos), size - (*pos), pos);
+        case D1BaseProtocol::Header::TYPE_TEXT_MESSAGE_BUNCH:
+            return analyzeProtocolTypeTextMessageBunch(data + (*pos), size - (*pos), pos);
         default:
             B1LOG("Unknown type: size[%d], recvdBuffer_size[%d]", size, _recvdBuffer.size());
             //assert(false);
@@ -46,7 +48,7 @@ B1BasePacketAnalyzer::ANALYZE_RESULT D1BasePacketAnalyzer::implAnalyzeData(uint8
     return ANALYZE_RESULT_SUCCESS;
 }
 
-D1BasePacketAnalyzer::ANALYZE_RESULT D1BasePacketAnalyzer::analyzeProtocolTypeNotifyID(uint8* data, size_t size, size_t* pos)
+auto D1BasePacketAnalyzer::analyzeProtocolTypeNotifyID(uint8* data, size_t size, size_t* pos) -> ANALYZE_RESULT
 {
     int32 id = -1;
     const size_t idLength = sizeof(id);
@@ -60,27 +62,63 @@ D1BasePacketAnalyzer::ANALYZE_RESULT D1BasePacketAnalyzer::analyzeProtocolTypeNo
     return ANALYZE_RESULT_SUCCESS;
 }
 
-D1BasePacketAnalyzer::ANALYZE_RESULT D1BasePacketAnalyzer::analyzeProtocolTypeTextMessage(uint8* data, size_t size, size_t* pos)
+auto D1BasePacketAnalyzer::analyzeProtocolTypeTextMessage(uint8* data, size_t size, size_t* pos) -> ANALYZE_RESULT
 {
-    D1BaseProtocol::DataTextMessage dataD1Message;
-    const size_t lengthSize = sizeof(dataD1Message._length);
+    D1BaseProtocol::DataTextMessage dataTextMessage;
+    const size_t lengthSize = sizeof(dataTextMessage._length);
     if (size < lengthSize) {
         return ANALYZE_RESULT_NOT_ENOUTH_DATA;
     }
-    memcpy(&dataD1Message._length, data, lengthSize);
-    dataD1Message._length = TO_UINT32_FOR_NETWORK(dataD1Message._length);
-    if (size < lengthSize + dataD1Message._length) {
+    memcpy(&dataTextMessage._length, data, lengthSize);
+    dataTextMessage._length = TO_UINT32_FOR_NETWORK(dataTextMessage._length);
+    if (size < lengthSize + dataTextMessage._length) {
         return ANALYZE_RESULT_NOT_ENOUTH_DATA;
     }
     try {
-        dataD1Message._message.from((char*)data + lengthSize);
+        dataTextMessage._message.from((char*)data + lengthSize);
     }
     catch (...) {
-        B1LOG("Invalid jize_message string");
+        B1LOG("Invalid data_text_message string");
         assert(false);
         return ANALYZE_RESULT_FAIL;
     }
-    implOnProtocolTypeTextMessage(dataD1Message._message);
-    (*pos) += (lengthSize + dataD1Message._length);
+    implOnProtocolTypeTextMessage(std::move(dataTextMessage._message));
+    (*pos) += (lengthSize + dataTextMessage._length);
+    return ANALYZE_RESULT_SUCCESS;
+}
+
+auto D1BasePacketAnalyzer::analyzeProtocolTypeTextMessageBunch(uint8* data, size_t size, size_t* pos) -> ANALYZE_RESULT
+{
+    int32 index = -1;
+    int32 indexCount = 0;
+    D1BaseProtocol::DataTextMessage dataTextMessage;
+
+    const size_t indexSize = sizeof(index);
+    const size_t indexCountSize = sizeof(indexCount);
+    const size_t dataTextLengthSize = sizeof(dataTextMessage._length);
+    if (size < indexSize + indexCountSize + dataTextLengthSize) {
+        return ANALYZE_RESULT_NOT_ENOUTH_DATA;
+    }
+
+    memcpy(&dataTextMessage._length, data + indexSize + indexCountSize, dataTextLengthSize);
+    dataTextMessage._length = TO_UINT32_FOR_NETWORK(dataTextMessage._length);
+    if (size < indexSize + indexCountSize + dataTextLengthSize + dataTextMessage._length) {
+        return ANALYZE_RESULT_NOT_ENOUTH_DATA;
+    }
+    memcpy(&index, data, indexSize);
+    memcpy(&indexCount, data + indexSize, indexCountSize);
+    index = TO_INT32_FOR_NETWORK(index);
+    indexCount = TO_INT32_FOR_NETWORK(indexCount);
+    
+    try {
+        dataTextMessage._message.from((char*)data + indexSize + indexCountSize + dataTextLengthSize);
+    }
+    catch (...) {
+        B1LOG("Invalid data_text_message string");
+        assert(false);
+        return ANALYZE_RESULT_FAIL;
+    }
+    implOnProtocolTypeTextMessageBunch(index, indexCount, std::move(dataTextMessage._message));
+    (*pos) += (indexSize + indexCountSize + dataTextLengthSize + dataTextMessage._length);
     return ANALYZE_RESULT_SUCCESS;
 }

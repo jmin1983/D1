@@ -21,13 +21,15 @@ namespace BnD {
         enum CONSTS {
             CONSTS_CLIENT_RECONNECT_INTERVAL = 1000,
         };
-#pragma pack(1)
         struct Header {
             enum TYPE {
                 TYPE_UNKNOWN = 0,
                 TYPE_ALIVE_CHECK,
                 TYPE_NOTIFY_ID,
                 TYPE_TEXT_MESSAGE,
+                TYPE_TEXT_MESSAGE_BUNCH,
+
+                TYPE_BEGIN_USER = 100,
 
                 TYPE_MAX = 254,
                 TYPE_RESERVED = 255,
@@ -53,7 +55,6 @@ namespace BnD {
             uint8 _patch;
             uint8 _type;
         };
-#pragma pack()
         struct DataTextMessage {
             DataTextMessage() : _length(0) {}
             uint32 _length; //  include end of string.
