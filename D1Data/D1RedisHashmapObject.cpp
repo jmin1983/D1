@@ -38,7 +38,7 @@ bool D1RedisHashmapObject::implWriteToRedis(D1RedisClientInterface* writer) cons
 
 bool D1RedisHashmapObject::implReadFromRedis(D1RedisClientInterface* reader)
 {
-    const B1String key = redisKey();
+    auto key = redisKey();
     if (key.isEmpty()) {
         assert(false);
         return false;
@@ -78,6 +78,14 @@ void D1RedisHashmapObject::setRedisString(std::vector<B1String>* args, B1String&
 {
     args->push_back(std::move(field));
     args->push_back(B1String::formatAs("%lf", value));
+}
+
+void D1RedisHashmapObject::setRedisString(std::vector<B1String>* args, B1String&& field, const B1String& value) const
+{
+    if (value.isEmpty() != true) {
+        args->push_back(std::move(field));
+        args->push_back(value.copy());
+    }
 }
 
 void D1RedisHashmapObject::setRedisString(std::vector<B1String>* args, B1String&& field, B1String&& value) const
@@ -193,7 +201,7 @@ bool D1RedisHashmapObject::readFromRedisMap(const std::map<B1String, B1String>& 
 
 std::vector<B1String> D1RedisHashmapObject::prepareRedisStringArgs() const
 {
-    B1String key = redisKey();
+    auto key = redisKey();
     if (key.isEmpty()) {
         assert(false);
         return std::vector<B1String>();

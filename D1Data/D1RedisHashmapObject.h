@@ -16,6 +16,8 @@
 #pragma once
 #endif
 
+#include <B1Base/B1DataType.h>
+
 #include <map>
 
 namespace BnD {
@@ -38,11 +40,12 @@ namespace BnD {
         void setRedisString(std::vector<B1String>* args, B1String&& field, uint32 value) const;
         void setRedisString(std::vector<B1String>* args, B1String&& field, uint64 value) const;
         void setRedisString(std::vector<B1String>* args, B1String&& field, float64 value) const;
+        void setRedisString(std::vector<B1String>* args, B1String&& field, const B1String& value) const;
         void setRedisString(std::vector<B1String>* args, B1String&& field, B1String&& value) const;
         template <typename T>
         void setRedisString(std::vector<B1String>* args, const T& data) const
         {
-            setRedisString(args, data.first, data.second);
+            setRedisString(args, data.first.copy(), data.second);
         }
         bool readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, int32* data, int32 defaultValue = -1) const;
         bool readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, int64* data, int32 defaultValue = -1) const;
