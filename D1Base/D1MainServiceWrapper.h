@@ -55,7 +55,8 @@ namespace BnD {
             }
         }
     protected:
-        virtual T* createMainService(int32 site, int32 type) = 0;
+        virtual T* createMainService(int32 site, int32 type, int32 serviceID) = 0;
+        virtual int32 getServiceID(D1RedisClientInterface* redisReader) { return -1; }
         virtual D1ProductIdentifier* createProductIdentifier() = 0;
         virtual void onMainServiceStartBefore() {}
     public:
@@ -82,8 +83,9 @@ namespace BnD {
                 D1RedisClientInterface clientInterface(&client);
                 productIdentifier->getProductInfo(&clientInterface);
                 B1LOG("find product type done! disconnecting Administration Service: site[%d], type[%d]", productIdentifier->site(), productIdentifier->type());
+                const int32 serviceID = getServiceID(&clientInterface);
                 client.finalize();
-                _service.reset(createMainService(productIdentifier->site(), productIdentifier->type()));
+                _service.reset(createMainService(productIdentifier->site(), productIdentifier->type(), serviceID));
             }
             if (_service == NULL) {
                 printf("create control service failed");

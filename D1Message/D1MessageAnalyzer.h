@@ -49,6 +49,10 @@ namespace BnD {
             MESSAGE_INCOMPLETE,     //  message can not be processed for this time.
             MESSAGE_IGNORED,        //  message can not be handled in this analyzer.
         };
+        enum MESSAGE_FROM {
+            MESSAGE_FROM_CHECK_RESULT = 0,
+            MESSAGE_FROM_IGNORE_RESULT,
+        };
     protected:
 #if defined(_USE_MESSAGE_ANALYZER_STD_MAP)
         std::map<B1String, int32> _messageTable;
@@ -64,7 +68,7 @@ namespace BnD {
         bool initialize(D1MessageAnalyzerListener* listener);
         void finalize();
         MESSAGE_RESULT analyzeMessage(const B1String& message, int32 from) const;
-        MESSAGE_RESULT analyzeMessage(D1MessageAnalyzerListener* temporaryListener, const B1String& message, int32 from) const;
+        MESSAGE_RESULT analyzeMessage(D1MessageAnalyzerListener* temporaryListener, const B1String& message, int32 from = 1) const;
     };
 }   //  !BnD
 

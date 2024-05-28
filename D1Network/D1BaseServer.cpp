@@ -32,12 +32,12 @@ D1BaseServer::~D1BaseServer()
 {
 }
 
-B1BaseSessionManager* D1BaseServer::createSessionManager()
+auto D1BaseServer::createSessionManager() -> B1BaseSessionManager*
 {
     return new B1BaseSessionManager(_aliveInterval);
 }
 
-B1BaseServerSession* D1BaseServer::createSession(B1ServerSocket* serverSocket)
+auto D1BaseServer::createSession(B1ServerSocket* serverSocket) -> B1BaseServerSession*
 {
     return new D1BaseServerSession(serverSocket, this, this, _maxAliveCount);
 }
@@ -63,11 +63,25 @@ void D1BaseServer::finalize()
     shutdown();
 }
 
-D1BaseServer::SEND_RESULT D1BaseServer::sendTextMessage(int32 id, const B1String& message)
+auto D1BaseServer::sendTextMessage(int32 id, const B1String& message) -> SEND_RESULT
 {
-    int32 handleID = _handleManager->getServerHandleID(id);
+    const int32 handleID = _handleManager->getServerHandleID(id);
     if (auto session = sessionManager()->getSessionByHandleID<D1BaseServerSession>(handleID)) {
         if (session->sendData(packetMaker()->makeDataTextMessage(message)) != true) {
+            return SEND_RESULT_NETWORK_ERROR;
+        }
+        return SEND_RESULT_SUCCESS;
+    }
+    else {
+        return SEND_RESULT_NO_ID_FOUND;
+    }
+}
+
+auto D1BaseServer::sendTextMessageBunch(int32 id, int32 index, int32 indexCount, const B1String& message) -> SEND_RESULT
+{
+    const int32 handleID = _handleManager->getServerHandleID(id);
+    if (auto session = sessionManager()->getSessionByHandleID<D1BaseServerSession>(id)) {
+        if (session->sendData(packetMaker()->makeDataTextMessageBunch(index, indexCount, message)) != true) {
             return SEND_RESULT_NETWORK_ERROR;
         }
         return SEND_RESULT_SUCCESS;
