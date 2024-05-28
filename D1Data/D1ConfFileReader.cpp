@@ -14,8 +14,6 @@
 
 #include <B1Base/B1SystemUtil.h>
 
-#include <boost/property_tree/json_parser.hpp>
-
 using namespace BnD;
 
 D1ConfFileReader::D1ConfFileReader()
