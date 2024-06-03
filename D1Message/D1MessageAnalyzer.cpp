@@ -14,7 +14,7 @@
 #include "D1MessageAnalyzerListener.h"
 
 #include "D1MSMsgKeepAliveReq.h"
-#include "D1MSMsgKeepAliveResp.h"
+#include "D1MSMsgKeepAliveRsp.h"
  
 using namespace BnD;
 
@@ -36,7 +36,7 @@ bool D1MessageAnalyzer::implInitialize()
 #define INSERT_TABLE_VALUE(c) table->insert(std::make_pair(c::messageString().copy(), MAKE_MSG_ENUM(c)));
     auto table = &_messageTable;
     INSERT_TABLE_VALUE(D1MSMsgKeepAliveReq);
-    INSERT_TABLE_VALUE(D1MSMsgKeepAliveResp);
+    INSERT_TABLE_VALUE(D1MSMsgKeepAliveRsp);
 
     if (_messageTable.size() != MSG_COUNTS) {
         assert(false);
@@ -60,7 +60,7 @@ auto D1MessageAnalyzer::implAnalyzeMessage(D1MessageAnalyzerListener* listener, 
     }
     switch (message) {
         NOTIFY_LISTENER(D1MSMsgKeepAliveReq);
-        NOTIFY_LISTENER(D1MSMsgKeepAliveResp);
+        NOTIFY_LISTENER(D1MSMsgKeepAliveRsp);
     default:
         break;
     }

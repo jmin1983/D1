@@ -25,14 +25,6 @@ D1RedisClientInterface::~D1RedisClientInterface()
 {
 }
 
-bool D1RedisClientInterface::getAllStrings(const std::vector<B1String>& args, std::list<B1String>* out)
-{
-    if (_redisDirectClient) {
-        return _redisDirectClient->blockedCommand(args, out);
-    }
-    return false;
-}
-
 bool D1RedisClientInterface::startPolling()
 {
     if (_redisDirectClient) {
@@ -48,6 +40,13 @@ void D1RedisClientInterface::startWriting()
     }
 }
 
+bool D1RedisClientInterface::getAllStrings(const std::vector<B1String>& args, std::list<B1String>* out)
+{
+    if (_redisDirectClient) {
+        return _redisDirectClient->blockedCommand(args, out);
+    }
+    return false;
+}
 
 bool D1RedisClientInterface::exists(const B1String& key)
 {
@@ -85,6 +84,14 @@ bool D1RedisClientInterface::hgetall(const B1String& key, std::map<B1String, B1S
 {
     if (_redisDirectClient) {
         return _redisDirectClient->hgetall(key, out);
+    }
+    return false;
+}
+
+bool D1RedisClientInterface::scan(const B1String& pattern, std::list<B1String>* out, int32 count)
+{
+    if (_redisDirectClient) {
+        return _redisDirectClient->scan(pattern, out, count);
     }
     return false;
 }
@@ -230,29 +237,6 @@ bool D1RedisClientInterface::publish(const B1String& channel, const B1String& me
 {
     if (_redisDirectClient) {
         return _redisDirectClient->publish(channel, message, isEssential);
-    }
-    return false;
-}
-
-bool D1RedisClientInterface::isDCSAlive(int32 dcsID)
-{
-    B1String key;
-    key.format("DCSInfo:%d:Alive", dcsID);
-
-
-
-
-    const B1String aliveString = hmget(key.copy(), "Alive");
-
-
-
-
-
-    if (aliveString.isEmpty() != true) {
-        try {
-            return aliveString.toInt32() == 1;
-        }
-        catch (...) {}
     }
     return false;
 }

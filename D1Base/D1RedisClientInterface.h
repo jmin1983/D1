@@ -29,15 +29,16 @@ namespace BnD {
     protected:
         B1RedisDirectClient* _redisDirectClient;
     public:
-        bool getAllStrings(const std::vector<B1String>& args, std::list<B1String>* out);
         bool startPolling();
         void startWriting();
     public:
+        bool getAllStrings(const std::vector<B1String>& args, std::list<B1String>* out);
         bool exists(const B1String& key);
         bool subscribe(std::set<B1String>&& channels);
         bool hmget(const B1String& key, const std::vector<B1String>& fields, std::vector<B1String>* out);
         B1String hmget(const B1String& key, const B1String& field);
         bool hgetall(const B1String& key, std::map<B1String, B1String>* out);
+        bool scan(const B1String& pattern, std::list<B1String>* out, int32 count = -1);
         bool smembers(const B1String& key, std::list<B1String>* out);
         bool incr(const B1String& key, int64* result);
         bool time(uint64* seconds, uint32* microseconds, bool ignoreAdjustSecond = false);
@@ -54,7 +55,6 @@ namespace BnD {
         bool srem(const B1String& key, const B1String& value);  //  using _commandEssentials.
         bool rpush(const B1String& key, const B1String& value); //  using _commands.
         bool publish(const B1String& channel, const B1String& message, bool isEssential);
-        bool isDCSAlive(int32 dcsID);
     };
 }   //  !BnD
 

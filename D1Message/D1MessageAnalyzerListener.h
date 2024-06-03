@@ -25,7 +25,7 @@ namespace BnD {
 #define DEFINE_MESSAGE_LISTENER_FUNC(c) virtual bool onMessage##c(const class c& data, int32 from)  //  from: MESSAGE_FROM
 #define DEFINE_MESSAGE_ANALYZER_LISTENER_FUNC(post_fix) \
     DEFINE_MESSAGE_LISTENER_FUNC(D1MSMsgKeepAliveReq) post_fix\
-    DEFINE_MESSAGE_LISTENER_FUNC(D1MSMsgKeepAliveResp) post_fix\
+    DEFINE_MESSAGE_LISTENER_FUNC(D1MSMsgKeepAliveRsp) post_fix\
 
     DEFINE_MESSAGE_ANALYZER_LISTENER_FUNC({ return true; });
 #undef DEFINE_MESSAGE_ANALYZER_LISTENER_FUNC

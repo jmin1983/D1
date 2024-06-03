@@ -37,7 +37,7 @@ namespace BnD {
             MSG_UNKNOWN = -1,
 
             MAKE_MSG_ENUM(D1MSMsgKeepAliveReq),
-            MAKE_MSG_ENUM(D1MSMsgKeepAliveResp),
+            MAKE_MSG_ENUM(D1MSMsgKeepAliveRsp),
 
             MSG_COUNTS,
 
