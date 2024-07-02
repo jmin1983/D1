@@ -22,7 +22,7 @@ namespace BnD {
         //  return true if message processing is complete.
         //  If message processing has not been completed(processed in another worker thread, etc.), return false and then process task completion according to @from.
         //  (ex: In case of polling, @from is set to 0, so if @from is 0, pop() is called from poller after the task is completed).
-#define DEFINE_MESSAGE_LISTENER_FUNC(c) virtual bool onMessage##c(const class c& data, int32 from)  //  from: MESSAGE_FROM
+#define DEFINE_MESSAGE_LISTENER_FUNC(c) virtual bool onMessage##c(int32 index, int32 indexCount, const class c& data, int32 from)  //  from: MESSAGE_FROM
 #define DEFINE_MESSAGE_ANALYZER_LISTENER_FUNC(post_fix) \
     DEFINE_MESSAGE_LISTENER_FUNC(D1MSMsgKeepAliveReq) post_fix\
     DEFINE_MESSAGE_LISTENER_FUNC(D1MSMsgKeepAliveRsp) post_fix\

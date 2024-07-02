@@ -50,13 +50,14 @@ void D1MessageAnalyzer::implFinalize()
     _messageTable.clear();
 }
 
-auto D1MessageAnalyzer::implAnalyzeMessage(D1MessageAnalyzerListener* listener, int32 message, const D1BaseMessage& baseMessage, const B1Archive& archive, int32 from) const -> MESSAGE_RESULT
+auto D1MessageAnalyzer::implAnalyzeMessage(D1MessageAnalyzerListener* listener, int32 index, int32 indexCount,
+                                           int32 message, const D1BaseMessage& baseMessage, const B1Archive& archive, int32 from) const -> MESSAGE_RESULT
 {
 #define NOTIFY_LISTENER(c)\
     case MAKE_MSG_ENUM(c): {\
         c m(std::move(const_cast<D1BaseMessage&>(baseMessage)));\
         archive.toObject(&m);\
-        return listener->onMessage##c(m, from) ? MESSAGE_COMPLETE : MESSAGE_INCOMPLETE;\
+        return listener->onMessage##c(index, indexCount, m, from) ? MESSAGE_COMPLETE : MESSAGE_INCOMPLETE;\
     }
     switch (message) {
         NOTIFY_LISTENER(D1MSMsgKeepAliveReq);
@@ -86,10 +87,10 @@ void D1MessageAnalyzer::finalize()
 auto D1MessageAnalyzer::analyzeMessage(const B1String& message, int32 from) const -> MESSAGE_RESULT
 {
     assert(_listener != NULL);
-    return analyzeMessage(_listener, message, from);
+    return analyzeMessage(_listener, 0, 1, message, from);
 }
 
-auto D1MessageAnalyzer::analyzeMessage(D1MessageAnalyzerListener* temporaryListener, const B1String& message, int32 from) const -> MESSAGE_RESULT
+auto D1MessageAnalyzer::analyzeMessage(D1MessageAnalyzerListener* temporaryListener, int32 index, int32 indexCount, const B1String& message, int32 from) const -> MESSAGE_RESULT
 {
     B1Archive archive;
     archive.fromString(message);
@@ -100,5 +101,5 @@ auto D1MessageAnalyzer::analyzeMessage(D1MessageAnalyzerListener* temporaryListe
         assert(false);
         return MESSAGE_IGNORED;
     }
-    return implAnalyzeMessage(temporaryListener, itr->second, baseMessage, archive, from);
+    return implAnalyzeMessage(temporaryListener, index, indexCount, itr->second, baseMessage, archive, from);
 }

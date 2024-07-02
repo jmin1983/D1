@@ -88,7 +88,7 @@ bool D1RedisClientInterface::hgetall(const B1String& key, std::map<B1String, B1S
     return false;
 }
 
-bool D1RedisClientInterface::scan(const B1String& pattern, std::list<B1String>* out, int32 count)
+bool D1RedisClientInterface::scan(const B1String& pattern, std::set<B1String>* out, int32 count)
 {
     if (_redisDirectClient) {
         return _redisDirectClient->scan(pattern, out, count);

@@ -63,12 +63,13 @@ namespace BnD {
     protected:
         virtual bool implInitialize();
         virtual void implFinalize();
-        virtual MESSAGE_RESULT implAnalyzeMessage(D1MessageAnalyzerListener* listener, int32 message, const D1BaseMessage& baseMessage, const B1Archive& archive, int32 from) const;
+        virtual MESSAGE_RESULT implAnalyzeMessage(D1MessageAnalyzerListener* listener, int32 index, int32 indexCount,
+                                                  int32 message, const D1BaseMessage& baseMessage, const B1Archive& archive, int32 from) const;
     public:
         bool initialize(D1MessageAnalyzerListener* listener);
         void finalize();
         MESSAGE_RESULT analyzeMessage(const B1String& message, int32 from) const;
-        MESSAGE_RESULT analyzeMessage(D1MessageAnalyzerListener* temporaryListener, const B1String& message, int32 from = 1) const;
+        MESSAGE_RESULT analyzeMessage(D1MessageAnalyzerListener* temporaryListener, int32 index, int32 indexCount, const B1String& message, int32 from = 1) const;
     };
 }   //  !BnD
 
