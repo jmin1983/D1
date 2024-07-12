@@ -120,20 +120,6 @@ bool D1RedisClientInterface::time(uint64* seconds, uint32* microseconds, bool ig
     return false;
 }
 
-void D1RedisClientInterface::time(B1String* result, bool useTimeLength17)
-{
-    if (_redisDirectClient) {
-        _redisDirectClient->time(result, useTimeLength17);
-    }
-}
-
-void D1RedisClientInterface::timeMMDDHHmmSSnnnn(B1String* result)
-{
-    if (_redisDirectClient) {
-        _redisDirectClient->timeMMDDHHmmSSnnnn(result);
-    }
-}
-
 bool D1RedisClientInterface::blockedCommand(const std::vector<B1String>& args, B1String* out)
 {
     if (_redisDirectClient) {

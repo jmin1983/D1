@@ -42,8 +42,6 @@ namespace BnD {
         bool smembers(const B1String& key, std::list<B1String>* out);
         bool incr(const B1String& key, int64* result);
         bool time(uint64* seconds, uint32* microseconds, bool ignoreAdjustSecond = false);
-        void time(B1String* result, bool useTimeLength17 = false);
-        void timeMMDDHHmmSSnnnn(B1String* result);
         bool blockedCommand(const std::vector<B1String>& args, B1String* out = NULL);
         void blockedCommand(const std::vector<std::vector<B1String> >& cmds);
         bool nonBlockedCommand(const std::vector<B1String>& args, bool isEssential);

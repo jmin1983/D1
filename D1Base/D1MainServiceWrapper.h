@@ -18,6 +18,7 @@
 
 #include <B1Base/B1FileLog.h>
 #include <B1Base/B1Singleton.h>
+#include <B1Base/B1Time.h>
 #include <B1Redic/B1RedisDirectClient.h>
 
 #include <D1Base/D1ProductIdentifier.h>
@@ -54,6 +55,20 @@ namespace BnD {
                 _fileLog.reset();
             }
         }
+        void syncWithRedisTime(D1RedisClientInterface* redisClient) const
+        {
+            uint64 redisSeconds = 0;
+            uint32 redisMicroSeconds = 0;
+            if (redisClient->time(&redisSeconds, &redisMicroSeconds)) {
+                B1Time t(static_cast<time_t64>(redisSeconds));
+                B1LOG("Sync server time:[%04d-%02d-%02d %02d:%02d:%02d.%03d]", t.year(), t.month(), t.day(), t.hour(), t.minute(), t.second(), static_cast<int32>(redisMicroSeconds / 1000));
+                B1Time::setAdjustCurrentTime(redisSeconds, redisMicroSeconds);
+                B1LOG("Sync server time finished");
+            }
+            else {
+                B1LOG("sync redis time failed");
+            }
+        }
     protected:
         virtual T* createMainService(int32 site, int32 type, int32 serviceID) = 0;
         virtual int32 getServiceID(D1RedisClientInterface* redisReader) { return -1; }
@@ -79,8 +94,9 @@ namespace BnD {
                     B1LOG("unable to connect Administration Service: address[%s], port[%d], db[%d]", address.cString(), port, db);
                     return false;
                 }
-                std::unique_ptr<D1ProductIdentifier> productIdentifier(createProductIdentifier());
                 D1RedisClientInterface clientInterface(&client);
+                syncWithRedisTime(&clientInterface);
+                std::unique_ptr<D1ProductIdentifier> productIdentifier(createProductIdentifier());
                 productIdentifier->getProductInfo(&clientInterface);
                 B1LOG("find product type done! disconnecting Administration Service: site[%d], type[%d]", productIdentifier->site(), productIdentifier->type());
                 const int32 serviceID = getServiceID(&clientInterface);

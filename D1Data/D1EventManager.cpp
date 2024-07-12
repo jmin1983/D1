@@ -72,14 +72,17 @@ bool D1EventManager::addEvent(int32 code, const B1String& commandID, const B1Str
     if (serialNumber < 0) {
         return false;
     }
-    B1String setTime;
-    _redisClientInterface->time(&setTime);
+    uint64 seconds = 0;
+    uint32 microseconds = 0;
+    if (_redisClientInterface->time(&seconds, &microseconds)) {
+        return false;
+    }
     B1Archive archive, messageData;
     archive.writeData("MessageID", B1String("tcsEventSet"));
 
     messageData.writeData("CommandID", commandID);
     messageData.writeData("CarrierID", carrierID);
-    messageData.writeData("Time", setTime);
+    messageData.writeData("Time", seconds);
     messageData.writeData("SerialNo", serialNumber);
     messageData.writeData("TaskID", taskID);
     messageData.writeData("EventCode", code);
