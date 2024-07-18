@@ -98,7 +98,8 @@ auto D1MessageAnalyzer::analyzeMessage(D1MessageAnalyzerListener* temporaryListe
     archive.toObject(&baseMessage);
     auto itr = _messageTable.find(baseMessage.messageID());
     if (itr == _messageTable.end()) {
-        assert(false);
+        B1LOG("unknown message received: message[%s]", message.cString());
+        //assert(false);
         return MESSAGE_IGNORED;
     }
     return implAnalyzeMessage(temporaryListener, index, indexCount, itr->second, baseMessage, archive, from);
