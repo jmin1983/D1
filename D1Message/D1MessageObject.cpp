@@ -14,15 +14,17 @@
 
 using namespace BnD;
 
-D1MessageObject::D1MessageObject()
+D1MessageObject::D1MessageObject(const B1Object* objectToArchive)
     : D1BaseMessage() 
-    , _object()
+    , _objectToArchive(objectToArchive)
+    , _unArchivedObject()
 {
 }
 
 D1MessageObject::D1MessageObject(D1BaseMessage&& baseMessage)
     : D1BaseMessage(std::move(baseMessage)) 
-    , _object()
+    , _objectToArchive(NULL)
+    , _unArchivedObject()
 {
 }
 
@@ -32,8 +34,8 @@ D1MessageObject::~D1MessageObject()
 
 void D1MessageObject::archiveMessage(B1Archive* archive) const
 {
-    if (_object) {
-        writeDataToArchive("Object", *_object, archive);
+    if (_objectToArchive) {
+        writeDataToArchive("Object", *_objectToArchive, archive);
     }
 }
 
@@ -43,5 +45,12 @@ void D1MessageObject::unarchiveMessage(const B1Archive& archive)
     if (object) {
         readDataFromArchive("Object", archive, object);
     }
-    _object.reset(object);
+    _unArchivedObject.reset(object);
+}
+
+B1String D1MessageObject::toMessage() const
+{
+    B1String message;
+    composeToJson(&message);
+    return message;
 }

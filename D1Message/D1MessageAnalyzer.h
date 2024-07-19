@@ -41,6 +41,8 @@ namespace BnD {
 
             MSG_COUNTS,
 
+            MSG_MAX = 1000,
+
             //  When adding a new message, check the comment at the top of enum MSG.
         };
     public:
@@ -61,6 +63,7 @@ namespace BnD {
 #endif
         D1MessageAnalyzerListener* _listener;
     protected:
+        virtual int32 messageCount() const;
         virtual bool implInitialize();
         virtual void implFinalize();
         virtual MESSAGE_RESULT implAnalyzeMessage(D1MessageAnalyzerListener* listener, int32 index, int32 indexCount,

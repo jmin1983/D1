@@ -28,8 +28,15 @@ D1MessageAnalyzer::~D1MessageAnalyzer()
 {
 }
 
+int32 D1MessageAnalyzer::messageCount() const
+{
+    return MSG_COUNTS;
+}
+
 bool D1MessageAnalyzer::implInitialize()
 {
+    assert(MSG_COUNTS < MSG_MAX);
+
     if (_messageTable.empty() != true) {
         return false;
     }
@@ -37,11 +44,6 @@ bool D1MessageAnalyzer::implInitialize()
     auto table = &_messageTable;
     INSERT_TABLE_VALUE(D1MSMsgKeepAliveReq);
     INSERT_TABLE_VALUE(D1MSMsgKeepAliveRsp);
-
-    if (_messageTable.size() != MSG_COUNTS) {
-        assert(false);
-        return false;
-    }
     return true;
 }
 
@@ -73,6 +75,10 @@ bool D1MessageAnalyzer::initialize(D1MessageAnalyzerListener* listener)
     _listener = listener;
     if (implInitialize() != true) {
         _listener = NULL;
+        return false;
+    }
+    if (_messageTable.size() != messageCount()) {
+        assert(false);
         return false;
     }
     return true;

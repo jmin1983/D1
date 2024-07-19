@@ -21,20 +21,20 @@
 namespace BnD {
     class D1MessageObject : public D1BaseMessage {
     public:
-        D1MessageObject();
+        D1MessageObject(const B1Object* objectToArchive);
         D1MessageObject(D1BaseMessage&& baseMessage);
         virtual ~D1MessageObject();
-    protected:
-        std::shared_ptr<B1Object> _object;
+    private:
+        const B1Object* _objectToArchive;
+        std::shared_ptr<B1Object> _unArchivedObject;
     protected:
         virtual B1Object* createObject() = 0;
     protected:
         virtual void archiveMessage(B1Archive* archive) const override;
         virtual void unarchiveMessage(const B1Archive& archive) override;
     public:
-        template <typename T> T getObject() const { return static_cast<T>(_object.get()); }
-
-        void setObject(std::shared_ptr<B1Object> object) { _object = object; }
+        B1String toMessage() const;
+        template <typename T> T toObject() const { return static_cast<T>(_unArchivedObject.get()); }
     };
 }   //  !BnD
 
