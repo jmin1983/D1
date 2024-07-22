@@ -29,8 +29,8 @@ namespace BnD {
         virtual ~D1MainService();
     private:
         enum CONSTS {
-            CONSTS_PERFORMANCE_CHECK_INTERVAL = 5 * 1000,
             CONSTS_REDIS_TIME_CHECK_INTERVAL = 1 * 60 * 1000,
+            CONSTS_DISABLE_PERFORMANCE_CHECK = 0,
         };
     private:
         std::shared_ptr<B1PerformanceProfiler> _performanceProfiler;
@@ -42,8 +42,8 @@ namespace BnD {
         void checkPerformance();
         void syncWithRedisTime();
     protected:
-        virtual bool usePerformanceProfiler() const { return true; }
         virtual bool useSyncWithRedisTime() const { return true; }
+        virtual uint32 performanceProfilerInterval() const { return CONSTS_DISABLE_PERFORMANCE_CHECK; } //  return 0 if disable performance_profiler
         virtual auto initializeRedisClient() -> B1RedisDirectClient* = 0;
         virtual void onCheckPerformance(uint32 pid, int64 memUsage, int64 memTotal, float64 cpuUsage) {}
     protected:

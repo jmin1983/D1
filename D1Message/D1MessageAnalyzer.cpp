@@ -13,6 +13,9 @@
 #include "D1MessageAnalyzer.h"
 #include "D1MessageAnalyzerListener.h"
 
+#include "D1DCSMsgZoneInfosReq.h"
+#include "D1DCSMsgZoneInfosRsp.h"
+#include "D1GUIMsgZoneInfosReq.h"
 #include "D1MSMsgKeepAliveReq.h"
 #include "D1MSMsgKeepAliveRsp.h"
  
@@ -42,6 +45,9 @@ bool D1MessageAnalyzer::implInitialize()
     }
 #define INSERT_TABLE_VALUE(c) table->insert(std::make_pair(c::messageString().copy(), MAKE_MSG_ENUM(c)));
     auto table = &_messageTable;
+    INSERT_TABLE_VALUE(D1DCSMsgZoneInfosReq);
+    INSERT_TABLE_VALUE(D1DCSMsgZoneInfosRsp);
+    INSERT_TABLE_VALUE(D1GUIMsgZoneInfosReq);
     INSERT_TABLE_VALUE(D1MSMsgKeepAliveReq);
     INSERT_TABLE_VALUE(D1MSMsgKeepAliveRsp);
     return true;
@@ -62,6 +68,9 @@ auto D1MessageAnalyzer::implAnalyzeMessage(D1MessageAnalyzerListener* listener, 
         return listener->onMessage##c(index, indexCount, m, from) ? MESSAGE_COMPLETE : MESSAGE_INCOMPLETE;\
     }
     switch (message) {
+        NOTIFY_LISTENER(D1DCSMsgZoneInfosReq);
+        NOTIFY_LISTENER(D1DCSMsgZoneInfosRsp);
+        NOTIFY_LISTENER(D1GUIMsgZoneInfosReq);
         NOTIFY_LISTENER(D1MSMsgKeepAliveReq);
         NOTIFY_LISTENER(D1MSMsgKeepAliveRsp);
     default:

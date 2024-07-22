@@ -36,7 +36,7 @@ void D1MainService::checkPerformance()
     int64 memUsage = _performanceProfiler->memUsage();
     int64 memTotal = _performanceProfiler->memTotal();
     float64 cpuUsage = _performanceProfiler->cpuUsage();
-    B1LOG("performance check: pid[%u], cpu[%lf], mem[%ld/%ld]", pid, cpuUsage, memUsage, memTotal);
+    B1LOG("performance check: pid[%u], cpu[%lf], mem[%ld/%ld][%d%%]", pid, cpuUsage, memUsage, memTotal, memUsage * 100 / memTotal);
     onCheckPerformance(pid, memUsage, memTotal, cpuUsage);
 }
 
@@ -63,10 +63,12 @@ bool D1MainService::implStart()
         _redisDirectClient.reset(redisDirectClient);
     }
     _redisClientInterface.reset(new D1RedisClientInterface(_redisDirectClient.get()));
-    if (usePerformanceProfiler()) {
+    uint32 perfInterval = performanceProfilerInterval();
+    if (CONSTS_DISABLE_PERFORMANCE_CHECK != perfInterval) {
         _performanceProfiler.reset(new B1PerformanceProfiler());
         if (_performanceProfiler->initialize()) {
-            _performanceCheckTimer.start(CONSTS_PERFORMANCE_CHECK_INTERVAL);
+            checkPerformance();
+            _performanceCheckTimer.start(perfInterval);
         }
         else {
             B1LOG("initialize profiler failed");
@@ -75,6 +77,7 @@ bool D1MainService::implStart()
         }
     }
     if (useSyncWithRedisTime()) {
+        syncWithRedisTime();
         _redisTimeCheckTimer.start(CONSTS_REDIS_TIME_CHECK_INTERVAL);
     }
     return true;

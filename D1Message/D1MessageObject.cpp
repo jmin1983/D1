@@ -35,7 +35,7 @@ D1MessageObject::~D1MessageObject()
 void D1MessageObject::archiveMessage(B1Archive* archive) const
 {
     if (_objectToArchive) {
-        writeDataToArchive("Object", *_objectToArchive, archive);
+        writeDataToArchive("ArchiveObject", *_objectToArchive, archive);
     }
 }
 
@@ -43,7 +43,7 @@ void D1MessageObject::unarchiveMessage(const B1Archive& archive)
 {
     B1Object* object = createObject();
     if (object) {
-        readDataFromArchive("Object", archive, object);
+        readDataFromArchive("ArchiveObject", archive, object);
     }
     _unArchivedObject.reset(object);
 }
