@@ -37,6 +37,9 @@ void D1MessageObject::archiveMessage(B1Archive* archive) const
     if (_objectToArchive) {
         writeDataToArchive("ArchiveObject", *_objectToArchive, archive);
     }
+    else if (_unArchivedObject) {
+        writeDataToArchive("ArchiveObject", *_unArchivedObject, archive);
+    }
 }
 
 void D1MessageObject::unarchiveMessage(const B1Archive& archive)
