@@ -12,12 +12,14 @@
 #include "D1Data.h"
 #include "D1Alarm.h"
 
+#include <D1Base/D1Consts.h>
+
 using namespace BnD;
 
 D1Alarm::D1Alarm()
-    : _serialNumber(-1)
+    : _serialNumber(D1Consts::ID_INVALID)
     , _code(0)
-    , _taskID(-1)
+    , _taskID(D1Consts::ID_INVALID)
     , _zoneID(0)
     , _reason(0)
     , _commandID()

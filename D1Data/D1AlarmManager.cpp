@@ -13,6 +13,7 @@
 #include "D1AlarmManager.h"
 #include "D1Alarm.h"
 
+#include <D1Base/D1Consts.h>
 #include <D1Base/D1RedisClientInterface.h>
 
 using namespace BnD;
@@ -83,8 +84,9 @@ bool D1AlarmReader::getActiveAlarmSerialNumbers(std::set<int64>* serialNumbers) 
     for (const auto& o : out) {
         try {
             int32 alarm = o.toInt32();
-            if (alarm > -1)
+            if (alarm != D1Consts::ID_INVALID) {
                 serialNumbers->insert(alarm);
+            }
         }
         catch (...) {}
     }

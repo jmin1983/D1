@@ -18,6 +18,7 @@
 
 #include <B1Base/B1Object.h>
 
+#include <D1Base/D1Consts.h>
 #include <D1Data/D1RedisHashmapObject.h>
 
 namespace BnD {
@@ -32,7 +33,7 @@ namespace BnD {
         virtual ~D1Zone() {}
     public:
         enum DIRECTION {
-            DIRECTION_INVALID = -1,
+            DIRECTION_INVALID = D1Consts::ID_INVALID,
 
             DIRECTION_NORTH = 0,
             DIRECTION_SOUTH,
@@ -42,7 +43,7 @@ namespace BnD {
             DIRECTION_COUNT,
         };
         enum LEVEL {
-            LEVEL_INAVLID = -1,
+            LEVEL_INAVLID = D1Consts::ID_INVALID,
 
             LEVEL_0 = 0,
             LEVEL_1,

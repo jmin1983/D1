@@ -14,6 +14,7 @@
 
 #include <B1Base/B1Time.h>
 
+#include <D1Base/D1Consts.h>
 #include <D1Base/D1RedisClientInterface.h>
 
 using namespace BnD;
@@ -57,12 +58,12 @@ bool D1WarningManager::addWarning(int32 code, const B1String &commandID, const B
 
 bool D1WarningManager::addWarning(int32 code)
 {
-    return addWarning(code, -1, -1, 0);
+    return addWarning(code, D1Consts::ID_INVALID, D1Consts::ID_INVALID, 0);
 }
 
 bool D1WarningManager::addWarning(int32 code, int32 zoneID)
 {
-    return addWarning(code, -1, zoneID, 0);
+    return addWarning(code, D1Consts::ID_INVALID, zoneID, 0);
 }
 
 bool D1WarningManager::addWarning(int32 code, int32 taskID, int32 zoneID, int32 reason)

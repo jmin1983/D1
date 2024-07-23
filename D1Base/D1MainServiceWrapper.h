@@ -21,6 +21,7 @@
 #include <B1Base/B1Time.h>
 #include <B1Redic/B1RedisDirectClient.h>
 
+#include <D1Base/D1Consts.h>
 #include <D1Base/D1ProductIdentifier.h>
 #include <D1Base/D1RedisClientInterface.h>
 
@@ -71,7 +72,7 @@ namespace BnD {
         }
     protected:
         virtual T* createMainService(int32 site, int32 type, int32 serviceID) = 0;
-        virtual int32 getServiceID(D1RedisClientInterface* redisReader) { return -1; }
+        virtual int32 getServiceID(D1RedisClientInterface* redisReader) { return D1Consts::SERVICE_ID_INVALID; }
         virtual D1ProductIdentifier* createProductIdentifier() = 0;
         virtual void onMainServiceStartBefore() {}
     public:

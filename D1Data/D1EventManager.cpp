@@ -14,6 +14,7 @@
 
 #include <B1Base/B1Time.h>
 
+#include <D1Base/D1Consts.h>
 #include <D1Base/D1RedisClientInterface.h>
 
 using namespace BnD;
@@ -31,9 +32,9 @@ D1EventManager::~D1EventManager()
 int64 D1EventManager::implMakeNewSerialNumber()
 {
     const static B1String key = "System:Event:EventSerialNo";
-    int64 result = -1;
+    int64 result = D1Consts::ID_INVALID;
     if (_redisClientInterface->incr(key, &result) != true) {
-        return -1;
+        return D1Consts::ID_INVALID;
     }
     return result;
 }
@@ -101,12 +102,12 @@ bool D1EventManager::addEvent(int32 code, const B1String& commandID, const B1Str
 
 bool D1EventManager::addEvent(int32 code)
 {
-    return addEvent(code, -1, -1, 0);
+    return addEvent(code, D1Consts::ID_INVALID, D1Consts::ID_INVALID, 0);
 }
 
 bool D1EventManager::addEvent(int32 code, int32 zoneID)
 {
-    return addEvent(code, -1, zoneID, 0);
+    return addEvent(code, D1Consts::ID_INVALID, zoneID, 0);
 }
 
 bool D1EventManager::addEvent(int32 code, int32 taskID, int32 zoneID, int32 reason, bool isEssential)

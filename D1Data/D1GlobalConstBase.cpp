@@ -73,7 +73,7 @@ bool D1GlobalConstBase::addAllItems()
 
 void D1GlobalConstBase::loadAllData(D1RedisClientInterface* redisClientInterface)
 {
-    if (_id > -1) {
+    if (_id != D1Consts::ID_INVALID) {
         loadData(false, redisClientInterface, itemKey());
         loadData(false, redisClientInterface, B1String::formatAs("%s:%d", itemKey().cString(), _id), true);
     }
@@ -85,7 +85,7 @@ void D1GlobalConstBase::loadAllData(D1RedisClientInterface* redisClientInterface
 
 void D1GlobalConstBase::reloadDynamicData(D1RedisClientInterface* redisClientInterface)
 {
-    if (_id > -1) {
+    if (_id != D1Consts::ID_INVALID) {
         loadData(true, redisClientInterface, itemKey());
         loadData(true, redisClientInterface, B1String::formatAs("%s:%d", itemKey().cString(), _id), true);
     }

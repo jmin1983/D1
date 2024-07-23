@@ -18,13 +18,15 @@
 
 #include <B1Base/B1Object.h>
 
+#include <D1Base/D1Consts.h>
+
 #include <map>
 
 namespace BnD {
     class D1RedisClientInterface;
     class D1GlobalConstBase : public B1Object {
     public:
-        D1GlobalConstBase(B1String&& processName, int32 id = -1) : _processName(processName), _id(id) {} //  not use id if id is less than zero.
+        D1GlobalConstBase(B1String&& processName, int32 id = D1Consts::ID_INVALID) : _processName(processName), _id(id) {} //  not use id if id is less than zero.
     protected:
         class ItemBunch {
         public:

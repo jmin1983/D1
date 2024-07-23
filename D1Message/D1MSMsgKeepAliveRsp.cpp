@@ -12,6 +12,8 @@
 #include "D1Message.h"
 #include "D1MSMsgKeepAliveRsp.h"
 
+#include <D1Base/D1Consts.h>
+
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
@@ -26,7 +28,7 @@ D1MSMsgKeepAliveRsp::D1MSMsgKeepAliveRsp(int32 serviceID)
 
 D1MSMsgKeepAliveRsp::D1MSMsgKeepAliveRsp(D1BaseMessage&& baseMessage)
     : D1BaseMessage(std::move(baseMessage))
-    , _serviceID("ServiceID", -1)
+    , _serviceID("ServiceID", D1Consts::SERVICE_ID_INVALID)
 {
 }
 
