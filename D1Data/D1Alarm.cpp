@@ -20,7 +20,8 @@ D1Alarm::D1Alarm()
     : _serialNumber(D1Consts::ID_INVALID)
     , _code(0)
     , _taskID(D1Consts::ID_INVALID)
-    , _zoneID(0)
+    , _zoneID(D1Consts::ID_INVALID)
+    , _serviceID(D1Consts::SERVICE_ID_INVALID)
     , _reason(0)
     , _commandID()
     , _carrierID()
@@ -31,12 +32,13 @@ D1Alarm::D1Alarm()
 {
 }
 
-D1Alarm::D1Alarm(int64 serialNumber, int32 code, int32 taskID, int32 zoneID, int32 reason,
+D1Alarm::D1Alarm(int64 serialNumber, int32 code, int32 taskID, int32 zoneID, int32 serviceID, int32 reason,
                  B1String&& commandID, B1String&& carrierID, B1String&& activateTime, B1String&& data)
     : _serialNumber(serialNumber)
     , _code(code)
     , _taskID(taskID)
     , _zoneID(zoneID)
+    , _serviceID(serviceID)
     , _reason(reason)
     , _commandID(commandID)
     , _carrierID(carrierID)
@@ -72,15 +74,16 @@ void D1Alarm::toRedisStringArgs(std::vector<B1String>* args) const
     args->reserve(20);
     args->push_back("HMSET");
     args->push_back(B1String::formatAs("System:Alarm:Record:%lld", _serialNumber));
-    args->push_back("SerialNo");
+    args->push_back("SerialNumber");
     args->push_back(B1String::formatAs("%lld", _serialNumber));
     appendRedisStringArgs(args, "Code", _code);
-    appendRedisStringArgs(args, "Location", _zoneID);
-    appendRedisStringArgs(args, "ReasonCode", _reason);
+    appendRedisStringArgs(args, "ZoneID", _zoneID);
+    appendRedisStringArgs(args, "ServiceID", _serviceID);
+    appendRedisStringArgs(args, "Reason", _reason);
     appendRedisStringArgs(args, "TaskID", _taskID);
     appendRedisStringArgs(args, "CommandID", _commandID);
     appendRedisStringArgs(args, "CarrierID", _carrierID);
-    appendRedisStringArgs(args, "SetTime", _activateTime);
+    appendRedisStringArgs(args, "ActivateTime", _activateTime);
     appendRedisStringArgs(args, "ClearTime", _clearTime);
     appendRedisStringArgs(args, "ResolvedBy", _resolvedBy);
     appendRedisStringArgs(args, "Data", _data);
@@ -95,14 +98,15 @@ void D1Alarm::fromRedisMap(const std::map<B1String, B1String>& map)
 #endif
     std::map<B1String, B1String>::const_iterator itr;
     try {
-        SET_FROM_REDIS_MAP_INT64("SerialNo", _serialNumber);
+        SET_FROM_REDIS_MAP_INT64("SerialNumber", _serialNumber);
         SET_FROM_REDIS_MAP_INT32("Code", _code);
-        SET_FROM_REDIS_MAP_INT32("Location", _zoneID);
-        SET_FROM_REDIS_MAP_INT32("ReasonCode", _reason);
+        SET_FROM_REDIS_MAP_INT32("ZoneID", _zoneID);
+        SET_FROM_REDIS_MAP_INT32("ServiceID", _serviceID);
+        SET_FROM_REDIS_MAP_INT32("Reason", _reason);
         SET_FROM_REDIS_MAP_INT32("TaskID", _taskID);
         SET_FROM_REDIS_MAP_STRING("CommandID", _commandID);
         SET_FROM_REDIS_MAP_STRING("CarrierID", _carrierID);
-        SET_FROM_REDIS_MAP_STRING("SetTime", _activateTime);
+        SET_FROM_REDIS_MAP_STRING("ActivateTime", _activateTime);
         SET_FROM_REDIS_MAP_STRING("ClearTime", _clearTime);
         SET_FROM_REDIS_MAP_STRING("ResolvedBy", _resolvedBy);
         SET_FROM_REDIS_MAP_STRING("Data", _data);

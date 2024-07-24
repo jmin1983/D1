@@ -25,14 +25,14 @@ namespace BnD {
         D1MsgRemoteLogNtf(D1BaseMessage&& baseMessage);
         virtual ~D1MsgRemoteLogNtf();
     protected:
-        enum LEVEL {
-            LEVEL_UNKNOWN = -1,
-            LEVEL_DEBUG = 0,
-            LEVEL_INFO = 1,
-            LEVEL_ERROR = 2,
+        enum TYPE {
+            TYPE_UNKNOWN = -1,
+            TYPE_DEBUG = 0,
+            TYPE_INFO = 1,
+            TYPE_ERROR = 2,
         };
     protected:
-        DataInt32 _level;
+        DataInt32 _type;
         DataInt32 _serviceID;
         DataInt32 _taskID;
         DataInt32 _zoneID;
@@ -41,18 +41,20 @@ namespace BnD {
         void archiveMessage(B1Archive* archive) const final;
         void unarchiveMessage(const B1Archive& archive) final;
     protected:
-        void set(LEVEL level, int32 serviceID, int32 taskID, int32 zoneID, B1String&& comment);
+        void set(TYPE type, int32 serviceID, int32 taskID, int32 zoneID, B1String&& comment);
+    public:
+        B1String toString() const final;
     public:
         void setDebug(int32 serviceID, int32 taskID, int32 zoneID, B1String&& comment);
         void setInfo(int32 serviceID, int32 taskID, int32 zoneID, B1String&& comment);
         void setError(int32 serviceID, int32 taskID, int32 zoneID, B1String&& comment);
 
-        bool isDebug() const { return LEVEL_DEBUG == _level.second; }
-        bool isInfo() const { return LEVEL_INFO == _level.second; }
-        bool isError() const { return LEVEL_ERROR == _level.second; }
-        bool serviceID() const { return _serviceID.second; }
-        bool taskID() const { return _taskID.second; }
-        bool zoneID() const { return _zoneID.second; }
+        bool isDebug() const { return TYPE_DEBUG == _type.second; }
+        bool isInfo() const { return TYPE_INFO == _type.second; }
+        bool isError() const { return TYPE_ERROR == _type.second; }
+        int32 serviceID() const { return _serviceID.second; }
+        int32 taskID() const { return _taskID.second; }
+        int32 zoneID() const { return _zoneID.second; }
         const B1String& comment() const { return _comment.second; }
     public:
         static const B1String& messageString()

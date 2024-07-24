@@ -24,6 +24,11 @@ namespace BnD {
         //  (ex: In case of polling, @from is set to 0, so if @from is 0, pop() is called from poller after the task is completed).
 #define DEFINE_MESSAGE_LISTENER_FUNC(c) virtual bool onMessage##c(int32 index, int32 indexCount, const class c& data, int32 from)  //  from: MESSAGE_FROM
 #define DEFINE_MESSAGE_ANALYZER_LISTENER_FUNC(post_fix) \
+    DEFINE_MESSAGE_LISTENER_FUNC(D1MsgAlarmClearReq) post_fix\
+    DEFINE_MESSAGE_LISTENER_FUNC(D1MsgAlarmClearRsp) post_fix\
+    DEFINE_MESSAGE_LISTENER_FUNC(D1MsgAlarmNtf) post_fix\
+    DEFINE_MESSAGE_LISTENER_FUNC(D1MsgAlarmRemoteNtf) post_fix\
+    DEFINE_MESSAGE_LISTENER_FUNC(D1MsgEventNtf) post_fix\
     DEFINE_MESSAGE_LISTENER_FUNC(D1DCSMsgZoneInfosReq) post_fix\
     DEFINE_MESSAGE_LISTENER_FUNC(D1DCSMsgZoneInfosRsp) post_fix\
     DEFINE_MESSAGE_LISTENER_FUNC(D1GUIMsgZoneInfosReq) post_fix\

@@ -13,6 +13,11 @@
 #include "D1MessageAnalyzer.h"
 #include "D1MessageAnalyzerListener.h"
 
+#include "D1MsgAlarmClearReq.h"
+#include "D1MsgAlarmClearRsp.h"
+#include "D1MsgAlarmNtf.h"
+#include "D1MsgAlarmRemoteNtf.h"
+#include "D1MsgEventNtf.h"
 #include "D1DCSMsgZoneInfosReq.h"
 #include "D1DCSMsgZoneInfosRsp.h"
 #include "D1GUIMsgZoneInfosReq.h"
@@ -45,6 +50,11 @@ bool D1MessageAnalyzer::implInitialize()
     }
 #define INSERT_TABLE_VALUE(c) table->insert(std::make_pair(c::messageString().copy(), MAKE_MSG_ENUM(c)));
     auto table = &_messageTable;
+    INSERT_TABLE_VALUE(D1MsgAlarmClearReq);
+    INSERT_TABLE_VALUE(D1MsgAlarmClearRsp);
+    INSERT_TABLE_VALUE(D1MsgAlarmNtf);
+    INSERT_TABLE_VALUE(D1MsgAlarmRemoteNtf);
+    INSERT_TABLE_VALUE(D1MsgEventNtf);
     INSERT_TABLE_VALUE(D1DCSMsgZoneInfosReq);
     INSERT_TABLE_VALUE(D1DCSMsgZoneInfosRsp);
     INSERT_TABLE_VALUE(D1GUIMsgZoneInfosReq);
@@ -68,6 +78,11 @@ auto D1MessageAnalyzer::implAnalyzeMessage(D1MessageAnalyzerListener* listener, 
         return listener->onMessage##c(index, indexCount, m, from) ? MESSAGE_COMPLETE : MESSAGE_INCOMPLETE;\
     }
     switch (message) {
+        NOTIFY_LISTENER(D1MsgAlarmClearReq);
+        NOTIFY_LISTENER(D1MsgAlarmClearRsp);
+        NOTIFY_LISTENER(D1MsgAlarmNtf);
+        NOTIFY_LISTENER(D1MsgAlarmRemoteNtf);
+        NOTIFY_LISTENER(D1MsgEventNtf);
         NOTIFY_LISTENER(D1DCSMsgZoneInfosReq);
         NOTIFY_LISTENER(D1DCSMsgZoneInfosRsp);
         NOTIFY_LISTENER(D1GUIMsgZoneInfosReq);

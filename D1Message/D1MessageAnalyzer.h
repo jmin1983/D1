@@ -36,6 +36,11 @@ namespace BnD {
         enum MSG {
             MSG_UNKNOWN = -1,
 
+            MAKE_MSG_ENUM(D1MsgAlarmClearReq),
+            MAKE_MSG_ENUM(D1MsgAlarmClearRsp),
+            MAKE_MSG_ENUM(D1MsgAlarmNtf),
+            MAKE_MSG_ENUM(D1MsgAlarmRemoteNtf),
+            MAKE_MSG_ENUM(D1MsgEventNtf),
             MAKE_MSG_ENUM(D1DCSMsgZoneInfosReq),
             MAKE_MSG_ENUM(D1DCSMsgZoneInfosRsp),
             MAKE_MSG_ENUM(D1GUIMsgZoneInfosReq),

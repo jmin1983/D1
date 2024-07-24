@@ -12,6 +12,7 @@
 #include "D1Message.h"
 #include "D1MessageSender.h"
 #include "D1BaseMessage.h"
+#include "D1MsgEventNtf.h"
 #include "D1MsgRemoteLogNtf.h"
 
 #include <D1Base/D1RedisClientInterface.h>
@@ -45,6 +46,17 @@ bool D1MessageSender::publishMessageWithTime(const B1String& channel, D1BaseMess
     B1String m;
     message->composeToJson(&m, false);
     return redisClientInterface->publish(channel, m, essential);
+}
+
+bool D1MessageSender::sendNotifyEvent(int64 serialNumber, int32 taskID, int32 zoneID, int32 serviceID, int32 code, int32 reason, B1String&& carrierID, D1RedisClientInterface* redisClientInterface)
+{
+    D1MsgEventNtf msg(serialNumber, code);
+    msg.setTaskID(taskID);
+    msg.setZoneID(zoneID);
+    msg.setServiceID(serviceID);
+    msg.setReason(reason);
+    msg.setCarrierID(std::move(carrierID));
+    return publishMessageWithTime(alarmEventChannel(), &msg, true, redisClientInterface);
 }
 
 bool D1MessageSender::sendLogMessageDebug(int32 serviceID, int32 taskID, int32 zoneID, B1String&& comment, D1RedisClientInterface* redisClientInterface)
