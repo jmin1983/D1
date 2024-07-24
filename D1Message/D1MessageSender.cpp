@@ -11,6 +11,10 @@
 
 #include "D1Message.h"
 #include "D1MessageSender.h"
+#include "D1BaseMessage.h"
+#include "D1MsgRemoteLogNtf.h"
+
+#include <D1Base/D1RedisClientInterface.h>
 
 using namespace BnD;
 
@@ -20,6 +24,48 @@ D1MessageSender::D1MessageSender()
 
 D1MessageSender::~D1MessageSender()
 {
+}
+
+bool D1MessageSender::rpushMessage(const B1String& key, const D1BaseMessage& message, D1RedisClientInterface* redisClientInterface)
+{
+    B1String m;
+    message.composeToJson(&m);
+    return redisClientInterface->rpush(key, m);
+}
+
+bool D1MessageSender::publishMessage(const B1String& channel, const D1BaseMessage& message, bool essential, D1RedisClientInterface* redisClientInterface)
+{
+    B1String m;
+    message.composeToJson(&m);
+    return redisClientInterface->publish(channel, m, essential);
+}
+
+bool D1MessageSender::publishMessageWithTime(const B1String& channel, D1BaseMessage* message, bool essential, D1RedisClientInterface* redisClientInterface)
+{
+    B1String m;
+    message->composeToJson(&m, false);
+    return redisClientInterface->publish(channel, m, essential);
+}
+
+bool D1MessageSender::sendLogMessageDebug(int32 serviceID, int32 taskID, int32 zoneID, B1String&& comment, D1RedisClientInterface* redisClientInterface)
+{
+    D1MsgRemoteLogNtf msg;
+    msg.setDebug(serviceID, taskID, zoneID, std::move(comment));
+    return publishMessageWithTime(logMessageChannel(), &msg, false, redisClientInterface);
+}
+
+bool D1MessageSender::sendLogMessageInfo(int32 serviceID, int32 taskID, int32 zoneID, B1String&& comment, D1RedisClientInterface* redisClientInterface)
+{
+    D1MsgRemoteLogNtf msg;
+    msg.setInfo(serviceID, taskID, zoneID, std::move(comment));
+    return publishMessageWithTime(logMessageChannel(), &msg, false, redisClientInterface);
+}
+
+bool D1MessageSender::sendLogMessageError(int32 serviceID, int32 taskID, int32 zoneID, B1String&& comment, D1RedisClientInterface* redisClientInterface)
+{
+    D1MsgRemoteLogNtf msg;
+    msg.setError(serviceID, taskID, zoneID, std::move(comment));
+    return publishMessageWithTime(logMessageChannel(), &msg, false, redisClientInterface);
 }
 
 const B1String& D1MessageSender::alarmEventChannel()

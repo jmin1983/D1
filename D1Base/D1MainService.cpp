@@ -35,9 +35,10 @@ void D1MainService::checkPerformance()
     uint32 pid = B1SystemUtil::getCurrentProcessID();
     int64 memUsage = _performanceProfiler->memUsage();
     int64 memTotal = _performanceProfiler->memTotal();
-    float64 cpuUsage = _performanceProfiler->cpuUsage();
-    B1LOG("performance check: pid[%u], cpu[%lf], mem[%ld/%ld][%d%%]", pid, cpuUsage, memUsage, memTotal, memUsage * 100 / memTotal);
-    onCheckPerformance(pid, memUsage, memTotal, cpuUsage);
+    float64 memUsagePercent = static_cast<float64>(memUsage) * 100 / memTotal;
+    float64 cpuUsagePercent = _performanceProfiler->cpuUsage();
+    B1LOG("performance check: pid[%u], cpu[%f], mem[%ld/%ld][%f%%]", pid, cpuUsagePercent, memUsage, memTotal, memUsagePercent);
+    onCheckPerformance(pid, memUsage, memTotal, memUsagePercent, cpuUsagePercent);
 }
 
 void D1MainService::syncWithRedisTime()

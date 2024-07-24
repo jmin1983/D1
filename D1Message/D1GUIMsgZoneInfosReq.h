@@ -5,8 +5,8 @@
 // Package: GUI
 // Module:  D1Message
 //
-// Copyright (c) 2023-2024, Semi-TS.
-// All rights reserved.
+// Written by jmin1983@gmail.com
+// Feel free to use, for any purpose.
 //
 
 #ifndef _D1MESSAGE_GUI_MSG_ZONE_INFOS_REQ_H

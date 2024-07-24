@@ -14,7 +14,6 @@
 #include "D1TaskLocationInfoMsg.h"
 
 #include <D1Base/D1Consts.h>
-#include <D1Base/D1RedisClientInterface.h>
 
 using namespace BnD;
 

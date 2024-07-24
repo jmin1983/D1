@@ -36,11 +36,6 @@ B1String D1GlobalConstBase::ItemBunch::itemFieldAndValue(const DataString& itemD
     return B1String::formatAs("%s[%s]", itemField(itemData.first).cString(), itemData.second.cString());
 }
 
-B1String D1GlobalConstBase::itemKey() const
-{
-    return "System:Configuration:" + _processName;
-}
-
 void D1GlobalConstBase::loadData(bool isDynamic, D1RedisClientInterface* redisClientInterface, const B1String& key, bool adjustValue)
 {
     if (_itemBunches.empty()) {

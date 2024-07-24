@@ -36,6 +36,8 @@ namespace BnD {
         virtual bool isValidToMakeRedisString() const override;
     public:
         int32 taskID() const { return _taskID.second; }
+    public:
+        static B1String redisKey(int32 taskID);
     };
     typedef std::shared_ptr<D1TaskInfo> SPD1TaskInfo;
 }   //  !BnD

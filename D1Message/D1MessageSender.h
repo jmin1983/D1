@@ -17,10 +17,20 @@
 #endif
  
 namespace BnD {
+    class D1BaseMessage;
+    class D1RedisClientInterface;
     class D1MessageSender {
     public:
         D1MessageSender();
         virtual ~D1MessageSender();
+    protected:
+        bool rpushMessage(const B1String& key, const D1BaseMessage& message, D1RedisClientInterface* redisClientInterface);
+        bool publishMessage(const B1String& channel, const D1BaseMessage& message, bool essential, D1RedisClientInterface* redisClientInterface);
+        bool publishMessageWithTime(const B1String& channel, D1BaseMessage* message, bool essential, D1RedisClientInterface* redisClientInterface);
+    public:
+        bool sendLogMessageDebug(int32 serviceID, int32 taskID, int32 zoneID, B1String&& comment, D1RedisClientInterface* redisClientInterface);
+        bool sendLogMessageInfo(int32 serviceID, int32 taskID, int32 zoneID, B1String&& comment, D1RedisClientInterface* redisClientInterface);
+        bool sendLogMessageError(int32 serviceID, int32 taskID, int32 zoneID, B1String&& comment, D1RedisClientInterface* redisClientInterface);
     public:
         static const B1String& alarmEventChannel();
         static const B1String& systemChannel();

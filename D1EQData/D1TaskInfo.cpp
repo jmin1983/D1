@@ -46,11 +46,16 @@ void D1TaskInfo::unarchiveFrom(const B1Archive& archive)
 
 B1String D1TaskInfo::redisKey() const
 {
-    assert(taskID() != D1Consts::ID_INVALID);
-    return taskID() != D1Consts::ID_INVALID ? B1String::formatAs("TaskInfo:%d", taskID()) : "";
+    return redisKey(taskID());
 }
 
 bool D1TaskInfo::isValidToMakeRedisString() const
 {
     return taskID() != D1Consts::ID_INVALID;
+}
+
+B1String D1TaskInfo::redisKey(int32 taskID)
+{
+    assert(taskID != D1Consts::ID_INVALID);
+    return taskID != D1Consts::ID_INVALID ? B1String::formatAs("TaskInfo:%d", taskID) : "";
 }

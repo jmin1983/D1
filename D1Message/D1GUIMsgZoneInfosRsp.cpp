@@ -5,8 +5,8 @@
 // Package: GUI
 // Module:  D1Message
 //
-// Copyright (c) 2023-2024, Semi-TS.
-// All rights reserved.
+// Written by jmin1983@gmail.com
+// Feel free to use, for any purpose.
 //
 
 #include "D1Message.h"

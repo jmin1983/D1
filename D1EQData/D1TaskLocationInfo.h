@@ -19,7 +19,6 @@
 #include <D1EQData/D1TaskInfo.h>
 
 namespace BnD {
-    class D1RedisClientInterface;
     class D1TaskLocationInfo : public D1TaskInfo {
     public:
         D1TaskLocationInfo();

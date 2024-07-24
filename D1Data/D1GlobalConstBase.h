@@ -74,8 +74,8 @@ namespace BnD {
         std::map<B1String, std::shared_ptr<ItemBunch> > _itemBunches;
     protected:
         virtual bool implAddAllItems() = 0;
+        virtual B1String itemKey() const = 0;
     protected:
-        B1String itemKey() const;
         void loadData(bool isDynamic, D1RedisClientInterface* redisClientInterface, const B1String& key, bool adjustValue = false);
         bool addItemBunch(std::shared_ptr<ItemBunch> itemBunch);
         template <typename T>
