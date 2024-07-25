@@ -48,7 +48,7 @@ bool D1MessageSender::publishMessageWithTime(const B1String& channel, D1BaseMess
     return redisClientInterface->publish(channel, m, essential);
 }
 
-bool D1MessageSender::sendNotifyEvent(int64 serialNumber, int32 taskID, int32 zoneID, int32 serviceID, int32 code, int32 reason, B1String&& carrierID, D1RedisClientInterface* redisClientInterface)
+bool D1MessageSender::sendNotifyEvent(int64 serialNumber, int64 taskID, int32 zoneID, int32 serviceID, int32 code, int32 reason, B1String&& carrierID, D1RedisClientInterface* redisClientInterface)
 {
     D1MsgEventNtf msg(serialNumber, code);
     msg.setTaskID(taskID);
@@ -59,21 +59,21 @@ bool D1MessageSender::sendNotifyEvent(int64 serialNumber, int32 taskID, int32 zo
     return publishMessageWithTime(alarmEventChannel(), &msg, true, redisClientInterface);
 }
 
-bool D1MessageSender::sendLogMessageDebug(int32 serviceID, int32 taskID, int32 zoneID, B1String&& comment, D1RedisClientInterface* redisClientInterface)
+bool D1MessageSender::sendLogMessageDebug(int32 serviceID, int64 taskID, int32 zoneID, B1String&& comment, D1RedisClientInterface* redisClientInterface)
 {
     D1MsgRemoteLogNtf msg;
     msg.setDebug(serviceID, taskID, zoneID, std::move(comment));
     return publishMessageWithTime(logMessageChannel(), &msg, false, redisClientInterface);
 }
 
-bool D1MessageSender::sendLogMessageInfo(int32 serviceID, int32 taskID, int32 zoneID, B1String&& comment, D1RedisClientInterface* redisClientInterface)
+bool D1MessageSender::sendLogMessageInfo(int32 serviceID, int64 taskID, int32 zoneID, B1String&& comment, D1RedisClientInterface* redisClientInterface)
 {
     D1MsgRemoteLogNtf msg;
     msg.setInfo(serviceID, taskID, zoneID, std::move(comment));
     return publishMessageWithTime(logMessageChannel(), &msg, false, redisClientInterface);
 }
 
-bool D1MessageSender::sendLogMessageError(int32 serviceID, int32 taskID, int32 zoneID, B1String&& comment, D1RedisClientInterface* redisClientInterface)
+bool D1MessageSender::sendLogMessageError(int32 serviceID, int64 taskID, int32 zoneID, B1String&& comment, D1RedisClientInterface* redisClientInterface)
 {
     D1MsgRemoteLogNtf msg;
     msg.setError(serviceID, taskID, zoneID, std::move(comment));

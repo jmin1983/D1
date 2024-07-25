@@ -16,7 +16,7 @@
 
 using namespace BnD;
 
-D1MsgAlarmRemoteNtf::D1MsgAlarmRemoteNtf(int32 taskID, int32 zoneID, int32 serviceID, int32 code, int32 reason)
+D1MsgAlarmRemoteNtf::D1MsgAlarmRemoteNtf(int64 taskID, int32 zoneID, int32 serviceID, int32 code, int32 reason)
     : D1BaseMessage()
     , _taskID("TaskID", taskID)
     , _zoneID("ZoneID", zoneID)
@@ -62,7 +62,7 @@ void D1MsgAlarmRemoteNtf::unarchiveMessage(const B1Archive& archive)
 B1String D1MsgAlarmRemoteNtf::toString() const
 {
     B1String str = D1BaseMessage::toString();
-    str.appendf(", taskID[%d]", taskID());
+    str.appendf(", taskID[%lld]", taskID());
     str.appendf(", zoneID[%d]", zoneID());
     str.appendf(", serviceID[%d]", serviceID());
     str.appendf(", code[%d]", code());

@@ -59,7 +59,7 @@ void D1MsgRemoteLogNtf::unarchiveMessage(const B1Archive& archive)
     readDataFromArchive(archive, &_comment);
 }
 
-void D1MsgRemoteLogNtf::set(TYPE type, int32 serviceID, int32 taskID, int32 zoneID, B1String&& comment)
+void D1MsgRemoteLogNtf::set(TYPE type, int32 serviceID, int64 taskID, int32 zoneID, B1String&& comment)
 {
     _type.second = type;
     _serviceID.second = serviceID;
@@ -73,23 +73,23 @@ B1String D1MsgRemoteLogNtf::toString() const
     B1String str = D1BaseMessage::toString();
     str.appendf(", type[%d]", _type.second);
     str.appendf(", serviceID[%d]", serviceID());
-    str.appendf(", taskID[%d]", taskID());
+    str.appendf(", taskID[%lld]", taskID());
     str.appendf(", zoneID[%d]", zoneID());
     str.appendf(", comment[%s]", comment().cString());
     return str;
 }
 
-void D1MsgRemoteLogNtf::setDebug(int32 serviceID, int32 taskID, int32 zoneID, B1String&& comment)
+void D1MsgRemoteLogNtf::setDebug(int32 serviceID, int64 taskID, int32 zoneID, B1String&& comment)
 {
     set(TYPE_DEBUG, serviceID, taskID, zoneID, std::move(comment));
 }
 
-void D1MsgRemoteLogNtf::setInfo(int32 serviceID, int32 taskID, int32 zoneID, B1String&& comment)
+void D1MsgRemoteLogNtf::setInfo(int32 serviceID, int64 taskID, int32 zoneID, B1String&& comment)
 {
     set(TYPE_INFO, serviceID, taskID, zoneID, std::move(comment));
 }
 
-void D1MsgRemoteLogNtf::setError(int32 serviceID, int32 taskID, int32 zoneID, B1String&& comment)
+void D1MsgRemoteLogNtf::setError(int32 serviceID, int64 taskID, int32 zoneID, B1String&& comment)
 {
     set(TYPE_ERROR, serviceID, taskID, zoneID, std::move(comment));
 }

@@ -26,7 +26,7 @@ namespace BnD {
         virtual ~D1MsgEventNtf();
     protected:
         DataInt64 _serialNumber;
-        DataInt32 _taskID;
+        DataInt64 _taskID;
         DataInt32 _zoneID;
         DataInt32 _serviceID;
         DataInt32 _code;
@@ -39,7 +39,7 @@ namespace BnD {
         B1String toString() const final;
     public:
         int64 serialNumber() const { return _serialNumber.second; }
-        int32 taskID() const { return _taskID.second; }
+        int64 taskID() const { return _taskID.second; }
         int32 zoneID() const { return _zoneID.second; }
         int32 serviceID() const { return _serviceID.second; }
         int32 code() const { return _code.second; }

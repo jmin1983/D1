@@ -32,7 +32,7 @@ D1Alarm::D1Alarm()
 {
 }
 
-D1Alarm::D1Alarm(int64 serialNumber, int32 code, int32 taskID, int32 zoneID, int32 serviceID, int32 reason,
+D1Alarm::D1Alarm(int64 serialNumber, int32 code, int64 taskID, int32 zoneID, int32 serviceID, int32 reason,
                  B1String&& commandID, B1String&& carrierID, B1String&& activateTime, B1String&& data)
     : _serialNumber(serialNumber)
     , _code(code)

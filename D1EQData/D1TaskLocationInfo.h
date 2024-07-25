@@ -22,8 +22,8 @@ namespace BnD {
     class D1TaskLocationInfo : public D1TaskInfo {
     public:
         D1TaskLocationInfo();
-        D1TaskLocationInfo(int32 taskID);
-        D1TaskLocationInfo(int32 taskID, int32 currentLocation);
+        D1TaskLocationInfo(int64 taskID);
+        D1TaskLocationInfo(int64 taskID, int32 currentLocation);
         virtual ~D1TaskLocationInfo();
     protected:
         DataInt32 _currentLocation;

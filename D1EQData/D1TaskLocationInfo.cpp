@@ -23,13 +23,13 @@ D1TaskLocationInfo::D1TaskLocationInfo()
 {
 }
 
-D1TaskLocationInfo::D1TaskLocationInfo(int32 taskID)
+D1TaskLocationInfo::D1TaskLocationInfo(int64 taskID)
     : D1TaskInfo(taskID)
     , _currentLocation("CurrentLocation", D1Consts::ID_INVALID)
 {
 }
 
-D1TaskLocationInfo::D1TaskLocationInfo(int32 taskID, int32 currentLocation)
+D1TaskLocationInfo::D1TaskLocationInfo(int64 taskID, int32 currentLocation)
     : D1TaskInfo(taskID)
     , _currentLocation("CurrentLocation", currentLocation)
 {

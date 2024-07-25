@@ -22,13 +22,13 @@ namespace BnD {
     class D1Alarm {
     public:
         D1Alarm();
-        D1Alarm(int64 serialNumber, int32 code, int32 taskID, int32 zoneID, int32 serviceID, int32 reason,
+        D1Alarm(int64 serialNumber, int32 code, int64 taskID, int32 zoneID, int32 serviceID, int32 reason,
                 B1String&& commandID, B1String&& carrierID, B1String&& activateTime, B1String&& data = "");
         virtual ~D1Alarm();
     protected:
         int64 _serialNumber;
         int32 _code;
-        int32 _taskID;
+        int64 _taskID;
         int32 _zoneID;
         int32 _serviceID;
         int32 _reason;
@@ -44,7 +44,7 @@ namespace BnD {
     public:
         int64 serialNumber() const { return _serialNumber; }
         int32 code() const { return _code; }
-        int32 taskID() const { return _taskID; }
+        int64 taskID() const { return _taskID; }
         int32 zoneID() const { return _zoneID; }
         int32 serviceID() const { return _serviceID; }
         int32 reason() const { return _reason; }
@@ -56,7 +56,7 @@ namespace BnD {
         const B1String& data() const { return _data; }
 
         void setCode(int32 code) { _code = code; }
-        void setTaskID(int32 taskID) { _taskID = taskID; }
+        void setTaskID(int64 taskID) { _taskID = taskID; }
         void setZoneID(int32 zoneID) { _zoneID = zoneID; }
         void setServiceID(int32 value) { _serviceID = value; }
         void setReason(int32 reason) { _reason = reason; }

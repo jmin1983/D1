@@ -24,7 +24,7 @@ D1WarningManager::D1WarningManager(B1String&& channel)
 {
 }
 
-bool D1WarningManager::addWarning(int32 code, const B1String &commandID, const B1String &carrierID, int32 taskID, int32 zoneID, int32 reason)
+bool D1WarningManager::addWarning(int32 code, const B1String &commandID, const B1String &carrierID, int64 taskID, int32 zoneID, int32 reason)
 {
     int64 serialNumber = makeNewSerialNumber();
     if (serialNumber < 0)
@@ -66,7 +66,7 @@ bool D1WarningManager::addWarning(int32 code, int32 zoneID)
     return addWarning(code, D1Consts::ID_INVALID, zoneID, 0);
 }
 
-bool D1WarningManager::addWarning(int32 code, int32 taskID, int32 zoneID, int32 reason)
+bool D1WarningManager::addWarning(int32 code, int64 taskID, int32 zoneID, int32 reason)
 {
     B1String commandID, carrierID;
     if (getTaskTransferInfo(taskID, &commandID, &carrierID) != true)

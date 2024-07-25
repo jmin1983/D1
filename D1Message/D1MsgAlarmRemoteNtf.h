@@ -21,11 +21,11 @@
 namespace BnD {
     class D1MsgAlarmRemoteNtf : public D1BaseMessage {
     public:
-        D1MsgAlarmRemoteNtf(int32 taskID, int32 zoneID, int32 serviceID, int32 code, int32 reason);
+        D1MsgAlarmRemoteNtf(int64 taskID, int32 zoneID, int32 serviceID, int32 code, int32 reason);
         D1MsgAlarmRemoteNtf(D1BaseMessage&& baseMessage);
         virtual ~D1MsgAlarmRemoteNtf();
     protected:
-        DataInt32 _taskID;
+        DataInt64 _taskID;
         DataInt32 _zoneID;
         DataInt32 _serviceID;
         DataInt32 _code;
@@ -36,7 +36,7 @@ namespace BnD {
     public:
         B1String toString() const final;
     public:
-        int32 taskID() const { return _taskID.second; }
+        int64 taskID() const { return _taskID.second; }
         int32 zoneID() const { return _zoneID.second; }
         int32 serviceID() const { return _serviceID.second; }
         int32 code() const { return _code.second; }

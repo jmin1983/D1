@@ -23,7 +23,7 @@ D1TaskInfo::D1TaskInfo()
 {
 }
 
-D1TaskInfo::D1TaskInfo(int32 taskID)
+D1TaskInfo::D1TaskInfo(int64 taskID)
     : D1NotifiableObject()
     , D1RedisHashmapObject()
     , _taskID("TaskID", taskID)
@@ -54,7 +54,7 @@ bool D1TaskInfo::isValidToMakeRedisString() const
     return taskID() != D1Consts::ID_INVALID;
 }
 
-B1String D1TaskInfo::redisKey(int32 taskID)
+B1String D1TaskInfo::redisKey(int64 taskID)
 {
     assert(taskID != D1Consts::ID_INVALID);
     return taskID != D1Consts::ID_INVALID ? B1String::formatAs("TaskInfo:%d", taskID) : "";

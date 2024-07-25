@@ -35,7 +35,7 @@ namespace BnD {
         virtual void implInitialize(D1RedisClientInterface* redisClientInterface);
         virtual void implFinalize();
     protected:
-        bool getTaskTransferInfo(int32 taskID, B1String* commandID, B1String* carrierID);
+        bool getTaskTransferInfo(int64 taskID, B1String* commandID, B1String* carrierID);
     public:
         void initialize(D1RedisClientInterface* redisClientInterface);
         void finalize();

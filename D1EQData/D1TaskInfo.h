@@ -24,10 +24,10 @@ namespace BnD {
                      , public D1RedisHashmapObject {
     public:
         D1TaskInfo();
-        D1TaskInfo(int32 taskID);
+        D1TaskInfo(int64 taskID);
         virtual ~D1TaskInfo();
     private:
-        DataInt32 _taskID;
+        DataInt64 _taskID;
     protected:
         virtual void archiveTo(B1Archive* archive) const override;
         virtual void unarchiveFrom(const B1Archive& archive) override;
@@ -35,9 +35,9 @@ namespace BnD {
         virtual B1String redisKey() const override;
         virtual bool isValidToMakeRedisString() const override;
     public:
-        int32 taskID() const { return _taskID.second; }
+        int64 taskID() const { return _taskID.second; }
     public:
-        static B1String redisKey(int32 taskID);
+        static B1String redisKey(int64 taskID);
     };
     typedef std::shared_ptr<D1TaskInfo> SPD1TaskInfo;
 }   //  !BnD

@@ -39,7 +39,7 @@ void D1AlarmReader::implFinalize()
     _redisClientInterface = NULL;
 }
 
-bool D1AlarmReader::getTaskTransferInfo(int32 taskID, B1String* commandID, B1String* carrierID)
+bool D1AlarmReader::getTaskTransferInfo(int64 taskID, B1String* commandID, B1String* carrierID)
 {
     B1String key;
     key.format("TransferInfo:%d", taskID);

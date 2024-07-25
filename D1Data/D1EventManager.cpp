@@ -44,7 +44,7 @@ int64 D1EventManager::makeNewSerialNumber()
     return implMakeNewSerialNumber();
 }
 
-bool D1EventManager::getTaskTransferInfo(int32 taskID, B1String* commandID, B1String* carrierID)
+bool D1EventManager::getTaskTransferInfo(int64 taskID, B1String* commandID, B1String* carrierID)
 {
     B1String key;
     key.format("TransferInfo:%d", taskID);
@@ -67,7 +67,7 @@ void D1EventManager::finalize()
     _redisClientInterface = NULL;
 }
 
-bool D1EventManager::addEvent(int32 code, const B1String& commandID, const B1String& carrierID, int32 taskID, int32 zoneID, int32 reason, bool isEssential)
+bool D1EventManager::addEvent(int32 code, const B1String& commandID, const B1String& carrierID, int64 taskID, int32 zoneID, int32 reason, bool isEssential)
 {
     int64 serialNumber = makeNewSerialNumber();
     if (serialNumber < 0) {
@@ -110,7 +110,7 @@ bool D1EventManager::addEvent(int32 code, int32 zoneID)
     return addEvent(code, D1Consts::ID_INVALID, zoneID, 0);
 }
 
-bool D1EventManager::addEvent(int32 code, int32 taskID, int32 zoneID, int32 reason, bool isEssential)
+bool D1EventManager::addEvent(int32 code, int64 taskID, int32 zoneID, int32 reason, bool isEssential)
 {
     B1String commandID, carrierID;
     if (getTaskTransferInfo(taskID, &commandID, &carrierID) != true) {

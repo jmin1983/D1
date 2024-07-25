@@ -67,7 +67,7 @@ B1String D1MsgAlarmNtf::toString() const
 {
     B1String str = D1BaseMessage::toString();
     str.appendf(", serialNumber[%lld]", _serialNumber.second);
-    str.appendf(", taskID[%d]", taskID());
+    str.appendf(", taskID[%lld]", taskID());
     str.appendf(", zoneID[%d]", zoneID());
     str.appendf(", serviceID[%d]", serviceID());
     str.appendf(", code[%d]", code());

@@ -107,7 +107,7 @@ int32 D1ZoneOccupiedAttributes::reservedTaskID() const
     return reservedTaskID;
 }
 
-bool D1ZoneOccupiedAttributes::isReserved(int32 taskID, int32* reservedTaskID) const
+bool D1ZoneOccupiedAttributes::isReserved(int64 taskID, int32* reservedTaskID) const
 {
     bool noneReserved = false;
     if (_lock) {
@@ -123,21 +123,21 @@ bool D1ZoneOccupiedAttributes::isReserved(int32 taskID, int32* reservedTaskID) c
     return noneReserved != true;
 }
 
-bool D1ZoneOccupiedAttributes::swapReserved(int32 taskID, D1RedisClientInterface* delayedCommander)
+bool D1ZoneOccupiedAttributes::swapReserved(int64 taskID, D1RedisClientInterface* delayedCommander)
 {
     if (isOwnerZone() != true) {
         assert(false);
         return false;
     }
     if (_lock) {
-        B1LOG("BEGIN_LOCK for swap_reserve zone: taskID[%d], zoneID[%d]", taskID, zoneID());
+        B1LOG("BEGIN_LOCK for swap_reserve zone: taskID[%lld], zoneID[%d]", taskID, zoneID());
         _lock->lock();
     }
     if (_reservedTaskID.second != D1Consts::ID_INVALID) {
         if (_reservedTaskID.second == taskID) {
             if (_lock) {
                 _lock->unlock();
-                B1LOG("swap_reserve zone already reserved: taskID[%d], zoneID[%d]", taskID, zoneID());
+                B1LOG("swap_reserve zone already reserved: taskID[%lld], zoneID[%d]", taskID, zoneID());
             }
             return true;
         }
@@ -146,7 +146,7 @@ bool D1ZoneOccupiedAttributes::swapReserved(int32 taskID, D1RedisClientInterface
     else {
         if (_lock) {
             _lock->unlock();
-            B1LOG("swap_reserve zone failed: taskID[%d], zoneID[%d]", taskID, zoneID());
+            B1LOG("swap_reserve zone failed: taskID[%lld], zoneID[%d]", taskID, zoneID());
         }
         return false;
     }
@@ -155,25 +155,25 @@ bool D1ZoneOccupiedAttributes::swapReserved(int32 taskID, D1RedisClientInterface
     }
     if (_lock) {
         _lock->unlock();
-        B1LOG("END_LOCK for swap_reserve zone: taskID[%d], zoneID[%d]", taskID, zoneID());
+        B1LOG("END_LOCK for swap_reserve zone: taskID[%lld], zoneID[%d]", taskID, zoneID());
     }
     return true;
 }
 
-bool D1ZoneOccupiedAttributes::setReserved(int32 taskID, D1RedisClientInterface* delayedCommander, bool useCandidate)
+bool D1ZoneOccupiedAttributes::setReserved(int64 taskID, D1RedisClientInterface* delayedCommander, bool useCandidate)
 {
     if (isOwnerZone() != true) {
         assert(false);
         return false;
     }
     if (_lock) {
-        B1LOG("BEGIN_LOCK for reserve zone: taskID[%d], zoneID[%d]", taskID, zoneID());
+        B1LOG("BEGIN_LOCK for reserve zone: taskID[%lld], zoneID[%d]", taskID, zoneID());
         _lock->lock();
     }
     if (_reservedTaskID.second == taskID) {
         if (_lock) {
             _lock->unlock();
-            B1LOG("END_LOCK for reserve zone. already reserved: taskID[%d], zoneID[%d]", taskID, zoneID());
+            B1LOG("END_LOCK for reserve zone. already reserved: taskID[%lld], zoneID[%d]", taskID, zoneID());
         }
         return true;
     }
@@ -196,7 +196,7 @@ bool D1ZoneOccupiedAttributes::setReserved(int32 taskID, D1RedisClientInterface*
                     candidates.format("[%d]", reserveCandidatesPair.first);
                 }
                 _lock->unlock();
-                B1LOG("END_LOCK(fail) for reserve zone: taskID[%d], zoneID[%d], candidates%s", taskID, zoneID(), candidates.cString());
+                B1LOG("END_LOCK(fail) for reserve zone: taskID[%lld], zoneID[%d], candidates%s", taskID, zoneID(), candidates.cString());
             }
             return false;
         }
@@ -215,7 +215,7 @@ bool D1ZoneOccupiedAttributes::setReserved(int32 taskID, D1RedisClientInterface*
                     }
                     else {
                         if (B1TickUtil::diffTick(itr->second, now) > CONSTS_RESERVE_CANDIDATE_TIMEOUT) {
-                            B1LOG("RESERVE_CANDIDATE_TIMEDOUT: taskID[%d], zoneID[%d]", itr->first, zoneID());
+                            B1LOG("RESERVE_CANDIDATE_TIMEDOUT: taskID[%lld], zoneID[%d]", itr->first, zoneID());
                             itr = _reserveCandidates.erase(itr);
                         }
                         else {
@@ -236,7 +236,7 @@ bool D1ZoneOccupiedAttributes::setReserved(int32 taskID, D1RedisClientInterface*
                             candidates.format("[%d]", reserveCandidatesPair.first);
                         }
                         _lock->unlock();
-                        B1LOG("END_LOCK(fail_other_priority) for reserve zone: taskID[%d], zoneID[%d], CANDIDATES%s", taskID, zoneID(), candidates.cString());
+                        B1LOG("END_LOCK(fail_other_priority) for reserve zone: taskID[%lld], zoneID[%d], CANDIDATES%s", taskID, zoneID(), candidates.cString());
                         return false;
                     }
                 }
@@ -246,12 +246,12 @@ bool D1ZoneOccupiedAttributes::setReserved(int32 taskID, D1RedisClientInterface*
     _reservedTaskID.second = taskID;
     if (_lock) {
         _lock->unlock();
-        B1LOG("END_LOCK for reserve zone: taskID[%d], zoneID[%d]", taskID, zoneID());
+        B1LOG("END_LOCK for reserve zone: taskID[%lld], zoneID[%d]", taskID, zoneID());
     }
     if (delayedCommander) {
         notifyAttributesChanged(delayedCommander);
     }
-    B1LOG("END_LOCK SAVE for reserve zone: taskID[%d], zoneID[%d]", taskID, zoneID());
+    B1LOG("END_LOCK SAVE for reserve zone: taskID[%lld], zoneID[%d]", taskID, zoneID());
     return true;
 }
 

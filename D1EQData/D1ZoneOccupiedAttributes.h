@@ -32,7 +32,7 @@ namespace BnD {
         };
     protected:
         mutable B1Lock* _lock;
-        std::list<std::pair<int32, uint64> > _reserveCandidates;    //  list<pair<task_id, reserved_tick> >
+        std::list<std::pair<int64, uint64> > _reserveCandidates;    //  list<pair<task_id, reserved_tick> >
         DataInt32 _reservedTaskID;
     protected:
         virtual void archiveTo(B1Archive* archive) const override;
@@ -48,11 +48,11 @@ namespace BnD {
         bool operator!=(const D1ZoneOccupiedAttributes& d) const { return operator==(d) != true; }
     public:
         int32 reservedTaskID() const;
-        bool isReserved(int32 taskID = -1, int32* reservedTaskID = NULL) const;
+        bool isReserved(int64 taskID = -1, int32* reservedTaskID = NULL) const;
 
         //  'set' is only available for owner.
-        bool swapReserved(int32 taskID, D1RedisClientInterface* delayedCommander = NULL);
-        bool setReserved(int32 taskID, D1RedisClientInterface* delayedCommander = NULL, bool useCandidate = true);  //  return true if reserve successed.
+        bool swapReserved(int64 taskID, D1RedisClientInterface* delayedCommander = NULL);
+        bool setReserved(int64 taskID, D1RedisClientInterface* delayedCommander = NULL, bool useCandidate = true);  //  return true if reserve successed.
         bool immediateClearReserved();  //  to clear reservation in advance before a reservation cancellation notification from a remote dcs.
         void clearReserved(D1RedisClientInterface* delayedCommander = NULL);
     };

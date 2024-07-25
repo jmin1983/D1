@@ -34,26 +34,26 @@ namespace BnD {
     protected:
         DataInt32 _type;
         DataInt32 _serviceID;
-        DataInt32 _taskID;
+        DataInt64 _taskID;
         DataInt32 _zoneID;
         DataString _comment;
     protected:
         void archiveMessage(B1Archive* archive) const final;
         void unarchiveMessage(const B1Archive& archive) final;
     protected:
-        void set(TYPE type, int32 serviceID, int32 taskID, int32 zoneID, B1String&& comment);
+        void set(TYPE type, int32 serviceID, int64 taskID, int32 zoneID, B1String&& comment);
     public:
         B1String toString() const final;
     public:
-        void setDebug(int32 serviceID, int32 taskID, int32 zoneID, B1String&& comment);
-        void setInfo(int32 serviceID, int32 taskID, int32 zoneID, B1String&& comment);
-        void setError(int32 serviceID, int32 taskID, int32 zoneID, B1String&& comment);
+        void setDebug(int32 serviceID, int64 taskID, int32 zoneID, B1String&& comment);
+        void setInfo(int32 serviceID, int64 taskID, int32 zoneID, B1String&& comment);
+        void setError(int32 serviceID, int64 taskID, int32 zoneID, B1String&& comment);
 
         bool isDebug() const { return TYPE_DEBUG == _type.second; }
         bool isInfo() const { return TYPE_INFO == _type.second; }
         bool isError() const { return TYPE_ERROR == _type.second; }
         int32 serviceID() const { return _serviceID.second; }
-        int32 taskID() const { return _taskID.second; }
+        int64 taskID() const { return _taskID.second; }
         int32 zoneID() const { return _zoneID.second; }
         const B1String& comment() const { return _comment.second; }
     public:

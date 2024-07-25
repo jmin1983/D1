@@ -23,10 +23,10 @@ namespace BnD {
     public:
         D1WarningManager(B1String&& channel);
     public:
-        bool addWarning(int32 code, const B1String &commandID, const B1String &carrierID, int32 taskID, int32 zoneID, int32 reason);
+        bool addWarning(int32 code, const B1String &commandID, const B1String &carrierID, int64 taskID, int32 zoneID, int32 reason);
         bool addWarning(int32 code);
         bool addWarning(int32 code, int32 zoneID);
-        bool addWarning(int32 code, int32 taskID, int32 zoneID, int32 reason);
+        bool addWarning(int32 code, int64 taskID, int32 zoneID, int32 reason);
     public:
         static D1WarningManager* getMe() { return static_cast<D1WarningManager*>(get()); }
     };
