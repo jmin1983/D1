@@ -11,18 +11,21 @@
 
 #include "D1Network.h"
 #include "D1BaseClientSession.h"
+#include "D1BaseClientSessionMessageListener.h"
 #include "D1BaseProtocol.h"
 
 #include <B1Base/B1TickUtil.h>
 
 using namespace BnD;
 
-D1BaseClientSession::D1BaseClientSession(B1ClientSocket* clientSocket, B1BaseClientSessionListener* listener, D1BasePacketMaker* packetMaker, int32 maxAliveCount)
+D1BaseClientSession::D1BaseClientSession(B1ClientSocket* clientSocket, B1BaseClientSessionListener* listener, D1BasePacketMaker* packetMaker, int32 maxAliveCount,
+                                         D1BaseClientSessionMessageListener* messageListener)
     : B1ArrayBufferClientSession(clientSocket, listener)
     , _maxAliveCount(maxAliveCount)
     , _aliveCheckCount(0)
     , _lastReconnectTick(0)
     , _packetMaker(packetMaker)
+    , _messageListener(messageListener)
 {
 }
 
@@ -33,6 +36,20 @@ D1BaseClientSession::~D1BaseClientSession()
 void D1BaseClientSession::implOnProtocolTypeAliveCheck()
 {
     _aliveCheckCount = 0;
+}
+
+void D1BaseClientSession::implOnProtocolTypeTextMessage(B1String&& message)
+{
+    if (_messageListener) {
+        _messageListener->onRecvClientDataTextMessage(std::move(message));
+    }
+}
+
+void D1BaseClientSession::implOnProtocolTypeTextMessageBunch(int32 index, int32 indexCount, B1String&& message)
+{
+    if (_messageListener) {
+        _messageListener->onRecvClientDataTextMessageBunch(index, indexCount, std::move(message));
+    }
 }
 
 void D1BaseClientSession::onReadComplete(uint8* data, size_t dataSize)
@@ -57,6 +74,9 @@ void D1BaseClientSession::implProcessConnected(bool firstConnectedProcess)
     if (++_aliveCheckCount > _maxAliveCount) {
         B1LOG("alive check failed -> client force to disconnect: id[%d], aliveCheckCount[%d], maxAliveCount[%d]", sessionHandleID(), _aliveCheckCount, _maxAliveCount);
         disconnect();
+    }
+    if (firstConnectedProcess && _messageListener) {
+        _messageListener->onClientSessionConnected();
     }
 }
 

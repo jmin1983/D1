@@ -43,7 +43,7 @@ namespace BnD {
         SPD1Zone findZone(int32 zoneID) const;
 
         const std::map<int32, std::map<int32, SPD1Zone> >& allZones() const { return _zones; }
-        std::set<int32> ownerIDs() const;
+        std::set<int32> ownerIDs(const std::set<int32>& exceptOwner = std::set<int32>()) const; //  all owner if except_owner is empty
         std::map<int32, SPD1Zone> zones(int32 ownerID) const;
         std::map<int32, SPD1Zone> zonesNotOwned(int32 ownerID) const;
     public:

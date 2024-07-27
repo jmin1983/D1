@@ -54,11 +54,13 @@ SPD1Zone D1ZoneRepository::findZone(int32 zoneID) const
     return jtr != itr->second.end() ? jtr->second : SPD1Zone();
 }
 
-auto D1ZoneRepository::ownerIDs() const -> std::set<int32>
+auto D1ZoneRepository::ownerIDs(const std::set<int32>& exceptOwner) const -> std::set<int32>
 {
     std::set<int32> ids;
     for (const auto& zonesPair : _zones) {
-        ids.insert(zonesPair.first);
+        if (exceptOwner.empty() || exceptOwner.find(zonesPair.first) == exceptOwner.end()) {
+            ids.insert(zonesPair.first);
+        }
     }
     return ids;
 }

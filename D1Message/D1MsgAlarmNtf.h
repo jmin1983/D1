@@ -44,7 +44,7 @@ namespace BnD {
         int32 code() const { return _code.second; }
         int32 reason() const { return _reason.second; }
 
-        void setTaskID(int32 value) { _taskID.second = value; }
+        void setTaskID(int64 value) { _taskID.second = value; }
         void setZoneID(int32 value) { _zoneID.second = value; }
         void setServiceID(int32 value) { _serviceID.second = value; }
         void setReason(int32 value) { _reason.second = value; }

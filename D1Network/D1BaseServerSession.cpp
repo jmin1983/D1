@@ -14,15 +14,18 @@
 #include "D1BaseProtocol.h"
 #include "D1BaseServer.h"
 #include "D1BaseServerHandleManager.h"
+#include "D1BaseServerSessionMessageListener.h"
 
 using namespace BnD;
 
-D1BaseServerSession::D1BaseServerSession(B1ServerSocket* serverSocket, B1BaseServerSessionListener* listener, D1BaseServer* owner, int32 maxAliveCount)
+D1BaseServerSession::D1BaseServerSession(B1ServerSocket* serverSocket, B1BaseServerSessionListener* listener, D1BaseServer* owner, int32 maxAliveCount,
+                                         D1BaseServerSessionMessageListener* messageListener)
     : B1ArrayBufferServerSession(serverSocket, listener)
     , _maxAliveCount(maxAliveCount)
     , _aliveCheckCount(0)
     , _owner(owner)
     , _id(-1)
+    , _messageListener(messageListener)
 {
 }
 
@@ -51,6 +54,20 @@ void D1BaseServerSession::implOnProtocolTypeNotifyID(int32 id)
         return;
     }
     _id = id;
+}
+
+void D1BaseServerSession::implOnProtocolTypeTextMessage(B1String&& message)
+{
+    if (_messageListener) {
+        _messageListener->onRecvServerDataTextMessage(std::move(message));
+    }
+}
+
+void D1BaseServerSession::implOnProtocolTypeTextMessageBunch(int32 index, int32 indexCount, B1String&& message)
+{
+    if (_messageListener) {
+        _messageListener->onRecvServerDataTextMessageBunch(index, indexCount, std::move(message));
+    }
 }
 
 void D1BaseServerSession::onReadComplete(uint8* data, size_t dataSize)

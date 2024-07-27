@@ -21,6 +21,8 @@
 #include "D1DCSMsgZoneInfosReq.h"
 #include "D1DCSMsgZoneInfosRsp.h"
 #include "D1GUIMsgZoneInfosReq.h"
+#include "D1MsgPerformanceCheckNtf.h"
+#include "D1MsgRemoteLogNtf.h"
 #include "D1MSMsgKeepAliveReq.h"
 #include "D1MSMsgKeepAliveRsp.h"
  
@@ -58,6 +60,8 @@ bool D1MessageAnalyzer::implInitialize()
     INSERT_TABLE_VALUE(D1DCSMsgZoneInfosReq);
     INSERT_TABLE_VALUE(D1DCSMsgZoneInfosRsp);
     INSERT_TABLE_VALUE(D1GUIMsgZoneInfosReq);
+    INSERT_TABLE_VALUE(D1MsgPerformanceCheckNtf);
+    INSERT_TABLE_VALUE(D1MsgRemoteLogNtf);
     INSERT_TABLE_VALUE(D1MSMsgKeepAliveReq);
     INSERT_TABLE_VALUE(D1MSMsgKeepAliveRsp);
     return true;
@@ -86,6 +90,8 @@ auto D1MessageAnalyzer::implAnalyzeMessage(D1MessageAnalyzerListener* listener, 
         NOTIFY_LISTENER(D1DCSMsgZoneInfosReq);
         NOTIFY_LISTENER(D1DCSMsgZoneInfosRsp);
         NOTIFY_LISTENER(D1GUIMsgZoneInfosReq);
+        NOTIFY_LISTENER(D1MsgPerformanceCheckNtf);
+        NOTIFY_LISTENER(D1MsgRemoteLogNtf);
         NOTIFY_LISTENER(D1MSMsgKeepAliveReq);
         NOTIFY_LISTENER(D1MSMsgKeepAliveRsp);
     default:

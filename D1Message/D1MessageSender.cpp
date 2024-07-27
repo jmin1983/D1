@@ -14,6 +14,7 @@
 #include "D1BaseMessage.h"
 #include "D1MsgEventNtf.h"
 #include "D1MsgRemoteLogNtf.h"
+#include "D1MSMsgKeepAliveRsp.h"
 
 #include <D1Base/D1RedisClientInterface.h>
 
@@ -57,6 +58,12 @@ bool D1MessageSender::sendNotifyEvent(int64 serialNumber, int64 taskID, int32 zo
     msg.setReason(reason);
     msg.setCarrierID(std::move(carrierID));
     return publishMessageWithTime(alarmEventChannel(), &msg, true, redisClientInterface);
+}
+
+bool D1MessageSender::sendResponseKeepAliveToMS(int32 serviceID, D1RedisClientInterface* redisClientInterface)
+{
+    D1MSMsgKeepAliveRsp rsp(serviceID);
+    return publishMessage(msSubscribingChannel(), rsp, false, redisClientInterface);
 }
 
 bool D1MessageSender::sendLogMessageDebug(int32 serviceID, int64 taskID, int32 zoneID, B1String&& comment, D1RedisClientInterface* redisClientInterface)

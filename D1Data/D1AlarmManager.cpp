@@ -19,8 +19,8 @@
 using namespace BnD;
 
 D1AlarmReader::D1AlarmReader()
-    : _prefixRecord("System:Alarm:Record:")
-    , _keyActive("System:Alarm:ActiveAlarms")
+    : _prefixRecord("Alarm:Record:")
+    , _keyActive("Alarm:ActiveAlarms")
     , _redisClientInterface(NULL)
 {
 }
@@ -128,7 +128,7 @@ bool D1AlarmReader::isAlarmActivated(int32 zoneID) const
     return false;
 }
 
-int64 AlarmWriter::makeNewSerialNumber()
+int64 D1AlarmWriter::makeNewSerialNumber()
 {
     return implMakeNewSerialNumber();
 }

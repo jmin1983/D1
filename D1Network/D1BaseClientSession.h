@@ -20,11 +20,13 @@
 #include <D1Network/D1BasePacketAnalyzer.h>
 
 namespace BnD {
+    class D1BaseClientSessionMessageListener;
     class D1BasePacketMaker;
     class D1BaseClientSession : protected D1BasePacketAnalyzer
                               , public B1ArrayBufferClientSession {
     public:
-        D1BaseClientSession(B1ClientSocket* clientSocket, B1BaseClientSessionListener* listener, D1BasePacketMaker* packetMaker, int32 maxAliveCount);
+        D1BaseClientSession(B1ClientSocket* clientSocket, B1BaseClientSessionListener* listener, D1BasePacketMaker* packetMaker, int32 maxAliveCount,
+                            D1BaseClientSessionMessageListener* messageListener = NULL);
         virtual ~D1BaseClientSession();
     private:
         const int32 _maxAliveCount;
@@ -32,8 +34,11 @@ namespace BnD {
         uint64 _lastReconnectTick;
     protected:
         D1BasePacketMaker* _packetMaker;
+        D1BaseClientSessionMessageListener* _messageListener;
     protected:  //  D1BasePacketAnalyzer
         void implOnProtocolTypeAliveCheck() final;
+        virtual void implOnProtocolTypeTextMessage(B1String&& message) override;
+        virtual void implOnProtocolTypeTextMessageBunch(int32 index, int32 indexCount, B1String&& message) override;
     protected:  //  B1BaseClientSession
         void onReadComplete(uint8* data, size_t dataSize) final;
         virtual void implOnConnect() override;

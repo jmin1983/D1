@@ -73,7 +73,7 @@ void D1Alarm::toRedisStringArgs(std::vector<B1String>* args) const
 {
     args->reserve(20);
     args->push_back("HMSET");
-    args->push_back(B1String::formatAs("System:Alarm:Record:%lld", _serialNumber));
+    args->push_back(B1String::formatAs("Alarm:Record:%lld", _serialNumber));
     args->push_back("SerialNumber");
     args->push_back(B1String::formatAs("%lld", _serialNumber));
     appendRedisStringArgs(args, "Code", _code);

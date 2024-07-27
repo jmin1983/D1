@@ -22,10 +22,12 @@
 namespace BnD {
     class D1BasePacketMaker;
     class D1BaseServer;
+    class D1BaseServerSessionMessageListener;
     class D1BaseServerSession : protected D1BasePacketAnalyzer
-                            , public B1ArrayBufferServerSession {
+                              , public B1ArrayBufferServerSession {
     public:
-        D1BaseServerSession(B1ServerSocket* serverSocket, B1BaseServerSessionListener* listener, D1BaseServer* owner, int32 maxAliveCount);
+        D1BaseServerSession(B1ServerSocket* serverSocket, B1BaseServerSessionListener* listener, D1BaseServer* owner, int32 maxAliveCount,
+                            D1BaseServerSessionMessageListener* messageListener = NULL);
         virtual ~D1BaseServerSession();
     private:
         const int32 _maxAliveCount;
@@ -33,9 +35,12 @@ namespace BnD {
     protected:
         D1BaseServer* _owner;
         int32 _id;
+        D1BaseServerSessionMessageListener* _messageListener;
     protected:  //  D1BasePacketAnalyzer
         void implOnProtocolTypeAliveCheck() final;
         virtual void implOnProtocolTypeNotifyID(int32 id) override;
+        virtual void implOnProtocolTypeTextMessage(B1String&& message) override;
+        virtual void implOnProtocolTypeTextMessageBunch(int32 index, int32 indexCount, B1String&& message) override;
     protected:  //  B1BaseServerSession
         void onReadComplete(uint8* data, size_t dataSize) final;
         virtual void implOnServerSessionDisconnected(int32 reason) override;

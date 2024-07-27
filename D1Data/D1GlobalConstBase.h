@@ -26,7 +26,7 @@ namespace BnD {
     class D1RedisClientInterface;
     class D1GlobalConstBase : public B1Object {
     public:
-        D1GlobalConstBase(B1String&& processName, int32 id = D1Consts::ID_INVALID) : _processName(processName), _id(id) {} //  not use id if id is less than zero.
+        D1GlobalConstBase(B1String&& processName, int32 id = D1Consts::ID_INVALID) : _processName(processName), _id(id) {}
     protected:
         class ItemBunch {
         public:
@@ -36,8 +36,8 @@ namespace BnD {
             const B1String _itemBunchName;
         protected:
             virtual bool implMakeRedisStringArgs(std::vector<B1String>* args) const { return false; }
-            virtual void implLoadDynamicData(D1GlobalConstBase* owner, const std::map<B1String, B1String>& values, bool adjustValue) {} //  Reload during operation.
-            virtual void implLoadStaticData(D1GlobalConstBase* owner, const std::map<B1String, B1String>& values, bool adjustValue) {}  //  Loaded once at first startup.
+            virtual void implLoadDynamicData(D1GlobalConstBase* owner, const std::map<B1String, B1String>& values, bool adjustValue) {} //  can reload anytime on running.
+            virtual void implLoadStaticData(D1GlobalConstBase* owner, const std::map<B1String, B1String>& values, bool adjustValue) {}  //  only can load once at starting.
             virtual B1String implToString() const = 0;
         protected:
             B1String itemField(const B1String& field) const;
@@ -90,8 +90,8 @@ namespace BnD {
         }
     public:
         bool addAllItems();
-        void loadAllData(D1RedisClientInterface* redisClientInterface);       //  After startup, use only once.
-        void reloadDynamicData(D1RedisClientInterface* redisClientInterface); //  Use at any time during operation.
+        void loadAllData(D1RedisClientInterface* redisClientInterface);       //  call only once when starting.
+        void reloadDynamicData(D1RedisClientInterface* redisClientInterface); //  can call anytime when running.
         void saveAllData(D1RedisClientInterface* redisClientInterface);
         B1String toString() const;
         bool getStringData(const std::map<B1String, B1String>& values, const B1String& key, B1String* data);

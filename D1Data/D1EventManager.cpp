@@ -31,7 +31,7 @@ D1EventManager::~D1EventManager()
 
 int64 D1EventManager::implMakeNewSerialNumber()
 {
-    const static B1String key = "System:Event:EventSerialNo";
+    const static B1String key = "Event:EventSerialNo";
     int64 result = D1Consts::ID_INVALID;
     if (_redisClientInterface->incr(key, &result) != true) {
         return D1Consts::ID_INVALID;

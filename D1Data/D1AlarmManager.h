@@ -46,7 +46,7 @@ namespace BnD {
         bool isAlarmActivated(int32 zoneID) const;
     };
 
-    class AlarmWriter : public D1AlarmReader {
+    class D1AlarmWriter : public D1AlarmReader {
     protected:
         virtual int64 implMakeNewSerialNumber() = 0;
     protected:
