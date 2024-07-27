@@ -96,7 +96,7 @@ bool D1BaseServer::containsID(int32 id) const
     return _handleManager->containsID(id);
 }
 
-void D1BaseServer::sendTextMessageToAllSessions(const B1String& message, const std::set<int32>& exceptIDs, std::set<int32>* sentIDs)
+void D1BaseServer::sendTextMessageToAllSessions(const B1String& message, std::set<int32>* sentIDs)
 {
     auto sessions = sessionManager()->getAllSessions();
     if (sessions.empty()) {
@@ -105,13 +105,13 @@ void D1BaseServer::sendTextMessageToAllSessions(const B1String& message, const s
     auto packet = packetMaker()->makeDataTextMessage(message);
     for (const auto& sessionsPair : sessions) {
         if (auto session = std::dynamic_pointer_cast<D1BaseServerSession>(sessionsPair.second._session)) {
-            if (exceptIDs.find(session->id()) == exceptIDs.end()) {
-                if (session->sendData(packet)) {
+            if (session->sendData(packet)) {
+                if (sentIDs) {
                     sentIDs->insert(session->id());
                 }
-                else {
-                    B1LOG("send all server sesssion failed: id[%d]", session->id());
-                }
+            }
+            else {
+                B1LOG("send all server sesssion failed: id[%d]", session->id());
             }
         }
         else {

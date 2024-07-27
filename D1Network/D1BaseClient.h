@@ -53,7 +53,7 @@ namespace BnD {
         bool isConnected(int32 id, int32* reason = NULL) const;
         SEND_RESULT sendTextMessage(int32 id, const B1String& message);
         SEND_RESULT sendTextMessageBunch(int32 id, int32 index, int32 indexCount, const B1String& message);
-        void sendTextMessageToAllSessions(const B1String& message, std::set<int32>* sentIDs);
+        void sendTextMessageToAllSessions(const B1String& message, std::set<int32>* sentIDs = NULL);
     };
 }   //  !BnD
 

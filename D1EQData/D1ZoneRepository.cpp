@@ -43,6 +43,14 @@ void D1ZoneRepository::finalize()
     _zones.clear();
 }
 
+void D1ZoneRepository::initializePlugin(int32 ownerID, D1ZoneAttributePlugin* plugin)
+{
+    auto ownerZones = zones(ownerID);
+    for (const auto& ownerZonesPair : ownerZones) {
+        ownerZonesPair.second->initializePlugins(plugin);
+    }
+}
+
 SPD1Zone D1ZoneRepository::findZone(int32 zoneID) const
 {
     int32 ownerID = toOwnerID(zoneID);

@@ -40,6 +40,7 @@ namespace BnD {
         bool initialize(const std::map<int32, SPD1Zone>& zoneInfos);    //  map<zone_id, zone>
         bool initialize(const std::list<SPD1Zone>& zones);
         void finalize();
+        void initializePlugin(int32 ownerID, D1ZoneAttributePlugin* plugin);
         SPD1Zone findZone(int32 zoneID) const;
 
         const std::map<int32, std::map<int32, SPD1Zone> >& allZones() const { return _zones; }

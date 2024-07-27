@@ -129,7 +129,9 @@ void D1BaseClient::sendTextMessageToAllSessions(const B1String& message, std::se
     for (const auto& sessionsPair : sessions) {
         if (auto session = std::dynamic_pointer_cast<D1BaseClientSession>(sessionsPair.second._session)) {
             if (session->sendData(packet)) {
-                sentIDs->insert(session->sessionHandleID());
+                if (sentIDs) {
+                    sentIDs->insert(session->sessionHandleID());
+                }
             }
             else {
                 B1LOG("send all client sesssions failed: id[%d]", session->sessionHandleID());

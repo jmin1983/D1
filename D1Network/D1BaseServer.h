@@ -53,7 +53,7 @@ namespace BnD {
         SEND_RESULT sendTextMessageBunch(int32 id, int32 index, int32 indexCount, const B1String& message);
         int32 aliveInterval() const { return _aliveInterval; }
         bool containsID(int32 id) const;
-        void sendTextMessageToAllSessions(const B1String& message, const std::set<int32>& exceptIDs, std::set<int32>* sentIDs);
+        void sendTextMessageToAllSessions(const B1String& message, std::set<int32>* sentIDs = NULL);
     };
 }   //  !BnD
 

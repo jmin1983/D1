@@ -34,6 +34,7 @@ namespace BnD {
     protected:
         virtual void archiveMessage(B1Archive* archive) const {}
         virtual void unarchiveMessage(const B1Archive& archive) {}
+    public:
         virtual B1String toString() const;
     public:
         const B1String& messageID() const { return _messageID.second; }
