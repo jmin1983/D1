@@ -33,7 +33,7 @@ namespace BnD {
     protected:
         mutable B1Lock* _lock;
         std::list<std::pair<int64, uint64> > _reserveCandidates;    //  list<pair<task_id, reserved_tick> >
-        DataInt32 _reservedTaskID;
+        DataInt64 _reservedTaskID;
     protected:
         virtual void archiveTo(B1Archive* archive) const override;
         virtual void unarchiveFrom(const B1Archive& archive) override;
@@ -47,8 +47,8 @@ namespace BnD {
         bool operator==(const D1ZoneOccupiedAttributes& d) const;
         bool operator!=(const D1ZoneOccupiedAttributes& d) const { return operator==(d) != true; }
     public:
-        int32 reservedTaskID() const;
-        bool isReserved(int64 taskID = -1, int32* reservedTaskID = NULL) const;
+        int64 reservedTaskID() const;
+        bool isReserved(int64 taskID = -1, int64* reservedTaskID = NULL) const;
 
         //  'set' is only available for owner.
         bool swapReserved(int64 taskID, D1RedisClientInterface* delayedCommander = NULL);

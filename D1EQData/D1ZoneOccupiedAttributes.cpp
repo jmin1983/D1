@@ -94,9 +94,9 @@ bool D1ZoneOccupiedAttributes::operator==(const D1ZoneOccupiedAttributes& d) con
     return _reservedTaskID.second == d._reservedTaskID.second;
 }
 
-int32 D1ZoneOccupiedAttributes::reservedTaskID() const
+int64 D1ZoneOccupiedAttributes::reservedTaskID() const
 {
-    int32 reservedTaskID = D1Consts::ID_INVALID;
+    int64 reservedTaskID = D1Consts::ID_INVALID;
     if (_lock) {
         _lock->lock();
     }
@@ -107,7 +107,7 @@ int32 D1ZoneOccupiedAttributes::reservedTaskID() const
     return reservedTaskID;
 }
 
-bool D1ZoneOccupiedAttributes::isReserved(int64 taskID, int32* reservedTaskID) const
+bool D1ZoneOccupiedAttributes::isReserved(int64 taskID, int64* reservedTaskID) const
 {
     bool noneReserved = false;
     if (_lock) {

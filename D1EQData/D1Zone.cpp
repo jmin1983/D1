@@ -134,6 +134,21 @@ int32 D1Zone::slaveID() const
     return D1ZoneRepository::toSlaveID(zoneID());
 }
 
+int64 D1Zone::reservedTaskID() const
+{
+    return _occupiedAttributes ? _occupiedAttributes->reservedTaskID() : D1Consts::ID_INVALID;
+}
+
+bool D1Zone::isReserved(int64 taskID, int64* reservedTaskID) const
+{
+    return _occupiedAttributes ? _occupiedAttributes->isReserved(taskID, reservedTaskID) : false;
+}
+
+bool D1Zone::isAlarmed() const
+{
+    return _stateAttributes ? _stateAttributes->isAlarmed() : false;
+}
+
 bool D1Zone::isInService() const
 {
     return _stateAttributes ? _stateAttributes->zoneState() == D1ZoneStateAttributes::ZONE_STATE_IN_SERVICE : false;

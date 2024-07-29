@@ -75,6 +75,9 @@ namespace BnD {
         LEVEL level() const { return _level.second; }
         DIRECTION direction() const { return _direction.second; }
 
+        int64 reservedTaskID() const;
+        bool isReserved(int64 taskID = D1Consts::ID_INVALID, int64* reservedTaskID = NULL) const;
+        bool isAlarmed() const;
         bool isInService() const;
         bool isOutOfService() const;
         bool isOffLine() const;
