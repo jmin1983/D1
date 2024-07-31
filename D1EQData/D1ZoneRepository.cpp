@@ -14,6 +14,8 @@
 
 using namespace BnD;
 
+int32 D1ZoneRepository::_maxSlaveID(CONSTS_DEFAULT_MAX_SLAVE_ID);
+
 bool D1ZoneRepository::initialize(const std::map<int32, SPD1Zone>& zoneInfos)
 {
     if (_zones.empty() != true) {
@@ -49,6 +51,11 @@ void D1ZoneRepository::initializePlugin(int32 ownerID, D1ZoneAttributePlugin* pl
     for (const auto& ownerZonesPair : ownerZones) {
         ownerZonesPair.second->initializePlugins(plugin);
     }
+}
+
+bool D1ZoneRepository::isValid() const
+{
+    return _zones.empty() != true;
 }
 
 SPD1Zone D1ZoneRepository::findZone(int32 zoneID) const
@@ -92,12 +99,12 @@ auto D1ZoneRepository::zonesNotOwned(int32 ownerID) const -> std::map<int32, SPD
 
 int32 D1ZoneRepository::toSlaveID(int32 zoneID)
 {
-    return zoneID % CONSTS_MAX_SLAVE_ID;
+    return zoneID % _maxSlaveID;
 }
 
 int32 D1ZoneRepository::toOwnerID(int32 zoneID)
 {
-    return zoneID / CONSTS_MAX_SLAVE_ID;
+    return zoneID / _maxSlaveID;
 }
 
 bool D1ZoneRepository::isOwnerZone(int32 zoneID, int32 ownerID)

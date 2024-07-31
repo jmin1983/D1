@@ -29,8 +29,10 @@ namespace BnD {
         virtual ~D1ZoneRepository() {}
     protected:
         enum CONSTS {
-            CONSTS_MAX_SLAVE_ID = 10000,
+            CONSTS_DEFAULT_MAX_SLAVE_ID = 10000,
         };
+    private:
+        static int32 _maxSlaveID;
     protected:
         std::map<int32, std::map<int32, SPD1Zone> > _zones; //  map<owner_id, map<zone_id, zone> >
     protected:
@@ -41,6 +43,7 @@ namespace BnD {
         bool initialize(const std::list<SPD1Zone>& zones);
         void finalize();
         void initializePlugin(int32 ownerID, D1ZoneAttributePlugin* plugin);
+        bool isValid() const;
         SPD1Zone findZone(int32 zoneID) const;
 
         const std::map<int32, std::map<int32, SPD1Zone> >& allZones() const { return _zones; }
@@ -48,6 +51,7 @@ namespace BnD {
         std::map<int32, SPD1Zone> zones(int32 ownerID) const;
         std::map<int32, SPD1Zone> zonesNotOwned(int32 ownerID) const;
     public:
+        static void setMaxSlaveID(int32 value) { _maxSlaveID = value; }
         static int32 toSlaveID(int32 zoneID);
         static int32 toOwnerID(int32 zoneID);
         static bool isOwnerZone(int32 zoneID, int32 ownerID);

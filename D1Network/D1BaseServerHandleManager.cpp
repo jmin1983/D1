@@ -41,8 +41,16 @@ bool D1BaseServerHandleManager::addID(int32 id, int32 serverHandleID)
 
 void D1BaseServerHandleManager::removeID(int32 id)
 {
-    B1AutoLock al(_idHandleMapLock);
-    _idHandleMap.erase(id);
+    {
+        B1AutoLock al(_idHandleMapLock);
+        auto itr = _idHandleMap.find(id);
+        if (itr != _idHandleMap.end()) {
+            _idHandleMap.erase(itr);
+            return;
+        }
+    }
+    assert(false);
+    B1LOG("unexceptionalError occurred on removeID: id[%d]", id);
 }
 
 int32 D1BaseServerHandleManager::getServerHandleID(int32 id) const

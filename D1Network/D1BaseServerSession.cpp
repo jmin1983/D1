@@ -83,6 +83,10 @@ void D1BaseServerSession::implOnServerSessionDisconnected(int32 reason)
     if (_id > -1) {
         owner()->handleManager()->removeID(_id);
     }
+    else {
+        assert(false);
+        B1LOG("unknown handle disconnected");
+    }
 }
 
 void D1BaseServerSession::implProcessConnected(bool firstConnectedProcess)
