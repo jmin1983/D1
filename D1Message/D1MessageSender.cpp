@@ -161,9 +161,3 @@ const B1String& D1MessageSender::logMessageChannel() {
     const static B1String s_logMessageChannel("LogMessageChannel");
     return s_logMessageChannel;
 }
-
-const B1String& D1MessageSender::selfTestChannel() {
-
-    const static B1String s_selfTestChannel("SelfTestChannel");
-    return s_selfTestChannel;
-}

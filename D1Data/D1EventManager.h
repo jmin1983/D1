@@ -28,9 +28,6 @@ namespace BnD {
         const B1String _channel;
         D1RedisClientInterface* _redisClientInterface;
     protected:
-        virtual int64 implMakeNewSerialNumber();
-    protected:
-        int64 makeNewSerialNumber();
         bool getTaskTransferInfo(int64 taskID, B1String* commandID, B1String* carrierID);
     public:
         void initialize(D1RedisClientInterface* redisClientInterface);

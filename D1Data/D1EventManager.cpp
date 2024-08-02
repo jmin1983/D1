@@ -29,21 +29,6 @@ D1EventManager::~D1EventManager()
 {
 }
 
-int64 D1EventManager::implMakeNewSerialNumber()
-{
-    const static B1String key = "Event:EventSerialNo";
-    int64 result = D1Consts::ID_INVALID;
-    if (_redisClientInterface->incr(key, &result) != true) {
-        return D1Consts::ID_INVALID;
-    }
-    return result;
-}
-
-int64 D1EventManager::makeNewSerialNumber()
-{
-    return implMakeNewSerialNumber();
-}
-
 bool D1EventManager::getTaskTransferInfo(int64 taskID, B1String* commandID, B1String* carrierID)
 {
     B1String key;
@@ -69,10 +54,6 @@ void D1EventManager::finalize()
 
 bool D1EventManager::addEvent(int32 code, const B1String& commandID, const B1String& carrierID, int64 taskID, int32 zoneID, int32 reason, bool isEssential)
 {
-    int64 serialNumber = makeNewSerialNumber();
-    if (serialNumber < 0) {
-        return false;
-    }
     uint64 seconds = 0;
     uint32 microseconds = 0;
     if (_redisClientInterface->time(&seconds, &microseconds)) {
@@ -84,7 +65,6 @@ bool D1EventManager::addEvent(int32 code, const B1String& commandID, const B1Str
     messageData.writeData("CommandID", commandID);
     messageData.writeData("CarrierID", carrierID);
     messageData.writeData("Time", seconds);
-    messageData.writeData("SerialNo", serialNumber);
     messageData.writeData("TaskID", taskID);
     messageData.writeData("EventCode", code);
     messageData.writeData("Location", zoneID);

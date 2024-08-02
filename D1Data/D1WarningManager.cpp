@@ -26,9 +26,6 @@ D1WarningManager::D1WarningManager(B1String&& channel)
 
 bool D1WarningManager::addWarning(int32 code, const B1String &commandID, const B1String &carrierID, int64 taskID, int32 zoneID, int32 reason)
 {
-    int64 serialNumber = makeNewSerialNumber();
-    if (serialNumber < 0)
-        return false;
     uint64 seconds = 0;
     uint32 microseconds = 0;
     if (_redisClientInterface->time(&seconds, &microseconds)) {
@@ -41,7 +38,6 @@ bool D1WarningManager::addWarning(int32 code, const B1String &commandID, const B
     messageData.writeData("CarrierID", carrierID);
     messageData.writeData("Time", seconds);
     messageData.writeData("TaskID", taskID);
-    messageData.writeData("SerialNo", serialNumber);
     messageData.writeData("EventCode", code);
     messageData.writeData("Location", zoneID);
     messageData.writeData("Reason", reason);

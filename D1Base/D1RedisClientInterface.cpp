@@ -159,14 +159,7 @@ bool D1RedisClientInterface::nonBlockedCommand(const std::vector<B1String>& args
 bool D1RedisClientInterface::hmset(const B1String& key, const B1String& field, const B1String& value, bool isEssential)
 {
     if (_redisDirectClient) {
-
-
-
         return _redisDirectClient->hmset(key.copy(), field.copy(), value.copy(), isEssential);
-
-
-
-
     }
     return false;
 }
