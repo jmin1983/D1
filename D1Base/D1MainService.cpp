@@ -11,6 +11,7 @@
 
 #include "D1Base.h"
 #include "D1MainService.h"
+#include "D1ProductIdentifier.h"
 #include "D1RedisClientInterface.h"
 
 #include <B1Base/B1SystemUtil.h>
@@ -20,8 +21,9 @@
 
 using namespace BnD;
 
-D1MainService::D1MainService(int32 serviceID, int32 version, B1String&& buildDate, B1String&& serviceName, B1String&& systemName)
-    : B1MainService(serviceID, version, std::move(buildDate), std::move(serviceName), std::move(systemName))
+D1MainService::D1MainService(std::shared_ptr<D1ProductIdentifier> productIdentifier, int32 version, B1String&& buildDate, B1String&& systemName)
+    : B1MainService(productIdentifier->serviceID(), version, std::move(buildDate), productIdentifier->serviceName(), std::move(systemName))
+    , _productIdentifier(productIdentifier)
 {
 }
 

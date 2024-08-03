@@ -10,14 +10,17 @@
 //
 
 #include "D1Base.h"
+#include "D1Consts.h"
 #include "D1ProductIdentifier.h"
 #include "D1RedisClientInterface.h"
 
 using namespace BnD;
+using namespace D1Consts;
 
-D1ProductIdentifier::D1ProductIdentifier()
+D1ProductIdentifier::D1ProductIdentifier(SERVICE_ID serviceID)
     : _site(SITE_UNKNOWN)
     , _type(TYPE_UNKNOWN)
+    , _serviceID(serviceID)
 {
 }
 
@@ -95,6 +98,61 @@ bool D1ProductIdentifier::implToProductTypeString(B1String* result) const
     return false;
 }
 
+B1String D1ProductIdentifier::serviceNameCCS() const
+{
+    return "CCS";
+}
+
+B1String D1ProductIdentifier::serviceNameCUS() const
+{
+    return "CUS";
+}
+
+B1String D1ProductIdentifier::serviceNameCSS() const
+{
+    return "CSS";
+}
+
+B1String D1ProductIdentifier::serviceNameDWS() const
+{
+    return "DWS";
+}
+
+B1String D1ProductIdentifier::serviceNameDCS() const
+{
+    return "DCS";
+}
+
+B1String D1ProductIdentifier::serviceNameDSS() const
+{
+    return "DSS";
+}
+
+B1String D1ProductIdentifier::serviceNameDUS() const
+{
+    return "DUS";
+}
+
+B1String D1ProductIdentifier::serviceNameECS() const
+{
+    return "ECS";
+}
+
+B1String D1ProductIdentifier::serviceNameMS() const
+{
+    return "MS";
+}
+
+B1String D1ProductIdentifier::serviceNameRS() const
+{
+    return "RS";
+}
+
+B1String D1ProductIdentifier::serviceNameWAS() const
+{
+    return "WAS";
+}
+
 bool D1ProductIdentifier::getProductInfo(D1RedisClientInterface* redisReader)
 {
     return implGetProductSite(redisReader->hmget(productInfoKey(), "Site")) && implGetProductType(redisReader->hmget(productInfoKey().copy(), "Type"));
@@ -120,6 +178,41 @@ B1String D1ProductIdentifier::toProductTypeString() const
     else {
         return typeString;
     }
+}
+
+B1String D1ProductIdentifier::serviceName() const
+{
+    if (SERVICE_ID_DCS_BEGIN < _serviceID && _serviceID < SERVICE_ID_DCS_END) {
+        return serviceNameDCS();
+    }
+    if (SERVICE_ID_DUS_BEGIN < _serviceID && _serviceID < SERVICE_ID_DUS_END) {
+        return serviceNameDUS();
+    }
+    if (SERVICE_ID_DSS_BEGIN < _serviceID && _serviceID < SERVICE_ID_DSS_END) {
+        return serviceNameDSS();
+    }
+    switch (_serviceID) {
+        case SERVICE_ID_CCS:
+            return serviceNameCCS();
+        case SERVICE_ID_CUS:
+            return serviceNameCUS();
+        case SERVICE_ID_CSS:
+            return serviceNameCSS();
+        case SERVICE_ID_MS:
+            return serviceNameMS();
+        case SERVICE_ID_ECS:
+            return serviceNameECS();
+        case SERVICE_ID_DWS:
+            return serviceNameDWS();
+        case SERVICE_ID_WAS:
+            return serviceNameWAS();
+        case SERVICE_ID_RS:
+            return serviceNameRS();
+        default:
+            break;
+
+    }
+    return "NA";
 }
 
 B1String D1ProductIdentifier::toString() const

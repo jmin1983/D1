@@ -23,9 +23,10 @@ namespace BnD {
     class B1PerformanceProfiler;
     class B1RedisDirectClient;
     class D1RedisClientInterface;
+    class D1ProductIdentifier;
     class D1MainService : public B1MainService {
     public:
-        D1MainService(int32 serviceID, int32 version, B1String&& buildDate, B1String&& serviceName, B1String&& systemName);
+        D1MainService(std::shared_ptr<D1ProductIdentifier> productIdentifier, int32 version, B1String&& buildDate, B1String&& systemName);
         virtual ~D1MainService();
     private:
         enum CONSTS {
@@ -33,6 +34,7 @@ namespace BnD {
             CONSTS_DISABLE_PERFORMANCE_CHECK = 0,
         };
     private:
+        std::shared_ptr<D1ProductIdentifier> _productIdentifier;
         std::shared_ptr<B1PerformanceProfiler> _performanceProfiler;
         std::shared_ptr<B1RedisDirectClient> _redisDirectClient;
         std::shared_ptr<D1RedisClientInterface> _redisClientInterface;
@@ -52,6 +54,7 @@ namespace BnD {
         virtual bool implWorking() override;
         virtual void implStop() override;
     public:
+        D1ProductIdentifier* productIdentifier() const { return _productIdentifier.get(); }
         D1RedisClientInterface* redisClientInterface() const { return _redisClientInterface.get(); }
     };
 }   //  !BnD

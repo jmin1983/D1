@@ -71,9 +71,9 @@ namespace BnD {
             }
         }
     protected:
-        virtual T* createMainService(int32 site, int32 type, int32 serviceID) = 0;
-        virtual int32 getServiceID(D1RedisClientInterface* redisReader) { return D1Consts::SERVICE_ID_INVALID; }
-        virtual D1ProductIdentifier* createProductIdentifier() = 0;
+        virtual T* createMainService(std::shared_ptr<D1ProductIdentifier> productIdentifier) = 0;
+        virtual int32 getServiceID(D1RedisClientInterface* redisReader) = 0;
+        virtual D1ProductIdentifier* createProductIdentifier(int32 serviceID) = 0;
         virtual void onMainServiceStartBefore() {}
     public:
         bool start(const B1String& address, uint16 port, int32 db, const B1String& logFilePath, const B1String& logFileName, int32 logCounts)
@@ -97,12 +97,11 @@ namespace BnD {
                 }
                 D1RedisClientInterface clientInterface(&client);
                 syncWithRedisTime(&clientInterface);
-                std::unique_ptr<D1ProductIdentifier> productIdentifier(createProductIdentifier());
+                std::shared_ptr<D1ProductIdentifier> productIdentifier(createProductIdentifier(getServiceID(&clientInterface)));
                 productIdentifier->getProductInfo(&clientInterface);
                 B1LOG("find product type done! disconnecting Administration Service: site[%d], type[%d]", productIdentifier->site(), productIdentifier->type());
-                const int32 serviceID = getServiceID(&clientInterface);
                 client.finalize();
-                _service.reset(createMainService(productIdentifier->site(), productIdentifier->type(), serviceID));
+                _service.reset(createMainService(productIdentifier));
             }
             if (_service == NULL) {
                 printf("create control service failed");
