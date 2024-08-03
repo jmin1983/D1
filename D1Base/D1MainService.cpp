@@ -56,7 +56,7 @@ void D1MainService::syncWithRedisTime()
 
 B1String D1MainService::serviceInfoKey() const
 {
-    return mainServiceName() + "Info";
+    return "ServiceInfo:" + mainServiceName();
 }
 
 bool D1MainService::implStart()
