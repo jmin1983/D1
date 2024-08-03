@@ -20,8 +20,8 @@
 
 using namespace BnD;
 
-D1MainService::D1MainService(int32 serviceID, int32 version, B1String&& buildDate, B1String&& name)
-    : B1MainService(serviceID, version, std::move(buildDate), std::move(name))
+D1MainService::D1MainService(int32 serviceID, int32 version, B1String&& buildDate, B1String&& serviceName, B1String&& systemName)
+    : B1MainService(serviceID, version, std::move(buildDate), std::move(serviceName), std::move(systemName))
 {
 }
 
@@ -52,6 +52,11 @@ void D1MainService::syncWithRedisTime()
     else {
         B1LOG("sync redis time failed");
     }
+}
+
+B1String D1MainService::serviceInfoKey() const
+{
+    return mainServiceName() + "Info";
 }
 
 bool D1MainService::implStart()

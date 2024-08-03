@@ -25,7 +25,7 @@ namespace BnD {
     class D1RedisClientInterface;
     class D1MainService : public B1MainService {
     public:
-        D1MainService(int32 serviceID, int32 version, B1String&& buildDate, B1String&& name);
+        D1MainService(int32 serviceID, int32 version, B1String&& buildDate, B1String&& serviceName, B1String&& systemName);
         virtual ~D1MainService();
     private:
         enum CONSTS {
@@ -46,6 +46,7 @@ namespace BnD {
         virtual uint32 performanceProfilerInterval() const { return CONSTS_DISABLE_PERFORMANCE_CHECK; } //  return 0 if disable performance_profiler
         virtual auto initializeRedisClient() -> B1RedisDirectClient* = 0;
         virtual void onCheckPerformance(uint32 pid, int64 memUsage, int64 memTotal, float64 memUsagePercent, float64 cpuUsagePercent) {}
+        virtual B1String serviceInfoKey() const;
     protected:
         virtual bool implStart() override;
         virtual bool implWorking() override;
