@@ -182,16 +182,21 @@ B1String D1ProductIdentifier::toProductTypeString() const
 
 B1String D1ProductIdentifier::serviceName() const
 {
-    if (SERVICE_ID_DCS_BEGIN < _serviceID && _serviceID < SERVICE_ID_DCS_END) {
+    return serviceName(_serviceID);
+}
+
+B1String D1ProductIdentifier::serviceName(int32 serviceID) const
+{
+    if (SERVICE_ID_DCS_BEGIN < serviceID && serviceID < SERVICE_ID_DCS_END) {
         return serviceNameDCS();
     }
-    if (SERVICE_ID_DUS_BEGIN < _serviceID && _serviceID < SERVICE_ID_DUS_END) {
+    if (SERVICE_ID_DUS_BEGIN < serviceID && serviceID < SERVICE_ID_DUS_END) {
         return serviceNameDUS();
     }
-    if (SERVICE_ID_DSS_BEGIN < _serviceID && _serviceID < SERVICE_ID_DSS_END) {
+    if (SERVICE_ID_DSS_BEGIN < serviceID && serviceID < SERVICE_ID_DSS_END) {
         return serviceNameDSS();
     }
-    switch (_serviceID) {
+    switch (serviceID) {
         case SERVICE_ID_CCS:
             return serviceNameCCS();
         case SERVICE_ID_CUS:
