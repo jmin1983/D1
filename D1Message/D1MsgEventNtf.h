@@ -21,7 +21,7 @@
 namespace BnD {
     class D1MsgEventNtf : public D1BaseMessage {
     public:
-        D1MsgEventNtf(int64 serialNumber, int32 code);
+        D1MsgEventNtf(int32 code);
         D1MsgEventNtf(D1BaseMessage&& baseMessage);
         virtual ~D1MsgEventNtf();
     protected:

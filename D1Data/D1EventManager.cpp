@@ -16,6 +16,7 @@
 
 #include <D1Base/D1Consts.h>
 #include <D1Base/D1RedisClientInterface.h>
+#include <D1Message/D1MsgEventNtf.h>
 
 using namespace BnD;
 
@@ -56,27 +57,17 @@ bool D1EventManager::addEvent(int32 code, const B1String& commandID, const B1Str
 {
     uint64 seconds = 0;
     uint32 microseconds = 0;
-    if (_redisClientInterface->time(&seconds, &microseconds)) {
+    if (_redisClientInterface->time(&seconds, &microseconds) != true) {
         return false;
     }
-    B1Archive archive, messageData;
-    archive.writeData("MessageID", B1String("tcsEventSet"));
-
-    messageData.writeData("CommandID", commandID);
-    messageData.writeData("CarrierID", carrierID);
-    messageData.writeData("Time", seconds);
-    messageData.writeData("TaskID", taskID);
-    messageData.writeData("EventCode", code);
-    messageData.writeData("Location", zoneID);
-    messageData.writeData("Reason", reason);
-    messageData.writeData("BaseTime", B1Time::currentTimeInMilliseconds());
-
-    archive.addSubArchive("MessageData", messageData);
-
-    B1String message;
-    archive.toString(&message);
-    _redisClientInterface->publish(_channel, message, isEssential);
-
+    D1MsgEventNtf info(code);
+    info.setCarrierID(carrierID.copy());
+    info.setTaskID(taskID);
+    info.setZoneID(zoneID);
+    info.setReason(reason);
+    B1String json;
+    info.composeToJson(&json);
+    _redisClientInterface->publish(_channel, json, isEssential);
     return true;
 }
 

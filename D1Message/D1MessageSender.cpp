@@ -50,9 +50,9 @@ bool D1MessageSender::publishMessageWithTime(const B1String& channel, D1BaseMess
     return redisClientInterface->publish(channel, m, essential);
 }
 
-bool D1MessageSender::sendNotifyEvent(int64 serialNumber, int64 taskID, int32 zoneID, int32 serviceID, int32 code, int32 reason, B1String&& carrierID, D1RedisClientInterface* redisClientInterface) const
+bool D1MessageSender::sendNotifyEvent(int64 taskID, int32 zoneID, int32 serviceID, int32 code, int32 reason, B1String&& carrierID, D1RedisClientInterface* redisClientInterface) const
 {
-    D1MsgEventNtf msg(serialNumber, code);
+    D1MsgEventNtf msg(code);
     msg.setTaskID(taskID);
     msg.setZoneID(zoneID);
     msg.setServiceID(serviceID);

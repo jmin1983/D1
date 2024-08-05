@@ -16,9 +16,9 @@
 
 using namespace BnD;
 
-D1MsgEventNtf::D1MsgEventNtf(int64 serialNumber, int32 code)
+D1MsgEventNtf::D1MsgEventNtf(int32 code)
     : D1BaseMessage()
-    , _serialNumber("SerialNumber", serialNumber)
+    , _serialNumber("SerialNumber", D1Consts::ID_INVALID)
     , _taskID("TaskID", D1Consts::ID_INVALID)
     , _zoneID("ZoneID", D1Consts::ID_INVALID)
     , _serviceID("ServiceID", D1Consts::SERVICE_ID_INVALID)
