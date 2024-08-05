@@ -42,6 +42,7 @@ namespace BnD {
         void setRedisString(std::vector<B1String>* args, B1String&& field, float64 value) const;
         void setRedisString(std::vector<B1String>* args, B1String&& field, const B1String& value) const;
         void setRedisString(std::vector<B1String>* args, B1String&& field, B1String&& value) const;
+        void setRedisString(std::vector<B1String>* args, B1String&& field, const std::vector<int32>& value) const;
         template <typename T>
         void setRedisString(std::vector<B1String>* args, const T& data) const
         {
@@ -53,6 +54,7 @@ namespace BnD {
         bool readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, uint64* data, uint32 defaultValue = 0) const;
         bool readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, float64* data, uint32 defaultValue = -1) const;
         bool readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, B1String* data, B1String&& defaultValue = "") const;
+        bool readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, std::vector<int32>* data) const;
         template <typename T>
         bool readFromRedisMap(const std::map<B1String, B1String>& map, T* data) const
         {

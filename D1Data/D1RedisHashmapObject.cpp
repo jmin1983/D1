@@ -12,6 +12,8 @@
 #include "D1Data.h"
 #include "D1RedisHashmapObject.h"
 
+#include <B1Base/B1StringUtil.h>
+
 #include <D1Base/D1RedisClientInterface.h>
 
 using namespace BnD;
@@ -93,6 +95,14 @@ void D1RedisHashmapObject::setRedisString(std::vector<B1String>* args, B1String&
     if (value.isEmpty() != true) {
         args->push_back(std::move(field));
         args->push_back(std::move(value));
+    }
+}
+
+void D1RedisHashmapObject::setRedisString(std::vector<B1String>* args, B1String&& field, const std::vector<int32>& value) const
+{
+    B1String valueString;
+    if (B1StringUtil::vectorIntToString(value, &valueString)) {
+        setRedisString(args, std::move(field), valueString);
     }
 }
 
@@ -199,7 +209,19 @@ bool D1RedisHashmapObject::readFromRedisMap(const std::map<B1String, B1String>& 
     return false;
 }
 
-std::vector<B1String> D1RedisHashmapObject::prepareRedisStringArgs() const
+bool D1RedisHashmapObject::readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, std::vector<int32>* data) const
+{
+    auto itr = map.find(field);
+    if (itr != map.end()) {
+        const B1String& valueString = itr->second;
+        if (valueString.isEmpty() != true) {
+            return B1StringUtil::stringToVectorInt(valueString, data);
+        }
+    }
+    return false;
+}
+
+auto D1RedisHashmapObject::prepareRedisStringArgs() const -> std::vector<B1String>
 {
     auto key = redisKey();
     if (key.isEmpty()) {

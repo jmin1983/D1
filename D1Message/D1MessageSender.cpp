@@ -16,6 +16,7 @@
 #include "D1MsgRemoteLogNtf.h"
 #include "D1MSMsgKeepAliveRsp.h"
 
+#include <D1Base/D1Consts.h>
 #include <D1Base/D1RedisClientInterface.h>
 
 using namespace BnD;
@@ -112,7 +113,7 @@ B1String D1MessageSender::dcsSubscribingChannel(int32 dcsID)
 
 B1String D1MessageSender::dcsPollingListKey(int32 dcsID)
 {
-    return B1String::formatAs("DCSPollingListKey:%d", dcsID);
+    return B1String::formatAs("PollingList:Controller:%d", dcsID);
 }
 
 B1String D1MessageSender::updateZoneAttributesChannel(int32 ownerID)
@@ -140,13 +141,13 @@ const B1String& D1MessageSender::userSubscribingChannel()
 
 const B1String& D1MessageSender::ecsPollingListKey()
 {
-    const static B1String s_ecsPollingListKey("ECSPollingListKey");
+    const static B1String s_ecsPollingListKey(B1String::formatAs("PollingList:%d", D1Consts::SERVICE_ID_ECS));
     return s_ecsPollingListKey;
 }
 
 const B1String& D1MessageSender::ccsPollingListKey()
 {
-    const static B1String s_ccsPollingListKey("CCSPollingListKey");
+    const static B1String s_ccsPollingListKey(B1String::formatAs("PollingList:%d", D1Consts::SERVICE_ID_CCS));
     return s_ccsPollingListKey;
 }
 

@@ -25,8 +25,10 @@ namespace BnD {
         D1TaskLocationInfo(int64 taskID);
         D1TaskLocationInfo(int64 taskID, int32 currentLocation);
         virtual ~D1TaskLocationInfo();
+    private:
+        const static B1String _currentLocationKey;
     protected:
-        DataInt32 _currentLocation;
+        int32 _currentLocation;
     protected:
         virtual void archiveTo(B1Archive* archive) const override;
         virtual void unarchiveFrom(const B1Archive& archive) override;
@@ -36,8 +38,10 @@ namespace BnD {
         virtual void makeRedisStringArgs(std::vector<B1String>* args) const override;
         virtual bool readRedisMap(const std::map<B1String, B1String>& map) override;
     public:
-        int32 currentLocation() const { return _currentLocation.second; }
-        void setCurrentLocation(int32 location) { _currentLocation.second = location; }
+        int32 currentLocation() const { return _currentLocation; }
+        void setCurrentLocation(int32 location) { _currentLocation = location; }
+    public:
+        static int32 getCurrentLocation(D1RedisClientInterface* redisClientInterface, int64 taskID);
     };
 }   //  !BnD
 

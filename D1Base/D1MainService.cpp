@@ -114,3 +114,8 @@ void D1MainService::implStop()
         _redisDirectClient.reset();
     }
 }
+
+B1String D1MainService::serviceName() const
+{
+    return productIdentifier() ? productIdentifier()->serviceName() : "UNKNOWN";
+}

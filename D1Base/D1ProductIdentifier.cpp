@@ -182,10 +182,10 @@ B1String D1ProductIdentifier::toProductTypeString() const
 
 B1String D1ProductIdentifier::serviceName() const
 {
-    return serviceName(_serviceID);
+    return serviceNameByID(_serviceID);
 }
 
-B1String D1ProductIdentifier::serviceName(int32 serviceID) const
+B1String D1ProductIdentifier::serviceNameByID(int32 serviceID) const
 {
     if (SERVICE_ID_DCS_BEGIN < serviceID && serviceID < SERVICE_ID_DCS_END) {
         return serviceNameDCS();

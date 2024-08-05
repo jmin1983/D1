@@ -14,24 +14,27 @@
 #include "D1TaskLocationInfoMsg.h"
 
 #include <D1Base/D1Consts.h>
+#include <D1Base/D1RedisClientInterface.h>
 
 using namespace BnD;
 
+const B1String D1TaskLocationInfo::_currentLocationKey("CurrentLocation");
+
 D1TaskLocationInfo::D1TaskLocationInfo()
     : D1TaskInfo()
-    , _currentLocation("CurrentLocation", D1Consts::ID_INVALID)
+    , _currentLocation(D1Consts::ID_INVALID)
 {
 }
 
 D1TaskLocationInfo::D1TaskLocationInfo(int64 taskID)
     : D1TaskInfo(taskID)
-    , _currentLocation("CurrentLocation", D1Consts::ID_INVALID)
+    , _currentLocation(D1Consts::ID_INVALID)
 {
 }
 
 D1TaskLocationInfo::D1TaskLocationInfo(int64 taskID, int32 currentLocation)
     : D1TaskInfo(taskID)
-    , _currentLocation("CurrentLocation", currentLocation)
+    , _currentLocation(currentLocation)
 {
 }
 
@@ -42,13 +45,13 @@ D1TaskLocationInfo::~D1TaskLocationInfo()
 void D1TaskLocationInfo::archiveTo(B1Archive* archive) const
 {
     D1TaskInfo::archiveTo(archive);
-    writeDataToArchive(_currentLocation, archive);
+    writeDataToArchive(_currentLocationKey, _currentLocation, archive);
 }
 
 void D1TaskLocationInfo::unarchiveFrom(const B1Archive& archive)
 {
     D1TaskInfo::unarchiveFrom(archive);
-    readDataFromArchive(archive, &_currentLocation);
+    readDataFromArchive(_currentLocationKey, archive, &_currentLocation);
 }
 
 auto D1TaskLocationInfo::createMessageObject() const -> D1MessageObject*
@@ -63,10 +66,20 @@ bool D1TaskLocationInfo::isValidToMakeRedisString() const
 
 void D1TaskLocationInfo::makeRedisStringArgs(std::vector<B1String>* args) const
 {
-    setRedisString(args, _currentLocation);
+    setRedisString(args, _currentLocationKey.copy(), _currentLocation);
 }
 
 bool D1TaskLocationInfo::readRedisMap(const std::map<B1String, B1String>& map)
 {
-    return readFromRedisMap(map, &_currentLocation);
+    return readFromRedisMap(map, _currentLocationKey, &_currentLocation);
+}
+
+int32 D1TaskLocationInfo::getCurrentLocation(D1RedisClientInterface* redisClientInterface, int64 taskID)
+{
+    try {
+        return redisClientInterface->hmget(redisKey(taskID), _currentLocationKey).toInt32();
+    }
+    catch (...) {
+        return D1Consts::ID_INVALID;
+    }
 }

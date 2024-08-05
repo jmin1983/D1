@@ -27,6 +27,7 @@ namespace BnD {
         D1TaskInfo(int64 taskID);
         virtual ~D1TaskInfo();
     private:
+        static const B1String _taskInfoKey;
         DataInt64 _taskID;
     protected:
         virtual void archiveTo(B1Archive* archive) const override;
@@ -36,7 +37,9 @@ namespace BnD {
         virtual bool isValidToMakeRedisString() const override;
     public:
         int64 taskID() const { return _taskID.second; }
+        bool readBulkRedisMap(const std::map<B1String, B1String>& map);
     public:
+        static const B1String& taskInfoKey() { return _taskInfoKey; }
         static B1String redisKey(int64 taskID);
     };
     typedef std::shared_ptr<D1TaskInfo> SPD1TaskInfo;

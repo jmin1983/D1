@@ -76,7 +76,7 @@ namespace BnD {
         B1String toProductSiteString() const;
         B1String toProductTypeString() const;
         B1String serviceName() const;
-        B1String serviceName(int32 serviceID) const;
+        B1String serviceNameByID(int32 serviceID) const;
         B1String toString() const;
     };
 }   //  !BnD

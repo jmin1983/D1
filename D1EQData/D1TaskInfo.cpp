@@ -16,6 +16,8 @@
 
 using namespace BnD;
 
+const B1String D1TaskInfo::_taskInfoKey("TaskInfo");
+
 D1TaskInfo::D1TaskInfo()
     : D1NotifiableObject()
     , D1RedisHashmapObject()
@@ -49,6 +51,11 @@ B1String D1TaskInfo::redisKey() const
     return redisKey(taskID());
 }
 
+bool D1TaskInfo::readBulkRedisMap(const std::map<B1String, B1String>& map)
+{
+    return readRedisMap(map);
+}
+
 bool D1TaskInfo::isValidToMakeRedisString() const
 {
     return taskID() != D1Consts::ID_INVALID;
@@ -57,5 +64,5 @@ bool D1TaskInfo::isValidToMakeRedisString() const
 B1String D1TaskInfo::redisKey(int64 taskID)
 {
     assert(taskID != D1Consts::ID_INVALID);
-    return taskID != D1Consts::ID_INVALID ? B1String::formatAs("TaskInfo:%lld", taskID) : "";
+    return taskID != D1Consts::ID_INVALID ? B1String::formatAs("%s:%lld", _taskInfoKey.cString(), taskID) : "";
 }
