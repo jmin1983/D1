@@ -19,36 +19,37 @@
 
 using namespace BnD;
 
-D1WarningManager::D1WarningManager(B1String&& channel)
-    : D1EventManager(std::move(channel))
+D1WarningManager::D1WarningManager()
+    : D1EventManager()
 {
 }
 
 bool D1WarningManager::addWarning(int32 code, const B1String &commandID, const B1String &carrierID, int64 taskID, int32 zoneID, int32 reason)
 {
-    uint64 seconds = 0;
-    uint32 microseconds = 0;
-    if (_redisClientInterface->time(&seconds, &microseconds)) {
-        return false;
-    }
-    B1Archive archive, messageData;
-    archive.writeData("MessageID", B1String("tcsWarningSet"));    
+    //  todo: implement.
+    //uint64 seconds = 0;
+    //uint32 microseconds = 0;
+    //if (_redisClientInterface->time(&seconds, &microseconds)) {
+    //    return false;
+    //}
+    //B1Archive archive, messageData;
+    //archive.writeData("MessageID", B1String("tcsWarningSet"));    
 
-    messageData.writeData("CommandID", commandID);
-    messageData.writeData("CarrierID", carrierID);
-    messageData.writeData("Time", seconds);
-    messageData.writeData("TaskID", taskID);
-    messageData.writeData("EventCode", code);
-    messageData.writeData("Location", zoneID);
-    messageData.writeData("Reason", reason);
-    messageData.writeData("BaseTime", B1Time::currentTimeInMilliseconds());
+    //messageData.writeData("CommandID", commandID);
+    //messageData.writeData("CarrierID", carrierID);
+    //messageData.writeData("Time", seconds);
+    //messageData.writeData("TaskID", taskID);
+    //messageData.writeData("EventCode", code);
+    //messageData.writeData("Location", zoneID);
+    //messageData.writeData("Reason", reason);
+    //messageData.writeData("BaseTime", B1Time::currentTimeInMilliseconds());
 
-    archive.addSubArchive("MessageData", messageData);
+    //archive.addSubArchive("MessageData", messageData);
 
-    B1String message;
-    archive.toString(&message);
-    
-    _redisClientInterface->publish(_channel, message, false);
+    //B1String message;
+    //archive.toString(&message);
+    //
+    //_redisClientInterface->publish(_channel, message, false);
     return true;
 }
 
@@ -64,9 +65,11 @@ bool D1WarningManager::addWarning(int32 code, int32 zoneID)
 
 bool D1WarningManager::addWarning(int32 code, int64 taskID, int32 zoneID, int32 reason)
 {
-    B1String commandID, carrierID;
-    if (getTaskTransferInfo(taskID, &commandID, &carrierID) != true)
-        return addWarning(code, "N/A", "N/A", taskID, zoneID, reason);
-    else
-        return addWarning(code, commandID, carrierID, taskID, zoneID, reason);
+    // todo:
+    return false;
+    //B1String commandID, carrierID;
+    //if (getTaskTransferInfo(taskID, &commandID, &carrierID) != true)
+    //    return addWarning(code, "N/A", "N/A", taskID, zoneID, reason);
+    //else
+    //    return addWarning(code, commandID, carrierID, taskID, zoneID, reason);
 }

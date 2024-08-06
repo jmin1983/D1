@@ -46,6 +46,7 @@ namespace BnD {
         int32 reason() const { return _reason.second; }
         const B1String& carrierID() const { return _carrierID.second; }
 
+        void setSerialNumber(int64 value) { _serialNumber.second = value; }
         void setTaskID(int64 value) { _taskID.second = value; }
         void setZoneID(int32 value) { _zoneID.second = value; }
         void setServiceID(int32 value) { _serviceID.second = value; }

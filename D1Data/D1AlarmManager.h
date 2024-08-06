@@ -18,7 +18,7 @@
 
 #include <B1Base/B1Singleton.h>
 
-#include <set>
+#include <list>
 
 namespace BnD {
     class D1Alarm;
@@ -28,29 +28,29 @@ namespace BnD {
         D1AlarmReader();
         virtual ~D1AlarmReader();
     protected:
-        const B1String _prefixRecord;
-        const B1String _keyActive;
         D1RedisClientInterface* _redisClientInterface;
     protected:
         virtual void implInitialize(D1RedisClientInterface* redisClientInterface);
         virtual void implFinalize();
-    protected:
-        bool getTaskTransferInfo(int64 taskID, B1String* commandID, B1String* carrierID);
     public:
         void initialize(D1RedisClientInterface* redisClientInterface);
         void finalize();
         std::shared_ptr<D1Alarm> getAlarmInfo(int64 serialNumber) const;
-        bool getActiveAlarmSerialNumbers(std::set<int64>* serialNumbers) const;
-        bool getActiveAlarmCodes(std::set<int32>* codes) const;
-        bool isAlarmActivated() const;
-        bool isAlarmActivated(int32 zoneID) const;
+        std::list<std::shared_ptr<D1Alarm> > getAllAlarmInfos() const;      //  WARNING: do not use too often. it scans all data.
     };
 
     class D1AlarmWriter : public D1AlarmReader {
+    public:
+        D1AlarmWriter();
     protected:
         virtual int64 implMakeNewSerialNumber() = 0;
+        virtual void implLogAlarm(int64 serialNumber, int32 code, int32 serviceID, int32 zoneID, int64 taskID, int32 reason, B1String&& carrierID, B1String&& data) {}
     protected:
         int64 makeNewSerialNumber();
+    public:
+        bool clearAlarm(int64 serialNumber, int32 serviceID, const B1String& resolvedBy);
+        bool addAlarm(int32 code, int32 serviceID, int32 zoneID, int64 taskID, int32 reason);
+        bool addAlarm(int32 code, int32 serviceID, int32 zoneID, int64 taskID, int32 reason, B1String&& carrierID, B1String&& data = "");
     };
 }   //  !BnD
 

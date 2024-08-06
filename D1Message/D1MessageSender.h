@@ -28,7 +28,6 @@ namespace BnD {
         bool publishMessage(const B1String& channel, const D1BaseMessage& message, bool essential, D1RedisClientInterface* redisClientInterface) const;
         bool publishMessageWithTime(const B1String& channel, D1BaseMessage* message, bool essential, D1RedisClientInterface* redisClientInterface) const;
     public:
-        bool sendNotifyEvent(int64 taskID, int32 zoneID, int32 serviceID, int32 code, int32 reason, B1String&& carrierID, D1RedisClientInterface* redisClientInterface) const;
         bool sendResponseKeepAliveToMS(int32 serviceID, D1RedisClientInterface* redisClientInterface) const;
         bool sendLogMessageDebug(int32 serviceID, int64 taskID, int32 zoneID, B1String&& comment, D1RedisClientInterface* redisClientInterface) const;
         bool sendLogMessageInfo(int32 serviceID, int64 taskID, int32 zoneID, B1String&& comment, D1RedisClientInterface* redisClientInterface) const;

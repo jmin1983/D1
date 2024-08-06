@@ -16,59 +16,50 @@
 #pragma once
 #endif
 
-#include <map>
+#include <D1Data/D1RedisHashmapObject.h>
 
 namespace BnD {
-    class D1Alarm {
+    class D1Alarm : public D1RedisHashmapObject {
     public:
-        D1Alarm();
-        D1Alarm(int64 serialNumber, int32 code, int64 taskID, int32 zoneID, int32 serviceID, int32 reason,
-                B1String&& commandID, B1String&& carrierID, B1String&& activateTime, B1String&& data = "");
+        D1Alarm(int64 serialNumber);
+        D1Alarm(int64 serialNumber, int32 code, int64 taskID, int32 zoneID, int32 serviceID, int32 reason, B1String&& carrierID, B1String&& data = "");
         virtual ~D1Alarm();
+    private:
+        static const B1String _alarmKey;
+        DataInt64 _serialNumber;
     protected:
-        int64 _serialNumber;
-        int32 _code;
-        int64 _taskID;
-        int32 _zoneID;
-        int32 _serviceID;
-        int32 _reason;
-        B1String _commandID;
-        B1String _carrierID;
-        B1String _activateTime;
-        B1String _clearTime;
-        B1String _resolvedBy;
-        B1String _data;
+        DataInt32 _code;
+        DataInt64 _taskID;
+        DataInt32 _zoneID;
+        DataInt32 _serviceID;
+        DataInt32 _reason;
+        DataString _carrierID;
+        DataString _data;
     protected:
-        void appendRedisStringArgs(std::vector<B1String>* args, B1String&& key, int32 value) const;
-        void appendRedisStringArgs(std::vector<B1String>* args, B1String&& key, const B1String& value) const;
+        B1String redisKey() const final;
+        bool isValidToMakeRedisString() const final;
+        void makeRedisStringArgs(std::vector<B1String>* args) const final;
+        bool readRedisMap(const std::map<B1String, B1String>& map) final;
     public:
-        int64 serialNumber() const { return _serialNumber; }
-        int32 code() const { return _code; }
-        int64 taskID() const { return _taskID; }
-        int32 zoneID() const { return _zoneID; }
-        int32 serviceID() const { return _serviceID; }
-        int32 reason() const { return _reason; }
-        const B1String& commandID() const { return _commandID; }
-        const B1String& carrierID() const { return _carrierID; }
-        const B1String& activateTime() const { return _activateTime; }
-        const B1String& clearTime() const { return _clearTime; }
-        const B1String& resolvedBy() const { return _resolvedBy; }
-        const B1String& data() const { return _data; }
+        int64 serialNumber() const { return _serialNumber.second; }
+        int32 code() const { return _code.second; }
+        int64 taskID() const { return _taskID.second; }
+        int32 zoneID() const { return _zoneID.second; }
+        int32 serviceID() const { return _serviceID.second; }
+        int32 reason() const { return _reason.second; }
+        const B1String& carrierID() const { return _carrierID.second; }
+        const B1String& data() const { return _data.second; }
 
-        void setCode(int32 code) { _code = code; }
-        void setTaskID(int64 taskID) { _taskID = taskID; }
-        void setZoneID(int32 zoneID) { _zoneID = zoneID; }
-        void setServiceID(int32 value) { _serviceID = value; }
-        void setReason(int32 reason) { _reason = reason; }
-        void setCommandID(B1String&& id) { _commandID = std::move(id); }
-        void setCarrierID(B1String&& id) { _carrierID = std::move(id); }
-        void setActivateTime(B1String&& t) { _activateTime = std::move(t); }
-        void setClearTime(B1String&& t) { _clearTime = std::move(t); }
-        void setResolvedBy(B1String&& value) { _resolvedBy = std::move(value); }
-        void setData(B1String&& value) { _data = std::move(value); }
-
-        void toRedisStringArgs(std::vector<B1String>* args) const;
-        void fromRedisMap(const std::map<B1String, B1String>& map);
+        void setCode(int32 value) { _code.second = value; }
+        void setTaskID(int64 value) { _taskID.second = value; }
+        void setZoneID(int32 value) { _zoneID.second = value; }
+        void setServiceID(int32 value) { _serviceID.second = value; }
+        void setReason(int32 value) { _reason.second = value; }
+        void setCarrierID(B1String&& value) { _carrierID.second = std::move(value); }
+        void setData(B1String&& value) { _data.second = std::move(value); }
+    public:
+        static const B1String& alarmKey() { return _alarmKey; }
+        static B1String redisKey(int64 serialNumber);
     };
 }   //  !BnD
 

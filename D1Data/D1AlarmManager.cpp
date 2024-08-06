@@ -15,13 +15,14 @@
 
 #include <D1Base/D1Consts.h>
 #include <D1Base/D1RedisClientInterface.h>
+#include <D1Message/D1MessageSender.h>
+#include <D1Message/D1MsgEventNtf.h>
+#include <D1EQData/D1ZoneRepository.h>
 
 using namespace BnD;
 
 D1AlarmReader::D1AlarmReader()
-    : _prefixRecord("Alarm:Record:")
-    , _keyActive("Alarm:ActiveAlarms")
-    , _redisClientInterface(NULL)
+    : _redisClientInterface(NULL)
 {
 }
 
@@ -39,19 +40,6 @@ void D1AlarmReader::implFinalize()
     _redisClientInterface = NULL;
 }
 
-bool D1AlarmReader::getTaskTransferInfo(int64 taskID, B1String* commandID, B1String* carrierID)
-{
-    B1String key;
-    key.format("TransferInfo:%d", taskID);
-    std::vector<B1String> fields(2), out;
-    fields[0] = "CommandID";
-    fields[1] = "CarrierID";
-    _redisClientInterface->hmget(key, fields, &out);
-    *commandID = std::move(out[0]);
-    *carrierID = std::move(out[1]);
-    return commandID->isEmpty() != true;
-}
-
 void D1AlarmReader::initialize(D1RedisClientInterface* redisClientInterface)
 {
     implInitialize(redisClientInterface);
@@ -64,71 +52,68 @@ void D1AlarmReader::finalize()
 
 auto D1AlarmReader::getAlarmInfo(int64 serialNumber) const -> std::shared_ptr<D1Alarm>
 {
-    B1String key;
-    key.format("%s%lld", _prefixRecord.cString(), serialNumber);
-    std::map<B1String, B1String> out;
-    if (_redisClientInterface->hgetall(key, &out) != true) {
-        return std::shared_ptr<D1Alarm>();
-    }
-    auto alarm(std::make_shared<D1Alarm>());
-    alarm->fromRedisMap(std::move(out));
+    auto alarm = std::make_shared<D1Alarm>(serialNumber);
+    alarm->readFromRedis(_redisClientInterface);
     return alarm;
 }
 
-bool D1AlarmReader::getActiveAlarmSerialNumbers(std::set<int64>* serialNumbers) const
+auto D1AlarmReader::getAllAlarmInfos() const -> std::list<std::shared_ptr<D1Alarm> >
 {
-    std::list<B1String> out;
-    if (_redisClientInterface->smembers(_keyActive, &out) != true) {
-        return false;
-    }
-    for (const auto& o : out) {
+    std::list<std::shared_ptr<D1Alarm> > result;
+    std::set<B1String> keys;
+    _redisClientInterface->scan(D1Alarm::alarmKey() + ":*[0-9]", &keys);
+    for (const auto& key : keys) {
+        std::map<B1String, B1String> out;
+        if (_redisClientInterface->hgetall(key, &out) != true) {
+            continue;
+        }
+        int64 serialNumber = D1Consts::ID_INVALID;
         try {
-            int32 alarm = o.toInt32();
-            if (alarm != D1Consts::ID_INVALID) {
-                serialNumbers->insert(alarm);
-            }
+            serialNumber = key.substring(D1Alarm::alarmKey().length() + 1).toInt64();
         }
-        catch (...) {}
-    }
-    return true;
-}
-
-bool D1AlarmReader::getActiveAlarmCodes(std::set<int32>* codes) const
-{
-    std::set<int64> serialNumbers;
-    if (getActiveAlarmSerialNumbers(&serialNumbers) != true)
-        return false;
-    for (auto serialNumber : serialNumbers) {
+        catch (...) {
+            continue;
+        }
         if (auto alarm = getAlarmInfo(serialNumber)) {
-            codes->insert(alarm->code());
+            result.push_back(alarm);
         }
     }
-    return true;
+    return result;
 }
 
-bool D1AlarmReader::isAlarmActivated() const
+D1AlarmWriter::D1AlarmWriter()
 {
-    std::set<int64> serialNumbers;
-    getActiveAlarmSerialNumbers(&serialNumbers);
-    return serialNumbers.empty() != true;
-}
-
-bool D1AlarmReader::isAlarmActivated(int32 zoneID) const
-{
-    std::set<int64> serialNumbers;
-    if (getActiveAlarmSerialNumbers(&serialNumbers) != true)
-        return false;
-    for (auto serialNumber : serialNumbers) {
-        if (auto alarm = getAlarmInfo(serialNumber)) {
-            if (alarm->zoneID() == zoneID) {
-                return true;
-            }
-        }
-    }
-    return false;
 }
 
 int64 D1AlarmWriter::makeNewSerialNumber()
 {
     return implMakeNewSerialNumber();
+}
+
+bool D1AlarmWriter::clearAlarm(int64 serialNumber, int32 serviceID, const B1String& resolvedBy)
+{
+    auto alarm = getAlarmInfo(serialNumber);
+    if (alarm == NULL) {
+        return false;
+    }
+    if (alarm->zoneID() != D1Consts::ID_INVALID) {
+        if (D1ZoneRepository::isOwnerZone(alarm->zoneID(), serviceID) != true) {
+            assert(false);  //  only owner can clear the alarm.
+            return false;
+        }
+    }
+    assert(false);  //  todo: implement.
+    return false;
+}
+
+bool D1AlarmWriter::addAlarm(int32 code, int32 serviceID, int32 zoneID, int64 taskID, int32 reason)
+{
+    assert(false);  //  todo: implement.
+    return false;
+}
+
+bool D1AlarmWriter::addAlarm(int32 code, int32 serviceID, int32 zoneID, int64 taskID, int32 reason, B1String&& carrierID, B1String&& data)
+{
+    assert(false);  //  todo: implement.
+    return false;
 }

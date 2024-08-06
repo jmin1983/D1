@@ -16,36 +16,29 @@
 
 using namespace BnD;
 
-D1Alarm::D1Alarm()
-    : _serialNumber(D1Consts::ID_INVALID)
-    , _code(0)
-    , _taskID(D1Consts::ID_INVALID)
-    , _zoneID(D1Consts::ID_INVALID)
-    , _serviceID(D1Consts::SERVICE_ID_INVALID)
-    , _reason(0)
-    , _commandID()
-    , _carrierID()
-    , _activateTime()
-    , _clearTime()
-    , _resolvedBy()
-    , _data()
+const B1String D1Alarm::_alarmKey("Alarm");
+
+D1Alarm::D1Alarm(int64 serialNumber)
+    : _serialNumber("SerialNumber", serialNumber)
+    , _code("Code", 0)
+    , _taskID("TaskID", D1Consts::ID_INVALID)
+    , _zoneID("ZoneID", D1Consts::ID_INVALID)
+    , _serviceID("ServiceID", D1Consts::SERVICE_ID_INVALID)
+    , _reason("Reason", 0)
+    , _carrierID("CarrierID", "")
+    , _data("Data", "")
 {
 }
 
-D1Alarm::D1Alarm(int64 serialNumber, int32 code, int64 taskID, int32 zoneID, int32 serviceID, int32 reason,
-                 B1String&& commandID, B1String&& carrierID, B1String&& activateTime, B1String&& data)
-    : _serialNumber(serialNumber)
-    , _code(code)
-    , _taskID(taskID)
-    , _zoneID(zoneID)
-    , _serviceID(serviceID)
-    , _reason(reason)
-    , _commandID(commandID)
-    , _carrierID(carrierID)
-    , _activateTime(activateTime)
-    , _clearTime()
-    , _resolvedBy()
-    , _data(data)
+D1Alarm::D1Alarm(int64 serialNumber, int32 code, int64 taskID, int32 zoneID, int32 serviceID, int32 reason, B1String&& carrierID, B1String&& data)
+    : _serialNumber("SerialNumber", serialNumber)
+    , _code("Code", code)
+    , _taskID("TaskID", taskID)
+    , _zoneID("ZoneID", zoneID)
+    , _serviceID("ServiceID", serviceID)
+    , _reason("Reason", reason)
+    , _carrierID("CarrierID", std::move(carrierID))
+    , _data("Data", std::move(data))
 {
 }
 
@@ -53,63 +46,42 @@ D1Alarm::~D1Alarm()
 {
 }
 
-void D1Alarm::appendRedisStringArgs(std::vector<B1String>* args, B1String&& key, int32 value) const
+B1String D1Alarm::redisKey() const
 {
-    if (value > 0) {
-        args->push_back(std::move(key));
-        args->push_back(B1String::formatAs("%d", value));
-    }
+    return redisKey(serialNumber());
 }
 
-void D1Alarm::appendRedisStringArgs(std::vector<B1String>* args, B1String&& key, const B1String& value) const
+bool D1Alarm::isValidToMakeRedisString() const
 {
-    if (value.isEmpty() != true) {
-        args->push_back(std::move(key));
-        args->push_back(value.copy());
-    }
+    return serialNumber() != D1Consts::ID_INVALID;
 }
 
-void D1Alarm::toRedisStringArgs(std::vector<B1String>* args) const
+void D1Alarm::makeRedisStringArgs(std::vector<B1String>* args) const
 {
-    args->reserve(20);
-    args->push_back("HMSET");
-    args->push_back(B1String::formatAs("Alarm:Record:%lld", _serialNumber));
-    args->push_back("SerialNumber");
-    args->push_back(B1String::formatAs("%lld", _serialNumber));
-    appendRedisStringArgs(args, "Code", _code);
-    appendRedisStringArgs(args, "ZoneID", _zoneID);
-    appendRedisStringArgs(args, "ServiceID", _serviceID);
-    appendRedisStringArgs(args, "Reason", _reason);
-    appendRedisStringArgs(args, "TaskID", _taskID);
-    appendRedisStringArgs(args, "CommandID", _commandID);
-    appendRedisStringArgs(args, "CarrierID", _carrierID);
-    appendRedisStringArgs(args, "ActivateTime", _activateTime);
-    appendRedisStringArgs(args, "ClearTime", _clearTime);
-    appendRedisStringArgs(args, "ResolvedBy", _resolvedBy);
-    appendRedisStringArgs(args, "Data", _data);
+    setRedisString(args, _code);
+    setRedisString(args, _taskID);
+    setRedisString(args, _zoneID);
+    setRedisString(args, _serviceID);
+    setRedisString(args, _reason);
+    setRedisString(args, _carrierID);
+    setRedisString(args, _data);
 }
 
-void D1Alarm::fromRedisMap(const std::map<B1String, B1String>& map)
+bool D1Alarm::readRedisMap(const std::map<B1String, B1String>& map)
 {
-#ifndef SET_FROM_REDIS_MAP
-#define SET_FROM_REDIS_MAP_INT64(k, v) itr = map.find(k); if (itr != map.end() && itr->second.isEmpty() != true) v = itr->second.toInt64(); else v = -1;
-#define SET_FROM_REDIS_MAP_INT32(k, v) itr = map.find(k); if (itr != map.end() && itr->second.isEmpty() != true) v = itr->second.toInt32(); else v = -1;
-#define SET_FROM_REDIS_MAP_STRING(k, v) itr = map.find(k); if (itr != map.end() && itr->second.isEmpty() != true) v = itr->second.copy(); else v.clear();
-#endif
-    std::map<B1String, B1String>::const_iterator itr;
-    try {
-        SET_FROM_REDIS_MAP_INT64("SerialNumber", _serialNumber);
-        SET_FROM_REDIS_MAP_INT32("Code", _code);
-        SET_FROM_REDIS_MAP_INT32("ZoneID", _zoneID);
-        SET_FROM_REDIS_MAP_INT32("ServiceID", _serviceID);
-        SET_FROM_REDIS_MAP_INT32("Reason", _reason);
-        SET_FROM_REDIS_MAP_INT32("TaskID", _taskID);
-        SET_FROM_REDIS_MAP_STRING("CommandID", _commandID);
-        SET_FROM_REDIS_MAP_STRING("CarrierID", _carrierID);
-        SET_FROM_REDIS_MAP_STRING("ActivateTime", _activateTime);
-        SET_FROM_REDIS_MAP_STRING("ClearTime", _clearTime);
-        SET_FROM_REDIS_MAP_STRING("ResolvedBy", _resolvedBy);
-        SET_FROM_REDIS_MAP_STRING("Data", _data);
-    }
-    catch (...) { assert(false); }
+    readFromRedisMap(map, &_code);
+    readFromRedisMap(map, &_taskID);
+    readFromRedisMap(map, &_zoneID);
+    readFromRedisMap(map, &_serviceID);
+    readFromRedisMap(map, &_reason);
+    readFromRedisMap(map, &_carrierID);
+    readFromRedisMap(map, &_data);
+    return true;
 }
+
+B1String D1Alarm::redisKey(int64 serialNumber)
+{
+    assert(serialNumber != D1Consts::ID_INVALID);
+    return serialNumber != D1Consts::ID_INVALID ? B1String::formatAs("%s:%lld", _alarmKey.cString(), serialNumber) : "";
+}
+

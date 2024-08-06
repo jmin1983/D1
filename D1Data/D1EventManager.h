@@ -22,20 +22,17 @@ namespace BnD {
     class D1RedisClientInterface;
     class D1EventManager : public B1Singleton<D1EventManager> {
     public:
-        D1EventManager(B1String&& channel);
+        D1EventManager();
         virtual ~D1EventManager();
     protected:
-        const B1String _channel;
         D1RedisClientInterface* _redisClientInterface;
-    protected:
-        bool getTaskTransferInfo(int64 taskID, B1String* commandID, B1String* carrierID);
     public:
         void initialize(D1RedisClientInterface* redisClientInterface);
         void finalize();
-        bool addEvent(int32 code, const B1String& commandID, const B1String& carrierID, int64 taskID, int32 zoneID, int32 reason, bool isEssential = false);
-        bool addEvent(int32 code);
-        bool addEvent(int32 code, int32 zoneID);
-        bool addEvent(int32 code, int64 taskID, int32 zoneID, int32 reason, bool isEssential = false);
+        bool addEvent(int32 code, int32 serviceID, bool isEssential = false);
+        bool addEvent(int32 code, int32 serviceID, int32 zoneID, bool isEssential = false);
+        bool addEvent(int32 code, int32 serviceID, int32 zoneID, int64 taskID, int32 reason, bool isEssential = false);
+        bool addEvent(int32 code, int32 serviceID, int32 zoneID, int64 taskID, int32 reason, B1String&& carrierID, bool isEssential = false);
     };
 }   //  !BnD
 

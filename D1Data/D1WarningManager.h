@@ -21,7 +21,7 @@
 namespace BnD {
     class D1WarningManager : public D1EventManager {
     public:
-        D1WarningManager(B1String&& channel);
+        D1WarningManager();
     public:
         bool addWarning(int32 code, const B1String &commandID, const B1String &carrierID, int64 taskID, int32 zoneID, int32 reason);
         bool addWarning(int32 code);
