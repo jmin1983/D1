@@ -38,7 +38,7 @@ namespace BnD {
         int32 zoneID() const { return _zoneID.second; }
         const B1String& resolvedBy() const { return _resolvedBy.second; }
         
-        void setSerialNumbererialNo(int64 value) { _serialNumber.second = value; }
+        void setSerialNumber(int64 value) { _serialNumber.second = value; }
         void setZoneID(int32 value) { _zoneID.second = value; }
         void setResolvedBy(B1String&& value) { _resolvedBy.second = std::move(value); }
     public:
