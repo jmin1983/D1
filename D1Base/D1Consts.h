@@ -23,7 +23,7 @@ namespace BnD {
             ID_USER_DEFINED = 0,
         };
         enum SERVICE_ID {
-            SERVICE_ID_INVALID = -1,
+            SERVICE_ID_INVALID = ID_INVALID,
 
             SERVICE_ID_DISTRIBUTED_BEGIN = 0,
 
@@ -58,6 +58,12 @@ namespace BnD {
             SERVICE_ID_WAS,
 
             SERVICE_ID_STAND_ALONE_END = SERVICE_ID_STAND_ALONE_BEGIN + 1000,
+        };
+        enum RESERVED_UNIQUE_ID {
+            RESERVED_UNIQUE_ID_INVALID = ID_INVALID,
+
+            RESERVED_UNIQUE_ID_MS_BEGIN = 1,
+            RESERVED_UNIQUE_ID_MS_END = RESERVED_UNIQUE_ID_MS_BEGIN + 1000 * 1000,
         };
     };
 }   //  !BnD

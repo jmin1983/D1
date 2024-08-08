@@ -80,13 +80,13 @@ void D1ZoneDynamicAttributes::reloadStates(D1RedisClientInterface* redisReader)
     }
 }
 
-void D1ZoneDynamicAttributes::notifyAttributesChanged(D1RedisClientInterface* delayedCommander) const
+void D1ZoneDynamicAttributes::notifyAttributesChanged(D1RedisClientInterface* delayedCommander, bool isEssential) const
 {
     const auto notifyString = toMessage();
     if (_plugin) {
         _plugin->implNotifyAttributesChanged(zoneID(), notifyString);
     }
     if (delayedCommander) {
-        delayedCommander->publish(D1MessageSender::updateZoneAttributesChannel(D1ZoneRepository::toOwnerID(zoneID())), notifyString, false);
+        delayedCommander->publish(D1MessageSender::updateZoneAttributesChannel(D1ZoneRepository::toOwnerID(zoneID())), notifyString, isEssential);
     }
 }

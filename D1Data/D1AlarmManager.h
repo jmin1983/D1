@@ -21,7 +21,9 @@
 #include <list>
 
 namespace BnD {
+    class B1Lock;
     class D1Alarm;
+    class D1Zone;
     class D1RedisClientInterface;
     class D1AlarmReader : public B1Singleton<D1AlarmReader> {
     public:
@@ -43,14 +45,19 @@ namespace BnD {
     public:
         D1AlarmWriter();
     protected:
+        std::shared_ptr<B1Lock> _alarmLock;
+    protected:
         virtual int64 implMakeNewSerialNumber() = 0;
-        virtual void implLogAlarm(int64 serialNumber, int32 code, int32 serviceID, int32 zoneID, int64 taskID, int32 reason, B1String&& carrierID, B1String&& data) {}
+        virtual void onAlarmAdded(int64 serialNumber, int32 code, int32 serviceID, int64 taskID, int32 reason, const D1Zone* zone, const B1String& carrierID, const B1String& data);
+        virtual void onAlarmCleared(int64 serialNumber, int32 serviceID, int32 zoneID);
     protected:
         int64 makeNewSerialNumber();
     public:
-        bool clearAlarm(int64 serialNumber, int32 serviceID, const B1String& resolvedBy);
-        bool addAlarm(int32 code, int32 serviceID, int32 zoneID, int64 taskID, int32 reason);
-        bool addAlarm(int32 code, int32 serviceID, int32 zoneID, int64 taskID, int32 reason, B1String&& carrierID, B1String&& data = "");
+        bool addAlarm(int32 code, int32 serviceID, int64 taskID, int32 reason);
+        bool addAlarm(int32 code, int32 serviceID, int64 taskID, int32 reason, const D1Zone* zone);
+        bool addAlarm(int32 code, int32 serviceID, int64 taskID, int32 reason, const D1Zone* zone, const B1String& carrierID, B1String&& data = "");
+        bool clearAlarm(int64 serialNumber, int32 serviceID);
+        bool clearAlarm(int64 serialNumber, int32 serviceID, const D1Zone* zone);
     };
 }   //  !BnD
 

@@ -16,12 +16,12 @@
 
 using namespace BnD;
 
-D1MsgAlarmClearRsp::D1MsgAlarmClearRsp()
+D1MsgAlarmClearRsp::D1MsgAlarmClearRsp(int64 serialNumber, int32 serviceID, int32 zoneID, bool alarmCleared)
     : D1BaseMessage()
-    , _serialNumber("SerialNumber", D1Consts::ID_INVALID)
-    , _zoneID("ZoneID", D1Consts::ID_INVALID)
-    , _serviceID("ServiceID", D1Consts::SERVICE_ID_INVALID)
-    , _alarmCleared("AlarmCleared", false)
+    , _serialNumber("SerialNumber", serialNumber)
+    , _zoneID("ZoneID", zoneID)
+    , _serviceID("ServiceID", serviceID)
+    , _alarmCleared("AlarmCleared", alarmCleared)
 {
     _messageID.second = messageString().copy();
 }

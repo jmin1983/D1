@@ -58,7 +58,7 @@ namespace BnD {
         int32 zoneID() const { return _zoneID.second; }
         void setPlugin(D1ZoneAttributePlugin* plugin) { _plugin = plugin; }
         void reloadStates(D1RedisClientInterface* redisReader);
-        void notifyAttributesChanged(D1RedisClientInterface* delayedCommander) const;
+        void notifyAttributesChanged(D1RedisClientInterface* delayedCommander, bool isEssential = false) const;
     public:
         static void setWriteOperatorChangedLog(bool flag) { _writeOperatorChangedLog = flag; }
     };
