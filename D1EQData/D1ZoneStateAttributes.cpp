@@ -134,6 +134,22 @@ void D1ZoneStateAttributes::setZoneState(ZONE_STATE state, D1RedisClientInterfac
     }
 }
 
+void D1ZoneStateAttributes::setZoneStateValidIfUnknownState(D1RedisClientInterface* delayedCommander)
+{
+    if (zoneState() != ZONE_STATE_UNKNOWN) {
+        return;
+    }
+    if (isOwnerZone() != true) {
+        assert(false);
+        return;
+    }
+    B1LOG("setZoneState valid: zoneID[%d]", zoneID());
+    _zoneState.second = ZONE_STATE_IN_SERVICE;
+    if (delayedCommander) {
+        notifyAttributesChanged(delayedCommander);
+    }
+}
+
 void D1ZoneStateAttributes::setAlarmed(int64 id, D1RedisClientInterface* delayedCommander)
 {
     if (alarmID() == id) {

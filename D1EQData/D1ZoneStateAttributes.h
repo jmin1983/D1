@@ -56,6 +56,7 @@ namespace BnD {
 
         //  'set' is only available for owner dcs.
         void setZoneState(ZONE_STATE state, D1RedisClientInterface* delayedCommander = NULL, bool forced = false);
+        void setZoneStateValidIfUnknownState(D1RedisClientInterface* delayedCommander);
         void setZoneStateInService(D1RedisClientInterface* delayedCommander = NULL, bool forced = false) { setZoneState(ZONE_STATE_IN_SERVICE, delayedCommander, forced); }
         void setZoneStateOutOfService(D1RedisClientInterface* delayedCommander = NULL, bool forced = false) { setZoneState(ZONE_STATE_OUT_OF_SERVICE, delayedCommander, forced); }
         void setZoneStateOffline(D1RedisClientInterface* delayedCommander = NULL, bool forced = false) { setZoneState(ZONE_STATE_OFFLINE, delayedCommander, forced); }
