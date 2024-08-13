@@ -40,6 +40,8 @@ auto D1BasePacketAnalyzer::implAnalyzeData(uint8* data, size_t size, size_t* pos
             return analyzeProtocolTypeTextMessage(data + (*pos), size - (*pos), pos);
         case D1BaseProtocol::Header::TYPE_TEXT_MESSAGE_BUNCH:
             return analyzeProtocolTypeTextMessageBunch(data + (*pos), size - (*pos), pos);
+        case D1BaseProtocol::Header::TYPE_BINARY:
+            return analyzeProtocolTypeBinary(data + (*pos), size - (*pos), pos);
         default:
             B1LOG("Unknown type: size[%d], recvdBuffer_size[%d]", size, _recvdBuffer.size());
             //assert(false);
@@ -120,5 +122,33 @@ auto D1BasePacketAnalyzer::analyzeProtocolTypeTextMessageBunch(uint8* data, size
     }
     implOnProtocolTypeTextMessageBunch(index, indexCount, std::move(dataTextMessage._message));
     (*pos) += (indexSize + indexCountSize + dataTextLengthSize + dataTextMessage._length);
+    return ANALYZE_RESULT_SUCCESS;
+}
+
+auto D1BasePacketAnalyzer::analyzeProtocolTypeBinary(uint8* data, size_t size, size_t* pos) -> ANALYZE_RESULT
+{
+    int32 index = -1;
+    int32 indexCount = 0;
+    uint32 dataLength = 0;
+
+    const size_t indexSize = sizeof(index);
+    const size_t indexCountSize = sizeof(indexCount);
+    const size_t dataLengthSize = sizeof(dataLength);
+    if (size < indexSize + indexCountSize + dataLengthSize) {
+        return ANALYZE_RESULT_NOT_ENOUTH_DATA;
+    }
+
+    memcpy(&dataLength, data + indexSize + indexCountSize, dataLengthSize);
+    dataLength = TO_UINT32_FOR_NETWORK(dataLength);
+    if (size < indexSize + indexCountSize + dataLengthSize + dataLength) {
+        return ANALYZE_RESULT_NOT_ENOUTH_DATA;
+    }
+    memcpy(&index, data, indexSize);
+    memcpy(&indexCount, data + indexSize, indexCountSize);
+    index = TO_INT32_FOR_NETWORK(index);
+    indexCount = TO_INT32_FOR_NETWORK(indexCount);
+
+    implOnProtocolTypeBinary(index, indexCount, std::vector<uint8>(data + indexSize + indexCountSize + dataLengthSize, data + indexSize + indexCountSize + dataLengthSize + dataLength));
+    (*pos) += (indexSize + indexCountSize + dataLengthSize + dataLength);
     return ANALYZE_RESULT_SUCCESS;
 }

@@ -28,6 +28,7 @@ namespace BnD {
                 TYPE_NOTIFY_ID,
                 TYPE_TEXT_MESSAGE,
                 TYPE_TEXT_MESSAGE_BUNCH,
+                TYPE_BINARY,
 
                 TYPE_BEGIN_USER = 100,
 

@@ -142,3 +142,16 @@ void D1BaseClient::sendTextMessageToAllSessions(const B1String& message, std::se
         }
     }
 }
+
+auto D1BaseClient::sendBinary(int32 id, int32 index, int32 indexCount, const std::vector<uint8>& binaryData) -> SEND_RESULT
+{
+    if (auto session = sessionManager()->getSessionByHandleID<D1BaseClientSession>(id)) {
+        if (session->sendData(packetMaker()->makeDataBinary(index, indexCount, binaryData)) != true) {
+            return SEND_RESULT_NETWORK_ERROR;
+        }
+        return SEND_RESULT_SUCCESS;
+    }
+    else {
+        return SEND_RESULT_NO_ID_FOUND;
+    }
+}

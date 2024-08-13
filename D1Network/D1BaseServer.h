@@ -54,6 +54,7 @@ namespace BnD {
         int32 aliveInterval() const { return _aliveInterval; }
         bool containsID(int32 id) const;
         void sendTextMessageToAllSessions(const B1String& message, std::set<int32>* sentIDs = NULL);
+        SEND_RESULT sendBinary(int32 id, int32 index, int32 indexCount, const std::vector<uint8>& binaryData);
     };
 }   //  !BnD
 

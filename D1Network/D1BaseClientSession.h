@@ -39,6 +39,7 @@ namespace BnD {
         void implOnProtocolTypeAliveCheck() final;
         virtual void implOnProtocolTypeTextMessage(B1String&& message) override;
         virtual void implOnProtocolTypeTextMessageBunch(int32 index, int32 indexCount, B1String&& message) override;
+        virtual void implOnProtocolTypeBinary(int32 index, int32 indexCount, std::vector<uint8>&& binaryData) override;
     protected:  //  B1BaseClientSession
         void onReadComplete(uint8* data, size_t dataSize) final;
         virtual void implOnConnect() override;

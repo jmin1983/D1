@@ -70,6 +70,13 @@ void D1BaseServerSession::implOnProtocolTypeTextMessageBunch(int32 index, int32 
     }
 }
 
+void D1BaseServerSession::implOnProtocolTypeBinary(int32 index, int32 indexCount, std::vector<uint8>&& binaryData)
+{
+    if (_messageListener) {
+        _messageListener->onRecvServerDataBinary(index, indexCount, std::move(binaryData));
+    }
+}
+
 void D1BaseServerSession::onReadComplete(uint8* data, size_t dataSize)
 {
     if (analyzeData(data, dataSize) != true) {

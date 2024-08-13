@@ -25,12 +25,14 @@ namespace BnD {
         virtual void implOnProtocolTypeNotifyID(int32 id) {}
         virtual void implOnProtocolTypeTextMessage(B1String&& message) {}
         virtual void implOnProtocolTypeTextMessageBunch(int32 index, int32 indexCount, B1String&& message) {}
+        virtual void implOnProtocolTypeBinary(int32 index, int32 indexCount, std::vector<uint8>&& binaryData) {}
     protected:
         ANALYZE_RESULT implAnalyzeData(uint8* data, size_t size, size_t* pos) final;
     protected:
         ANALYZE_RESULT analyzeProtocolTypeNotifyID(uint8* data, size_t size, size_t* pos);
         ANALYZE_RESULT analyzeProtocolTypeTextMessage(uint8* data, size_t size, size_t* pos);
         ANALYZE_RESULT analyzeProtocolTypeTextMessageBunch(uint8* data, size_t size, size_t* pos);
+        ANALYZE_RESULT analyzeProtocolTypeBinary(uint8* data, size_t size, size_t* pos);
     };
 }   //  !BnD
 

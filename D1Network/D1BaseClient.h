@@ -54,6 +54,7 @@ namespace BnD {
         SEND_RESULT sendTextMessage(int32 id, const B1String& message);
         SEND_RESULT sendTextMessageBunch(int32 id, int32 index, int32 indexCount, const B1String& message);
         void sendTextMessageToAllSessions(const B1String& message, std::set<int32>* sentIDs = NULL);
+        SEND_RESULT sendBinary(int32 id, int32 index, int32 indexCount, const std::vector<uint8>& binaryData);
     };
 }   //  !BnD
 

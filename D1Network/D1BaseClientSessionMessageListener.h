@@ -22,6 +22,7 @@ namespace BnD {
         virtual void onClientSessionConnected() {}
         virtual void onRecvClientDataTextMessage(B1String&& message) {}
         virtual void onRecvClientDataTextMessageBunch(int32 index, int32 indexCount, B1String&& message) {}
+        virtual void onRecvClientDataBinary(int32 index, int32 indexCount, std::vector<uint8>&& binaryData) {}
     };
 }   //  !BnD
 

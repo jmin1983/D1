@@ -21,6 +21,7 @@ namespace BnD {
     public:
         virtual void onRecvServerDataTextMessage(B1String&& message) {}
         virtual void onRecvServerDataTextMessageBunch(int32 index, int32 indexCount, B1String&& message) {}
+        virtual void onRecvServerDataBinary(int32 index, int32 indexCount, std::vector<uint8>&& binaryData) {}
     };
 }   //  !BnD
 
