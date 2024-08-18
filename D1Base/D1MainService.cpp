@@ -39,7 +39,7 @@ void D1MainService::checkPerformance()
     int64 memTotal = _performanceProfiler->memTotal();
     float64 memUsagePercent = static_cast<float64>(memUsage) * 100 / memTotal;
     float64 cpuUsagePercent = _performanceProfiler->cpuUsage();
-    B1LOG("performance check: pid[%u], cpu[%f], mem[%ld/%ld][%f%%]", pid, cpuUsagePercent, memUsage, memTotal, memUsagePercent);
+    B1LOG("performance check: pid[%u], cpu[%f], mem[%lld/%lld][%f%%]", pid, cpuUsagePercent, memUsage, memTotal, memUsagePercent);
     onCheckPerformance(pid, memUsage, memTotal, memUsagePercent, cpuUsagePercent);
 }
 

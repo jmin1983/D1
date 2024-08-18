@@ -27,6 +27,7 @@ namespace BnD {
     protected:
         DataInt64 _serialNumber;
         DataInt64 _taskID;
+        DataInt64 _time;
         DataInt32 _zoneID;
         DataInt32 _serviceID;
         DataInt32 _code;
@@ -40,6 +41,7 @@ namespace BnD {
     public:
         int64 serialNumber() const { return _serialNumber.second; }
         int64 taskID() const { return _taskID.second; }
+        int64 time() const { return _time.second; }
         int32 zoneID() const { return _zoneID.second; }
         int32 serviceID() const { return _serviceID.second; }
         int32 code() const { return _code.second; }
@@ -48,6 +50,7 @@ namespace BnD {
 
         void setSerialNumber(int64 value) { _serialNumber.second = value; }
         void setTaskID(int64 value) { _taskID.second = value; }
+        void setTime(int64 value) { _time.second = value; }
         void setZoneID(int32 value) { _zoneID.second = value; }
         void setServiceID(int32 value) { _serviceID.second = value; }
         void setReason(int32 value) { _reason.second = value; }

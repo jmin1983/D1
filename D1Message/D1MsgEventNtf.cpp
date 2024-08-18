@@ -20,6 +20,7 @@ D1MsgEventNtf::D1MsgEventNtf(int32 code)
     : D1BaseMessage()
     , _serialNumber("SerialNumber", D1Consts::ID_INVALID)
     , _taskID("TaskID", D1Consts::ID_INVALID)
+    , _time("Time", 0)
     , _zoneID("ZoneID", D1Consts::ID_INVALID)
     , _serviceID("ServiceID", D1Consts::SERVICE_ID_INVALID)
     , _code("Code", code)
@@ -33,6 +34,7 @@ D1MsgEventNtf::D1MsgEventNtf(D1BaseMessage&& baseMessage)
     : D1BaseMessage(std::move(baseMessage))
     , _serialNumber("SerialNumber", D1Consts::ID_INVALID)
     , _taskID("TaskID", D1Consts::ID_INVALID)
+    , _time("Time", 0)
     , _zoneID("ZoneID", D1Consts::ID_INVALID)
     , _serviceID("ServiceID", D1Consts::SERVICE_ID_INVALID)
     , _code("Code", D1Consts::ID_INVALID)
@@ -49,6 +51,7 @@ void D1MsgEventNtf::archiveMessage(B1Archive* archive) const
 {
     writeDataToArchive(_serialNumber, archive);
     writeDataToArchive(_taskID, archive);
+    writeDataToArchive(_time, archive);
     writeDataToArchive(_zoneID, archive);
     writeDataToArchive(_serviceID, archive);
     writeDataToArchive(_code, archive);
@@ -60,6 +63,7 @@ void D1MsgEventNtf::unarchiveMessage(const B1Archive& archive)
 {
     readDataFromArchive(archive, &_serialNumber);
     readDataFromArchive(archive, &_taskID);
+    readDataFromArchive(archive, &_time);
     readDataFromArchive(archive, &_zoneID);
     readDataFromArchive(archive, &_serviceID);
     readDataFromArchive(archive, &_code);
@@ -72,6 +76,7 @@ B1String D1MsgEventNtf::toString() const
     B1String str = D1BaseMessage::toString();
     str.appendf(", serialNumber[%lld]", _serialNumber.second);
     str.appendf(", taskID[%lld]", taskID());
+    str.appendf(", time[%lld]", time());
     str.appendf(", zoneID[%d]", zoneID());
     str.appendf(", serviceID[%d]", serviceID());
     str.appendf(", code[%d]", code());
