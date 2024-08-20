@@ -19,8 +19,9 @@
 using namespace BnD;
 
 D1BaseServerSession::D1BaseServerSession(B1ServerSocket* serverSocket, B1BaseServerSessionListener* listener, D1BaseServer* owner, int32 maxAliveCount,
-                                         D1BaseServerSessionMessageListener* messageListener)
-    : B1ArrayBufferServerSession(serverSocket, listener)
+                                         D1BaseServerSessionMessageListener* messageListener, size_t defaultBufferSize)
+    : D1BasePacketAnalyzer(defaultBufferSize)
+    , B1ArrayBufferServerSession(serverSocket, listener)
     , _maxAliveCount(maxAliveCount)
     , _aliveCheckCount(0)
     , _owner(owner)
@@ -91,7 +92,7 @@ void D1BaseServerSession::implOnServerSessionDisconnected(int32 reason)
         owner()->handleManager()->removeID(_id);
     }
     else {
-        assert(false);
+        //assert(false);
         B1LOG("unknown handle disconnected");
     }
 }

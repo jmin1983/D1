@@ -17,37 +17,45 @@
 
 using namespace BnD;
 
-auto D1BasePacketAnalyzer::implAnalyzeData(uint8* data, size_t size, size_t* pos) -> ANALYZE_RESULT
+D1BasePacketAnalyzer::D1BasePacketAnalyzer(size_t defaultBufferSize)
+    : B1BasePacketAnalyzer(defaultBufferSize)
 {
-    D1BaseProtocol::Header::TYPE type = D1BaseProtocol::Header::TYPE_UNKNOWN;
-    {
-        D1BaseProtocol::Header header;
-        const size_t headerSize = sizeof(header);
-        if (size < headerSize) {
-            return ANALYZE_RESULT_NOT_ENOUTH_DATA;
-        }
-        memcpy(&header, data, headerSize);
-        (*pos) += headerSize;
-        type = static_cast<D1BaseProtocol::Header::TYPE>(header._type);
-    }
-    switch (type) {
+}
+
+auto D1BasePacketAnalyzer::implAnalyzeData(const D1BaseProtocol::Header& header, uint8* data, size_t size, size_t* pos) -> ANALYZE_RESULT
+{
+    switch (header._type) {
         case D1BaseProtocol::Header::TYPE_ALIVE_CHECK:
             implOnProtocolTypeAliveCheck();
             break;
         case D1BaseProtocol::Header::TYPE_NOTIFY_ID:
-            return analyzeProtocolTypeNotifyID(data + (*pos), size - (*pos), pos);
+            return analyzeProtocolTypeNotifyID(data, size, pos);
         case D1BaseProtocol::Header::TYPE_TEXT_MESSAGE:
-            return analyzeProtocolTypeTextMessage(data + (*pos), size - (*pos), pos);
+            return analyzeProtocolTypeTextMessage(data, size, pos);
         case D1BaseProtocol::Header::TYPE_TEXT_MESSAGE_BUNCH:
-            return analyzeProtocolTypeTextMessageBunch(data + (*pos), size - (*pos), pos);
+            return analyzeProtocolTypeTextMessageBunch(data, size, pos);
         case D1BaseProtocol::Header::TYPE_BINARY:
-            return analyzeProtocolTypeBinary(data + (*pos), size - (*pos), pos);
+            return analyzeProtocolTypeBinary(data, size, pos);
         default:
             B1LOG("Unknown type: size[%d], recvdBuffer_size[%d]", size, _recvdBuffer.size());
             //assert(false);
             return ANALYZE_RESULT_FAIL;
     }
     return ANALYZE_RESULT_SUCCESS;
+}
+
+auto D1BasePacketAnalyzer::implAnalyzeData(uint8* data, size_t size, size_t* pos) -> ANALYZE_RESULT
+{
+    D1BaseProtocol::Header header;
+    {
+        const size_t headerSize = sizeof(header);
+        if (size < headerSize) {
+            return ANALYZE_RESULT_NOT_ENOUTH_DATA;
+        }
+        memcpy(&header, data, headerSize);
+        (*pos) += headerSize;
+    }
+    return implAnalyzeData(header, data + (*pos), size - (*pos), pos);
 }
 
 auto D1BasePacketAnalyzer::analyzeProtocolTypeNotifyID(uint8* data, size_t size, size_t* pos) -> ANALYZE_RESULT

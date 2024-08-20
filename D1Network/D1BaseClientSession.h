@@ -25,14 +25,15 @@ namespace BnD {
     class D1BaseClientSession : protected D1BasePacketAnalyzer
                               , public B1ArrayBufferClientSession {
     public:
-        D1BaseClientSession(B1ClientSocket* clientSocket, B1BaseClientSessionListener* listener, D1BasePacketMaker* packetMaker, int32 maxAliveCount,
-                            D1BaseClientSessionMessageListener* messageListener = NULL);
+        D1BaseClientSession(int32 clientID, B1ClientSocket* clientSocket, B1BaseClientSessionListener* listener, D1BasePacketMaker* packetMaker, int32 maxAliveCount,
+                            D1BaseClientSessionMessageListener* messageListener = NULL, size_t defaultBufferSize = CONSTS_DEFAULT_BUFFER_RESERVED_SIZE);
         virtual ~D1BaseClientSession();
     private:
         const int32 _maxAliveCount;
         int32 _aliveCheckCount;
         uint64 _lastReconnectTick;
     protected:
+        const int32 _clientID;
         D1BasePacketMaker* _packetMaker;
         D1BaseClientSessionMessageListener* _messageListener;
     protected:  //  D1BasePacketAnalyzer

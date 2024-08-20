@@ -24,12 +24,17 @@ D1BaseServer::D1BaseServer(int32 maxAliveCount, int32 aliveInterval)
     , _maxAliveCount(maxAliveCount)
     , _aliveInterval(aliveInterval)
     , _handleManager(new D1BaseServerHandleManager())
-    , _packetMaker(new D1BasePacketMaker())
+    , _packetMaker()
 {
 }
 
 D1BaseServer::~D1BaseServer()
 {
+}
+
+auto D1BaseServer::createPacketMaker() -> D1BasePacketMaker*
+{
+    return new D1BasePacketMaker();
 }
 
 auto D1BaseServer::createSessionManager() -> B1BaseSessionManager*
@@ -44,6 +49,7 @@ auto D1BaseServer::createSession(B1ServerSocket* serverSocket) -> B1BaseServerSe
 
 bool D1BaseServer::initialize(int32 port)
 {
+    _packetMaker.reset(createPacketMaker());
     if (port < 1 || port > UINT16_MAX) {
         return false;
     }
@@ -61,6 +67,7 @@ void D1BaseServer::finalize()
     implFinalize();
     close();
     shutdown();
+    _packetMaker.reset();
 }
 
 auto D1BaseServer::sendTextMessage(int32 id, const B1String& message) -> SEND_RESULT

@@ -24,7 +24,7 @@ namespace BnD {
     class D1BasePacketMaker;
     class D1BaseClient : protected B1BaseClient {
     public:
-        D1BaseClient(int32 maxAliveCount, int32 aliveInterval);   //  server로 alive_check 요청.
+        D1BaseClient(int32 clientID, int32 maxAliveCount, int32 aliveInterval);
         virtual ~D1BaseClient();
     public:
         enum SEND_RESULT {
@@ -35,10 +35,12 @@ namespace BnD {
     protected:
         const int32 _maxAliveCount;
         const int32 _aliveInterval;
+        const int32 _clientID;
         std::shared_ptr<D1BasePacketMaker> _packetMaker;
     protected:
         virtual bool implInitialize() { return true; }
         virtual void implFinalize() {}
+        virtual D1BasePacketMaker* createPacketMaker();
         virtual B1BaseClientSession* createD1BaseClientSession(B1ClientSocket* clientSocket);
     protected:
         virtual B1BaseSessionManager* createSessionManager() override;

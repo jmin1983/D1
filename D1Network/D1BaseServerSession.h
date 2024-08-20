@@ -27,7 +27,7 @@ namespace BnD {
                               , public B1ArrayBufferServerSession {
     public:
         D1BaseServerSession(B1ServerSocket* serverSocket, B1BaseServerSessionListener* listener, D1BaseServer* owner, int32 maxAliveCount,
-                            D1BaseServerSessionMessageListener* messageListener = NULL);
+                            D1BaseServerSessionMessageListener* messageListener = NULL, size_t defaultBufferSize = CONSTS_DEFAULT_BUFFER_RESERVED_SIZE);
         virtual ~D1BaseServerSession();
     private:
         const int32 _maxAliveCount;

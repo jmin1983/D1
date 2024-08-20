@@ -41,6 +41,7 @@ namespace BnD {
     protected:
         virtual bool implInitialize() { return true; }
         virtual void implFinalize() {}
+        virtual D1BasePacketMaker* createPacketMaker();
     protected:
         virtual B1BaseSessionManager* createSessionManager() override;
         virtual B1BaseServerSession* createSession(B1ServerSocket* serverSocket) override;

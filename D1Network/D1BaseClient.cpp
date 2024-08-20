@@ -19,11 +19,12 @@
 
 using namespace BnD;
 
-D1BaseClient::D1BaseClient(int32 maxAliveCount, int32 aliveInterval)
+D1BaseClient::D1BaseClient(int32 clientID, int32 maxAliveCount, int32 aliveInterval)
     : B1BaseClient()
     , _maxAliveCount(maxAliveCount)
     , _aliveInterval(aliveInterval)
-    , _packetMaker(new D1BasePacketMaker())
+    , _clientID(clientID)
+    , _packetMaker()
 {
 }
 
@@ -31,9 +32,14 @@ D1BaseClient::~D1BaseClient()
 {
 }
 
+auto D1BaseClient::createPacketMaker() -> D1BasePacketMaker*
+{
+    return new D1BasePacketMaker();
+}
+
 auto D1BaseClient::createD1BaseClientSession(B1ClientSocket* clientSocket) -> B1BaseClientSession*
 {
-    return new D1BaseClientSession(clientSocket, this, _packetMaker.get(), _maxAliveCount);
+    return new D1BaseClientSession(_clientID, clientSocket, this, _packetMaker.get(), _maxAliveCount);
 }
 
 auto D1BaseClient::createSessionManager() -> B1BaseSessionManager*
@@ -58,6 +64,7 @@ int32 D1BaseClient::connectionStatus(int32 id) const
 
 bool D1BaseClient::initialize()
 {
+    _packetMaker.reset(createPacketMaker());
     if (startup() != true) {
         return false;
     }
@@ -68,6 +75,7 @@ void D1BaseClient::finalize()
 {
     implFinalize();
     shutdown();
+    _packetMaker.reset();
 }
 
 bool D1BaseClient::connect(const B1String& address, uint16 port, int32 id)

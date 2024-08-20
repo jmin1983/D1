@@ -13,17 +13,20 @@
 #include "D1BaseClientSession.h"
 #include "D1BaseClientSessionMessageListener.h"
 #include "D1BaseProtocol.h"
+#include "D1BasePacketMaker.h"
 
 #include <B1Base/B1TickUtil.h>
 
 using namespace BnD;
 
-D1BaseClientSession::D1BaseClientSession(B1ClientSocket* clientSocket, B1BaseClientSessionListener* listener, D1BasePacketMaker* packetMaker, int32 maxAliveCount,
-                                         D1BaseClientSessionMessageListener* messageListener)
-    : B1ArrayBufferClientSession(clientSocket, listener)
+D1BaseClientSession::D1BaseClientSession(int32 clientID, B1ClientSocket* clientSocket, B1BaseClientSessionListener* listener, D1BasePacketMaker* packetMaker, int32 maxAliveCount,
+                                         D1BaseClientSessionMessageListener* messageListener, size_t defaultBufferSize)
+    : D1BasePacketAnalyzer(defaultBufferSize)
+    , B1ArrayBufferClientSession(clientSocket, listener)
     , _maxAliveCount(maxAliveCount)
     , _aliveCheckCount(0)
     , _lastReconnectTick(0)
+    , _clientID(clientID)
     , _packetMaker(packetMaker)
     , _messageListener(messageListener)
 {
@@ -76,11 +79,16 @@ void D1BaseClientSession::implOnConnect()
 
 void D1BaseClientSession::implProcessConnected(bool firstConnectedProcess)
 {
-    D1BaseProtocol::Header header(D1BaseProtocol::Header::TYPE_ALIVE_CHECK);
-    writeData((const uint8*)&header, sizeof(header));
-    if (++_aliveCheckCount > _maxAliveCount) {
-        B1LOG("alive check failed -> client force to disconnect: id[%d], aliveCheckCount[%d], maxAliveCount[%d]", sessionHandleID(), _aliveCheckCount, _maxAliveCount);
-        disconnect();
+    if (firstConnectedProcess) {
+        sendData(packetMaker()->makeDataNotifyID(_clientID));
+    }
+    else {
+        D1BaseProtocol::Header header(D1BaseProtocol::Header::TYPE_ALIVE_CHECK);
+        writeData((const uint8*)&header, sizeof(header));
+        if (++_aliveCheckCount > _maxAliveCount) {
+            B1LOG("alive check failed -> client force to disconnect: id[%d], aliveCheckCount[%d], maxAliveCount[%d]", sessionHandleID(), _aliveCheckCount, _maxAliveCount);
+            disconnect();
+        }
     }
     if (firstConnectedProcess && _messageListener) {
         _messageListener->onClientSessionConnected();

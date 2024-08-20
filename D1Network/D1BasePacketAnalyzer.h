@@ -18,9 +18,14 @@
 
 #include <B1Network/B1BasePacketAnalyzer.h>
 
+#include <D1Network/D1BaseProtocol.h>
+
 namespace BnD {
     class D1BasePacketAnalyzer : public B1BasePacketAnalyzer {
+    public:
+        D1BasePacketAnalyzer(size_t defaultBufferSize = CONSTS_DEFAULT_BUFFER_RESERVED_SIZE);
     protected:
+        virtual ANALYZE_RESULT implAnalyzeData(const D1BaseProtocol::Header& header, uint8* data, size_t size, size_t* pos);
         virtual void implOnProtocolTypeAliveCheck() {}
         virtual void implOnProtocolTypeNotifyID(int32 id) {}
         virtual void implOnProtocolTypeTextMessage(B1String&& message) {}
