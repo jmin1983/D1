@@ -31,7 +31,7 @@ namespace BnD {
         int32 _adminDB;
     protected:
         virtual B1String implConfigFilePath() const;
-        virtual B1String defaultLogPath(const B1String& serviceNameInLowerCase) const;
+        virtual B1String defaultLogPath() const;
         virtual int32 defaultLogDays() const;
     protected:
         virtual B1String implToString() const override;
@@ -43,7 +43,7 @@ namespace BnD {
         bool loadDefault();
         bool saveDefault();
         const B1String& adminAddress() const { return _adminAddress; }
-        B1String logPath(const B1String& serviceName) const;
+        B1String logPath() const;
         int32 logCounts() const;
         int32 adminPort() const { return _adminPort; }
         int32 adminDB() const { return _adminDB; }

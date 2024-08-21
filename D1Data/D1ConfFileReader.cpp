@@ -35,9 +35,15 @@ B1String D1ConfFileReader::implConfigFilePath() const
     return B1SystemUtil::getCurrentDirectory() + "/config/config.json";
 }
 
-B1String D1ConfFileReader::defaultLogPath(const B1String& serviceNameInLowerCase) const
+B1String D1ConfFileReader::defaultLogPath() const
 {
-    return B1String::formatAs("%s/appLog/%s", B1SystemUtil::getCurrentDirectory().cString(), serviceNameInLowerCase.cString());
+    B1String defaultDirectory =
+#if defined(_WIN32)
+        B1SystemUtil::getCurrentDirectory();
+#else
+        "/mnt/sd";
+#endif
+    return defaultDirectory + "/appLog";
 }
 
 int32 D1ConfFileReader::defaultLogDays() const
@@ -48,11 +54,11 @@ int32 D1ConfFileReader::defaultLogDays() const
 B1String D1ConfFileReader::implToString() const
 {
     B1String result;
-    result.appendf("config_logPath(empty to default):[%s]\n", _logPath.cString());
-    result.appendf("config_adminAddress:[%s]\n", _adminAddress.cString());
-    result.appendf("config_logDays(0 to default):[%d]\n", _logDays);
-    result.appendf("config_adminPort:[%d]\n", _adminPort);
-    result.appendf("config_adminDB:[%d]\n", _adminDB);
+    result.appendf("\nconfig_logPath(empty to default):[%s], defalut:[%s]", _logPath.cString(), defaultLogPath().cString());
+    result.appendf("\nconfig_adminAddress:[%s]", _adminAddress.cString());
+    result.appendf("\nconfig_logDays(0 to default):[%d], default[%d]", _logDays, defaultLogDays());
+    result.appendf("\nconfig_adminPort:[%d]", _adminPort);
+    result.appendf("\nconfig_adminDB:[%d]", _adminDB);
     return result;
 }
 
@@ -108,16 +114,9 @@ bool D1ConfFileReader::saveDefault()
     return implSave(configFilePath());
 }
 
-B1String D1ConfFileReader::logPath(const B1String& serviceName) const
+B1String D1ConfFileReader::logPath() const
 {
-    B1String lower(serviceName.copy());
-    lower.makeLower();
-    if (_logPath.isEmpty()) {
-        return defaultLogPath(lower);
-    }
-    else {
-        return B1String::formatAs("%s/%s", _logPath.cString(), lower.cString());
-    }
+    return _logPath.isEmpty() ? defaultLogPath() : _logPath.copy();
 }
 
 int32 D1ConfFileReader::logCounts() const
