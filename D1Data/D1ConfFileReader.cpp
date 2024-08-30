@@ -37,13 +37,7 @@ B1String D1ConfFileReader::implConfigFilePath() const
 
 B1String D1ConfFileReader::defaultLogPath() const
 {
-    B1String defaultDirectory =
-#if defined(_WIN32)
-        B1SystemUtil::getCurrentDirectory();
-#else
-        "/mnt/sd";
-#endif
-    return defaultDirectory + "/appLog";
+    return B1SystemUtil::getCurrentDirectory() + "/appLog";
 }
 
 int32 D1ConfFileReader::defaultLogDays() const
