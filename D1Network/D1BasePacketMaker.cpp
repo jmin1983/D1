@@ -42,7 +42,8 @@ auto D1BasePacketMaker::makeDataTextMessage(const B1String& message) -> std::vec
     D1BaseProtocol::Header header(D1BaseProtocol::Header::TYPE_TEXT_MESSAGE);
     uint32 dataLength = TO_UINT32_FOR_NETWORK(message.length() + 1);    //  include end of string.
     std::vector<uint8> buffer;
-    buffer.reserve(sizeof(header) + sizeof(dataLength) + message.length() + 1);
+    const size_t messageLengthSize = 2048; /*message.length() + 1*/     //  for resolve linux warning.
+    buffer.reserve(sizeof(header) + sizeof(dataLength) + messageLengthSize);
     buffer.insert(buffer.end(), (uint8*)&header, (uint8*)&header + sizeof(header));
     buffer.insert(buffer.end(), (uint8*)&dataLength, (uint8*)&dataLength + sizeof(dataLength));
     buffer.insert(buffer.end(), message.cString(), message.cString() + message.length());
