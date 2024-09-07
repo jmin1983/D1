@@ -19,6 +19,7 @@ using namespace BnD;
 D1MsgAlarmClearReq::D1MsgAlarmClearReq()
     : D1BaseMessage()
     , _serialNumber("SerialNumber", D1Consts::ID_INVALID)
+    , _serviceID("ServiceID", D1Consts::SERVICE_ID_INVALID)
     , _zoneID("ZoneID", D1Consts::ID_INVALID)
     , _resolvedBy("ResolvedBy", "")
 {
@@ -28,6 +29,7 @@ D1MsgAlarmClearReq::D1MsgAlarmClearReq()
 D1MsgAlarmClearReq::D1MsgAlarmClearReq(D1BaseMessage&& baseMessage)
     : D1BaseMessage(std::move(baseMessage))
     , _serialNumber("SerialNumber", D1Consts::ID_INVALID)
+    , _serviceID("ServiceID", D1Consts::SERVICE_ID_INVALID)
     , _zoneID("ZoneID", D1Consts::ID_INVALID)
     , _resolvedBy("ResolvedBy", "")
 {
@@ -40,6 +42,7 @@ D1MsgAlarmClearReq::~D1MsgAlarmClearReq()
 void D1MsgAlarmClearReq::archiveMessage(B1Archive* archive) const
 {
     writeDataToArchive(_serialNumber, archive);
+    writeDataToArchive(_serviceID, archive);
     writeDataToArchive(_zoneID, archive);
     writeDataToArchive(_resolvedBy, archive);
 }
@@ -47,6 +50,7 @@ void D1MsgAlarmClearReq::archiveMessage(B1Archive* archive) const
 void D1MsgAlarmClearReq::unarchiveMessage(const B1Archive& archive)
 {
     readDataFromArchive(archive, &_serialNumber);
+    readDataFromArchive(archive, &_serviceID);
     readDataFromArchive(archive, &_zoneID);
     readDataFromArchive(archive, &_resolvedBy);
 }
@@ -55,6 +59,7 @@ B1String D1MsgAlarmClearReq::toString() const
 {
     B1String str = D1BaseMessage::toString();
     str.appendf(", serialNumber[%lld]", _serialNumber.second);
+    str.appendf(", serviceID[%d]", serviceID());
     str.appendf(", zoneID[%d]", zoneID());
     str.appendf(", resolvedBy[%s]", resolvedBy().cString());
     return str;

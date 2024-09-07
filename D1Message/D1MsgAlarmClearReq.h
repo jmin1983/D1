@@ -26,6 +26,7 @@ namespace BnD {
         virtual ~D1MsgAlarmClearReq();
     protected:
         DataInt64 _serialNumber;
+        DataInt32 _serviceID;
         DataInt32 _zoneID;
         DataString _resolvedBy;
     protected:
@@ -35,10 +36,12 @@ namespace BnD {
         B1String toString() const final;
     public:
         int64 serialNumber() const { return _serialNumber.second; }
+        int32 serviceID() const { return _serviceID.second; }
         int32 zoneID() const { return _zoneID.second; }
         const B1String& resolvedBy() const { return _resolvedBy.second; }
         
         void setSerialNumber(int64 value) { _serialNumber.second = value; }
+        void setServiceID(int32 value) { _serviceID.second = value; }
         void setZoneID(int32 value) { _zoneID.second = value; }
         void setResolvedBy(B1String&& value) { _resolvedBy.second = std::move(value); }
     public:
