@@ -139,6 +139,12 @@ const B1String& D1MessageSender::ccsPollingListKey()
     return s_ccsPollingListKey;
 }
 
+const B1String& D1MessageSender::cusPollingListKey()
+{
+    const static B1String s_cusPollingListKey(B1String::formatAs("PollingList:%d", D1Consts::SERVICE_ID_CUS));
+    return s_cusPollingListKey;
+}
+
 const B1String& D1MessageSender::msSubscribingChannel()
 {
     const static B1String s_msSubscribingChannel("MSSubscribingChannel");
