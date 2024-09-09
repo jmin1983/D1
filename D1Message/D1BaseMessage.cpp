@@ -42,8 +42,8 @@ void D1BaseMessage::archiveTo(B1Archive* archive) const
     writeDataToArchive(_messageID, archive);
     B1Archive messageData;
     archiveMessage(&messageData);
-    archive->addSubArchive(_messageDataKey, messageData);
     writeDataToArchive(_baseTime, &messageData);
+    archive->addSubArchive(_messageDataKey, messageData);
 }
 
 void D1BaseMessage::unarchiveFrom(const B1Archive& archive)
