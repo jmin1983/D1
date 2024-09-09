@@ -25,12 +25,12 @@ namespace BnD {
         D1BaseMessage(D1BaseMessage&& base) noexcept;
         virtual ~D1BaseMessage();
     protected:
-        const static B1String _messageDataKey;  //  TODO: remove after impl pathInto, pathOut.
+        const static B1String _messageDataKey;
         DataString _messageID;
-        DataString _baseTime;   //  local time.
+        DataInt64 _baseTime;    //  local time(second).
     protected:
-        virtual void archiveTo(B1Archive* archive) const override;
-        virtual void unarchiveFrom(const B1Archive& archive) override;
+        void archiveTo(B1Archive* archive) const final;
+        void unarchiveFrom(const B1Archive& archive) final;
     protected:
         virtual void archiveMessage(B1Archive* archive) const {}
         virtual void unarchiveMessage(const B1Archive& archive) {}
@@ -38,10 +38,10 @@ namespace BnD {
         virtual B1String toString() const;
     public:
         const B1String& messageID() const { return _messageID.second; }
-        const B1String& baseTime() const { return _baseTime.second; }
+        int64 baseTime() const { return _baseTime.second; }
         bool composeToJson(B1String* json) const;
-        bool composeToJson(B1String* json, bool doNotSetBaseTime);
-        void setBaseTime(B1String&& baseTime) { _baseTime.second = std::move(baseTime); }
+        bool composeToJsonWithBaseTime(B1String* json);
+        void setBaseTime(int64 baseTime) { _baseTime.second = baseTime; }
     };
 }   //  !BnD
 

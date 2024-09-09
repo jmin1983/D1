@@ -22,7 +22,7 @@ namespace BnD {
     class D1Alarm : public D1RedisHashmapObject {
     public:
         D1Alarm(int64 serialNumber);
-        D1Alarm(int64 serialNumber, int32 code, int64 taskID, int32 zoneID, int32 serviceID, int32 reason, B1String&& carrierID, B1String&& time, B1String&& data = "");
+        D1Alarm(int64 serialNumber, int32 code, int64 taskID, int32 zoneID, int32 serviceID, int32 reason, B1String&& carrierID, B1String&& data = "");
         virtual ~D1Alarm();
     private:
         static const B1String _alarmKey;
@@ -34,7 +34,6 @@ namespace BnD {
         DataInt32 _serviceID;
         DataInt32 _reason;
         DataString _carrierID;
-        DataString _time;
         DataString _data;
     protected:
         B1String redisKey() const final;
@@ -49,7 +48,6 @@ namespace BnD {
         int32 serviceID() const { return _serviceID.second; }
         int32 reason() const { return _reason.second; }
         const B1String& carrierID() const { return _carrierID.second; }
-        const B1String& time() const { return _time.second; }
         const B1String& data() const { return _data.second; }
 
         void setCode(int32 value) { _code.second = value; }
@@ -58,7 +56,6 @@ namespace BnD {
         void setServiceID(int32 value) { _serviceID.second = value; }
         void setReason(int32 value) { _reason.second = value; }
         void setCarrierID(B1String&& value) { _carrierID.second = std::move(value); }
-        void setTime(B1String&& value) { _time.second = std::move(value); }
         void setData(B1String&& value) { _data.second = std::move(value); }
     public:
         static const B1String& alarmKey() { return _alarmKey; }

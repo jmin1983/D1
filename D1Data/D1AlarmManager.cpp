@@ -14,7 +14,6 @@
 #include "D1Alarm.h"
 
 #include <B1Base/B1Lock.h>
-#include <B1Base/B1Time.h>
 
 #include <D1Base/D1Consts.h>
 #include <D1Base/D1RedisClientInterface.h>
@@ -131,8 +130,7 @@ bool D1AlarmWriter::addAlarm(int32 code, int32 serviceID, int64 taskID, int32 re
     if (D1Consts::ID_INVALID == serialNumber) {
         return false;
     }
-    B1String time = B1Time::currentTimeInMicroseconds();
-    D1Alarm(serialNumber, code, taskID, zone ? zone->zoneID() : D1Consts::ID_INVALID, serviceID, reason, carrierID.copy(), time.copy(), data.copy()).writeToRedis(_redisClientInterface);
+    D1Alarm(serialNumber, code, taskID, zone ? zone->zoneID() : D1Consts::ID_INVALID, serviceID, reason, carrierID.copy(), data.copy()).writeToRedis(_redisClientInterface);
     if (zone) {
         {
             B1AutoLock al(*_alarmLock);
@@ -146,7 +144,6 @@ bool D1AlarmWriter::addAlarm(int32 code, int32 serviceID, int64 taskID, int32 re
     onAlarmAdded(serialNumber, code, serviceID, taskID, reason, zone, carrierID, data);
 
     D1MsgAlarmNtf info(serialNumber, code);
-    info.setBaseTime(std::move(time));
     info.setReason(reason);
     info.setServiceID(serviceID);
     info.setTaskID(taskID);
@@ -154,7 +151,7 @@ bool D1AlarmWriter::addAlarm(int32 code, int32 serviceID, int64 taskID, int32 re
         info.setZoneID(zone->zoneID());
     }
     B1String json;
-    info.composeToJson(&json, true);
+    info.composeToJsonWithBaseTime(&json);
     return _redisClientInterface->publish(D1MessageSender::alarmEventChannel(), json, true);
 }
 
@@ -171,7 +168,7 @@ bool D1AlarmWriter::clearAlarm(int64 serialNumber, int32 serviceID, const D1Zone
             B1LOG("unable to clear alarm if not a zone owner: zoneID[%d], serviceID[%d]", zone->zoneID(), serviceID);
             D1MsgAlarmClearRsp rsp(serialNumber, serviceID, zone ? zone->zoneID() : D1Consts::ID_INVALID, false);
             B1String json;
-            rsp.composeToJson(&json, false);
+            rsp.composeToJsonWithBaseTime(&json);
             _redisClientInterface->publish(D1MessageSender::alarmEventChannel(), json, false);
             return false;
         }
@@ -182,7 +179,7 @@ bool D1AlarmWriter::clearAlarm(int64 serialNumber, int32 serviceID, const D1Zone
                 B1LOG("unable to clear zone_alarm if not a zone owner: zoneID[%d], serviceID[d]", alarm->zoneID(), serviceID);
                 D1MsgAlarmClearRsp rsp(serialNumber, serviceID, zone ? zone->zoneID() : D1Consts::ID_INVALID, false);
                 B1String json;
-                rsp.composeToJson(&json, false);
+                rsp.composeToJsonWithBaseTime(&json);
                 _redisClientInterface->publish(D1MessageSender::alarmEventChannel(), json, false);
                 return false;
             }
@@ -201,6 +198,6 @@ bool D1AlarmWriter::clearAlarm(int64 serialNumber, int32 serviceID, const D1Zone
 
     D1MsgAlarmClearRsp rsp(serialNumber, serviceID, zone ? zone->zoneID() : D1Consts::ID_INVALID, true);
     B1String json;
-    rsp.composeToJson(&json, false);
+    rsp.composeToJsonWithBaseTime(&json);
     return _redisClientInterface->publish(D1MessageSender::alarmEventChannel(), json, true);
 }

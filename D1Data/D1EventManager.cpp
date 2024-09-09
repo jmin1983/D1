@@ -62,6 +62,6 @@ bool D1EventManager::addEvent(int32 code, int32 serviceID, int32 zoneID, int64 t
     info.setReason(reason);
     info.setServiceID(serviceID);
     B1String json;
-    info.composeToJson(&json, false);
+    info.composeToJsonWithBaseTime(&json);
     return _redisClientInterface->publish(D1MessageSender::alarmEventChannel(), json, isEssential);
 }

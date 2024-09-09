@@ -45,7 +45,7 @@ bool D1MessageSender::publishMessage(const B1String& channel, const D1BaseMessag
 bool D1MessageSender::publishMessageWithTime(const B1String& channel, D1BaseMessage* message, bool essential, D1RedisClientInterface* redisClientInterface) const
 {
     B1String m;
-    message->composeToJson(&m, false);
+    message->composeToJsonWithBaseTime(&m);
     return redisClientInterface->publish(channel, m, essential);
 }
 

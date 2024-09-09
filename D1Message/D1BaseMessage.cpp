@@ -22,7 +22,7 @@ const B1String D1BaseMessage::_messageDataKey("MessageData");
 D1BaseMessage::D1BaseMessage()
     : B1Object()
     , _messageID("MessageID", "")
-    , _baseTime("BaseTime", "")
+    , _baseTime("BaseTime", 0)
 {
 }
 
@@ -42,19 +42,19 @@ void D1BaseMessage::archiveTo(B1Archive* archive) const
     writeDataToArchive(_messageID, archive);
     B1Archive messageData;
     archiveMessage(&messageData);
-    writeDataToArchive(_baseTime, &messageData);
     archive->addSubArchive(_messageDataKey, messageData);
+    writeDataToArchive(_baseTime, &messageData);
 }
 
 void D1BaseMessage::unarchiveFrom(const B1Archive& archive)
 {
-    if (_messageID.second.isEmpty())
+    if (_messageID.second.isEmpty()) {
         readDataFromArchive(archive, &_messageID);
+    }
     B1Archive messageData;
     archive.getSubArchive(_messageDataKey, &messageData);
     unarchiveMessage(messageData);
-    if (_baseTime.second.isEmpty())
-        readDataFromArchive(messageData, &_baseTime);
+    readDataFromArchive(messageData, &_baseTime);        
 }
 
 B1String D1BaseMessage::toString() const
@@ -67,11 +67,9 @@ bool D1BaseMessage::composeToJson(B1String* json) const
     return archiveToString(json);
 }
 
-bool D1BaseMessage::composeToJson(B1String* json, bool doNotSetBaseTime)
+bool D1BaseMessage::composeToJsonWithBaseTime(B1String* json)
 {
-    if (doNotSetBaseTime != true) {
-        if (_baseTime.second.isEmpty())
-            _baseTime.second = B1Time::currentTimeInMilliseconds();
-    }
+    int32 microSecond = 0;
+    B1Time::getCurrentTime(&_baseTime.second, &microSecond);
     return composeToJson(json);
 }
