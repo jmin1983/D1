@@ -51,6 +51,7 @@ namespace BnD {
         D1Consts::SERVICE_ID _serviceID;
     protected:
         static const B1String& productInfoKey();
+        static const B1String& productSiteInfoKey();
     protected:
         virtual bool implGetProductSite(const B1String& siteString);
         virtual bool implGetProductType(const B1String& typeString);

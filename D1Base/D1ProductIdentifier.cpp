@@ -34,6 +34,12 @@ const B1String& D1ProductIdentifier::productInfoKey()
     return s_productInfoKey;
 }
 
+const B1String& D1ProductIdentifier::productSiteInfoKey()
+{
+    static const B1String s_productSiteInfoKey("System:ProductSiteInfo");
+    return s_productSiteInfoKey;
+}
+
 bool D1ProductIdentifier::implGetProductSite(const B1String& siteString)
 {
     int32 site = SITE_UNKNOWN;
@@ -155,7 +161,11 @@ B1String D1ProductIdentifier::serviceNameWAS() const
 
 bool D1ProductIdentifier::getProductInfo(D1RedisClientInterface* redisReader)
 {
-    return implGetProductSite(redisReader->hmget(productInfoKey(), "Site")) && implGetProductType(redisReader->hmget(productInfoKey().copy(), "Type"));
+    auto siteString = redisReader->hmget(productSiteInfoKey(), B1String::formatAs("%d", serviceID()));
+    if (siteString.isEmpty()) {
+        siteString = redisReader->hmget(productInfoKey(), "Site");
+    }
+    return implGetProductSite(siteString) && implGetProductType(redisReader->hmget(productInfoKey(), "Type"));
 }
 
 B1String D1ProductIdentifier::toProductSiteString() const
