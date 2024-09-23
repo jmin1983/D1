@@ -59,7 +59,14 @@ void D1BaseMessage::unarchiveFrom(const B1Archive& archive)
 
 B1String D1BaseMessage::toString() const
 {
-    return _messageID.second.copy();
+    if (baseTime() > 0) {
+        B1String str = _messageID.second.copy();
+        str.appendf(", baseTime[%s]", B1Time(baseTime()).toString().cString());
+        return str;
+    }
+    else {
+        return _messageID.second.copy();
+    }
 }
 
 bool D1BaseMessage::composeToJson(B1String* json) const
