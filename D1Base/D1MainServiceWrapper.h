@@ -78,7 +78,7 @@ namespace BnD {
         virtual void onMainServiceStartBefore() {}
     public:
         bool start(const B1String& address, uint16 port, int32 db, const B1String& logPath, int32 logCounts,
-                   bool useServiceIDForLog = false, const B1String& additionalPathName = "")
+                   bool useServiceIDForLog = false, bool ignoreFileLogFailure = false)
         {
             if (_service) {
                 printf("already started");
@@ -102,20 +102,22 @@ namespace BnD {
                 int32 serviceID = getServiceID(&clientInterface);
                 std::shared_ptr<D1ProductIdentifier> productIdentifier(createProductIdentifier(serviceID));
                 productIdentifier->getProductInfo(&clientInterface);
-                const B1String logFilePath = logPath + "/" + productIdentifier->serviceName() + additionalPathName;
+                const B1String logFilePath = logPath + "/" + productIdentifier->serviceName();
                 B1String serviceNameLower(productIdentifier->serviceName());
                 serviceNameLower.makeLower();
                 const B1String logFileName = useServiceIDForLog ? B1String::formatAs("%s_%d", serviceNameLower.cString(), serviceID) : serviceNameLower;
                 if (initFileLog(logFilePath.copy(), logFileName.copy(), logCounts) != true) {
-                    B1String errorMessage(B1String::formatAs("unable to start log file[%s/%s]\n", logFilePath.cString(), logFileName.cString()));
-                    printf("%s\n", errorMessage.cString());
-                    if (FILE* fp = fopen((B1SystemUtil::getCurrentDirectory() + "/can_not_create_log.err").cString(), "w")) {
-                        fwrite(errorMessage.cString(), sizeof(char), errorMessage.length(), fp);
-                        fclose(fp);
+                    if (ignoreFileLogFailure != true) {
+                        B1String errorMessage(B1String::formatAs("unable to start log file[%s/%s]\n", logFilePath.cString(), logFileName.cString()));
+                        printf("%s\n", errorMessage.cString());
+                        if (FILE* fp = fopen((B1SystemUtil::getCurrentDirectory() + "/can_not_create_log.err").cString(), "w")) {
+                            fwrite(errorMessage.cString(), sizeof(char), errorMessage.length(), fp);
+                            fclose(fp);
+                        }
+                        client.finalize();
+                        assert(false);
+                        return false;
                     }
-                    client.finalize();
-                    assert(false);
-                    return false;
                 }
                 B1LOG("initializing service: name[%s]", productIdentifier->serviceName().cString());
                 B1LOG("cleanup product initializer -> disconnect sessions: site[%d], type[%d]", productIdentifier->site(), productIdentifier->type());
