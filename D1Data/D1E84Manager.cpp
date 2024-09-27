@@ -26,10 +26,10 @@ D1E84Manager::Data::Data(int32 zoneID)
 {
 }
 
-bool D1E84Manager::updateSignal(D1E84SignalSequence* sequence)
+bool D1E84Manager::updateSignal(int32 zoneID, D1E84SignalSequence* sequence)
 {
     std::vector<bool> signals;
-    if (implGetSignalFromSensor(&signals) != true) {
+    if (implGetSignalFromSensor(zoneID , &signals) != true) {
         return false;
     }
     if (sequence->signals() == signals) {
@@ -65,12 +65,12 @@ void D1E84Manager::process(std::map<int32, Data>* data, bool isLoadSequence)
                 dataPair.second._halted = true;
             }
             else {
-                if (updateSignal(&dataPair.second._sequence)) {
+                if (updateSignal(dataPair.first, &dataPair.second._sequence)) {
                     if (isLoadSequence) {
-                        processLoadSequence(&dataPair.second._sequence);
+                        processLoadSequence(dataPair.first, &dataPair.second._sequence);
                     }
                     else {
-                        processUnloadSequence(&dataPair.second._sequence);
+                        processUnloadSequence(dataPair.first, &dataPair.second._sequence);
                     }
                 }
             }
@@ -78,38 +78,38 @@ void D1E84Manager::process(std::map<int32, Data>* data, bool isLoadSequence)
     }
 }
 
-void D1E84Manager::processLoadSequence(D1E84SignalSequence* sequence)
+void D1E84Manager::processLoadSequence(int32 zoneID, D1E84SignalSequence* sequence)
 {
     if (sequence->setNextLoadSequence()) {
         if (sequence->needToTurnOnLREQ()) {
-            implSetSingalToSensor(D1E84SignalSequence::SIGNAL_L_REQ, true);
+            implSetSingalToSensor(zoneID, D1E84SignalSequence::SIGNAL_L_REQ, true);
         }
         else if (sequence->needToTurnOnREADY()) {
-            implSetSingalToSensor(D1E84SignalSequence::SIGNAL_READY, true);
+            implSetSingalToSensor(zoneID, D1E84SignalSequence::SIGNAL_READY, true);
         }
         else if (sequence->needToTurnOffLREQ()) {
-            implSetSingalToSensor(D1E84SignalSequence::SIGNAL_L_REQ, false);
+            implSetSingalToSensor(zoneID, D1E84SignalSequence::SIGNAL_L_REQ, false);
         }
         else if (sequence->needToTurnOffREADY()) {
-            implSetSingalToSensor(D1E84SignalSequence::SIGNAL_READY, false);
+            implSetSingalToSensor(zoneID, D1E84SignalSequence::SIGNAL_READY, false);
         }
     }
 }
 
-void D1E84Manager::processUnloadSequence(D1E84SignalSequence* sequence)
+void D1E84Manager::processUnloadSequence(int32 zoneID, D1E84SignalSequence* sequence)
 {
     if (sequence->setNextUnloadSequence()) {
         if (sequence->needToTurnOnUREQ()) {
-            implSetSingalToSensor(D1E84SignalSequence::SIGNAL_U_REQ, true);
+            implSetSingalToSensor(zoneID, D1E84SignalSequence::SIGNAL_U_REQ, true);
         }
         else if (sequence->needToTurnOnREADY()) {
-            implSetSingalToSensor(D1E84SignalSequence::SIGNAL_READY, true);
+            implSetSingalToSensor(zoneID, D1E84SignalSequence::SIGNAL_READY, true);
         }
         else if (sequence->needToTurnOffUREQ()) {
-            implSetSingalToSensor(D1E84SignalSequence::SIGNAL_U_REQ, false);
+            implSetSingalToSensor(zoneID, D1E84SignalSequence::SIGNAL_U_REQ, false);
         }
         else if (sequence->needToTurnOffREADY()) {
-            implSetSingalToSensor(D1E84SignalSequence::SIGNAL_READY, false);
+            implSetSingalToSensor(zoneID, D1E84SignalSequence::SIGNAL_READY, false);
         }
     }
 }

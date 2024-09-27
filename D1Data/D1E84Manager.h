@@ -38,16 +38,16 @@ namespace BnD {
         std::map<int32, Data> _loadSequences;   //  map<zone_id, data>
         std::map<int32, Data> _unloadSequences; //  map<zone_id, data>
     protected:
-        virtual bool implGetSignalFromSensor(std::vector<bool>* signals) = 0;   //  vector<D1E84SignalSequence::SIGNAL>. return false if get signal from E84 sensor failed.
-        virtual bool implSetSingalToSensor(D1E84SignalSequence::SIGNAL signal, bool value) = 0;
+        virtual bool implGetSignalFromSensor(int32 zoneID, std::vector<bool>* signals) = 0;   //  vector<D1E84SignalSequence::SIGNAL>. return false if get signal from E84 sensor failed.
+        virtual bool implSetSingalToSensor(int32 zoneID, D1E84SignalSequence::SIGNAL signal, bool value) = 0;
         virtual bool implIsZoneAvailableToE84(int32 zoneID) { return true; }
         virtual void implOnSequenceTimedOut(int32 zoneID, D1E84SignalSequence::TIMEOUT type) = 0;
         virtual void implOnEmergencyStopped(int32 zoneID) = 0;
     protected:
-        bool updateSignal(D1E84SignalSequence* sequence);   //  return true if signal updated.
+        bool updateSignal(int32 zoneID, D1E84SignalSequence* sequence); //  return true if signal updated.
         void process(std::map<int32, Data>* data, bool isLoadSequence);
-        void processLoadSequence(D1E84SignalSequence* sequence);
-        void processUnloadSequence(D1E84SignalSequence* sequence);
+        void processLoadSequence(int32 zoneID, D1E84SignalSequence* sequence);
+        void processUnloadSequence(int32 zoneID, D1E84SignalSequence* sequence);
     public:
         bool initialize(const std::set<int32>& loadZoneIDs, const std::set<int32>& unloadZoneIDs);
         void finalize();
