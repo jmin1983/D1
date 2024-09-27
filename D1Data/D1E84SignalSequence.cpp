@@ -24,12 +24,12 @@ D1E84SignalSequence::D1E84SignalSequence(int32 zoneID)
 {
 }
 
-bool D1E84SignalSequence::signalOn(SIGNAL signal) const
+bool D1E84SignalSequence::isSignalOn(SIGNAL signal) const
 {
     return _signals[signal];
 }
 
-bool D1E84SignalSequence::signalOff(SIGNAL signal) const
+bool D1E84SignalSequence::isSignalOff(SIGNAL signal) const
 {
     return _signals[signal] != true;
 }
@@ -74,7 +74,7 @@ B1String D1E84SignalSequence::toString() const
 {
     B1String tmp;
     tmp.format("E84_SEQUENCE[%d]", _sequence);
-#define APPEND_SIGNAL_STRING(s) tmp.appendf(", %s:[%d]", toRedisField(s).cString(), signalOn(s) ? 1 : 0);
+#define APPEND_SIGNAL_STRING(s) tmp.appendf(", %s:[%d]", toRedisField(s).cString(), isSignalOn(s) ? 1 : 0);
     APPEND_SIGNAL_STRING(SIGNAL_VALID);
     APPEND_SIGNAL_STRING(SIGNAL_CS_0);
     APPEND_SIGNAL_STRING(SIGNAL_CS_1);
@@ -130,60 +130,60 @@ bool D1E84SignalSequence::isValidSequenceSignal(SEQUENCE sequence, bool isLoadin
     switch (sequence) {
         case SEQUENCE_0:
         case SEQUENCE_13:
-            return signalOff(SIGNAL_VALID) &&
-                   signalOff(SIGNAL_CS_0) &&
-                   signalOff(SIGNAL_CS_1) &&
-                   signalOff(SIGNAL_TR_REQ) &&
-                   signalOff(SIGNAL_L_REQ) &&
-                   signalOff(SIGNAL_U_REQ) &&
-                   signalOff(SIGNAL_READY) &&
-                   signalOff(SIGNAL_BUSY) &&
-                   signalOff(SIGNAL_COMPT) &&
-                   signalOff(SIGNAL_CONT) &&
-                   signalOn(SIGNAL_HO_AVBL) &&
-                   signalOn(SIGNAL_ES);
+            return isSignalOff(SIGNAL_VALID) &&
+                   isSignalOff(SIGNAL_CS_0) &&
+                   isSignalOff(SIGNAL_CS_1) &&
+                   isSignalOff(SIGNAL_TR_REQ) &&
+                   isSignalOff(SIGNAL_L_REQ) &&
+                   isSignalOff(SIGNAL_U_REQ) &&
+                   isSignalOff(SIGNAL_READY) &&
+                   isSignalOff(SIGNAL_BUSY) &&
+                   isSignalOff(SIGNAL_COMPT) &&
+                   isSignalOff(SIGNAL_CONT) &&
+                   isSignalOn(SIGNAL_HO_AVBL) &&
+                   isSignalOn(SIGNAL_ES);
         case SEQUENCE_1:
-            return signalOn(SIGNAL_CS_0);
+            return isSignalOn(SIGNAL_CS_0);
         case SEQUENCE_2:
-            return signalOn(SIGNAL_VALID);
+            return isSignalOn(SIGNAL_VALID);
         case SEQUENCE_3:
-            return signalOn(SIGNAL_VALID) &&
-                   (isLoading ? signalOn(SIGNAL_L_REQ) : signalOn(SIGNAL_U_REQ));
+            return isSignalOn(SIGNAL_VALID) &&
+                   (isLoading ? isSignalOn(SIGNAL_L_REQ) : isSignalOn(SIGNAL_U_REQ));
         case SEQUENCE_4:
-            return signalOn(SIGNAL_VALID) &&
-                   signalOn(SIGNAL_TR_REQ);
+            return isSignalOn(SIGNAL_VALID) &&
+                   isSignalOn(SIGNAL_TR_REQ);
         case SEQUENCE_5:
-            return signalOn(SIGNAL_VALID) &&
-                   signalOn(SIGNAL_READY) &&
-                   signalOn(SIGNAL_TR_REQ);
+            return isSignalOn(SIGNAL_VALID) &&
+                   isSignalOn(SIGNAL_READY) &&
+                   isSignalOn(SIGNAL_TR_REQ);
         case SEQUENCE_6:
-            return signalOn(SIGNAL_VALID) &&
-                   signalOn(SIGNAL_READY) &&
-                   signalOn(SIGNAL_TR_REQ) &&
-                   signalOn(SIGNAL_BUSY);
+            return isSignalOn(SIGNAL_VALID) &&
+                   isSignalOn(SIGNAL_READY) &&
+                   isSignalOn(SIGNAL_TR_REQ) &&
+                   isSignalOn(SIGNAL_BUSY);
         case SEQUENCE_7:
-            return signalOn(SIGNAL_VALID) &&
-                   signalOn(SIGNAL_READY) &&
-                   (isLoading ? signalOff(SIGNAL_L_REQ) : signalOff(SIGNAL_U_REQ));
+            return isSignalOn(SIGNAL_VALID) &&
+                   isSignalOn(SIGNAL_READY) &&
+                   (isLoading ? isSignalOff(SIGNAL_L_REQ) : isSignalOff(SIGNAL_U_REQ));
         case SEQUENCE_8:
-            return signalOn(SIGNAL_VALID) &&
-                   signalOn(SIGNAL_READY) &&
-                   signalOff(SIGNAL_BUSY);
+            return isSignalOn(SIGNAL_VALID) &&
+                   isSignalOn(SIGNAL_READY) &&
+                   isSignalOff(SIGNAL_BUSY);
         case SEQUENCE_9:
-            return signalOn(SIGNAL_VALID) &&
-                   signalOn(SIGNAL_READY) &&
-                   signalOff(SIGNAL_TR_REQ) &&
-                   signalOff(SIGNAL_BUSY);
+            return isSignalOn(SIGNAL_VALID) &&
+                   isSignalOn(SIGNAL_READY) &&
+                   isSignalOff(SIGNAL_TR_REQ) &&
+                   isSignalOff(SIGNAL_BUSY);
         case SEQUENCE_10:
-            return signalOn(SIGNAL_VALID) &&
-                   signalOn(SIGNAL_READY) &&
-                   signalOn(SIGNAL_COMPT);
+            return isSignalOn(SIGNAL_VALID) &&
+                   isSignalOn(SIGNAL_READY) &&
+                   isSignalOn(SIGNAL_COMPT);
         case SEQUENCE_11:
-            return signalOff(SIGNAL_READY);
+            return isSignalOff(SIGNAL_READY);
         case SEQUENCE_12:
-            return signalOff(SIGNAL_CS_0) &&
-                   signalOff(SIGNAL_VALID) &&
-                   signalOff(SIGNAL_COMPT);
+            return isSignalOff(SIGNAL_CS_0) &&
+                   isSignalOff(SIGNAL_VALID) &&
+                   isSignalOff(SIGNAL_COMPT);
         default:
             break;
     }
@@ -264,7 +264,7 @@ void D1E84SignalSequence::makeRedisStringArgs(std::vector<B1String>* args) const
     args->push_back(toRedisFieldFromSequence());
     args->push_back(B1String::formatAs("%d", _sequence));
 
-#define PUSH_BACK_SIGNAL(s) args->push_back(toRedisField(s)); args->push_back(B1String::formatAs("%d", signalOn(s) ? 1 : 0));
+#define PUSH_BACK_SIGNAL(s) args->push_back(toRedisField(s)); args->push_back(B1String::formatAs("%d", isSignalOn(s) ? 1 : 0));
     PUSH_BACK_SIGNAL(SIGNAL_VALID);
     PUSH_BACK_SIGNAL(SIGNAL_CS_0);
     PUSH_BACK_SIGNAL(SIGNAL_CS_1);
@@ -324,6 +324,7 @@ void D1E84SignalSequence::setSignal(SIGNAL signal, bool value)
 
 void D1E84SignalSequence::resetSequence()
 {
+    _timer.stop();
     _sequence = SEQUENCE_0;
 }
 

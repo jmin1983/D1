@@ -122,8 +122,8 @@ namespace BnD {
         B1TimeChecker _timer;
         static std::vector<uint32> _timeouts;   //  vector<TIMEOUT>
     private:
-        bool signalOn(SIGNAL signal) const;     //  use private only.
-        bool signalOff(SIGNAL signal) const;    //  use private only.
+        bool isSignalOn(SIGNAL signal) const;   //  use private only.
+        bool isSignalOff(SIGNAL signal) const;  //  use private only.
     protected:
         virtual void archiveTo(B1Archive* archive) const override;
         virtual void unarchiveFrom(const B1Archive& archive) override;
@@ -148,9 +148,9 @@ namespace BnD {
         bool needToTurnOnLREQ() const { return sequence() == SEQUENCE_2; }
         bool needToTurnOnUREQ() const { return sequence() == SEQUENCE_2; }
         bool needToTurnOnREADY() const { return sequence() == SEQUENCE_4; }
-        bool canTurnOffLREQ() const { return sequence() == SEQUENCE_6; }
-        bool canTurnOffUREQ() const { return sequence() == SEQUENCE_6; }
-        bool canTurnOffREADY() const { return sequence() == SEQUENCE_10; }
+        bool needToTurnOffLREQ() const { return sequence() == SEQUENCE_6; }
+        bool needToTurnOffUREQ() const { return sequence() == SEQUENCE_6; }
+        bool needToTurnOffREADY() const { return sequence() == SEQUENCE_10; }
         bool isEndOfSequence() const { return sequence() == SEQUENCE_13; }
         bool isOn(SIGNAL signal) const;
         bool isOff(SIGNAL signal) const;
@@ -159,6 +159,7 @@ namespace BnD {
         bool setNextLoadSequence();     //  return true if next sequence condition met.
         bool setNextUnloadSequence();   //  return true if next sequence condition met.
         TIMEOUT isSequenceTimedOut();
+        std::vector<bool>& signals() { return _signals; }
     public:
         static void initTimeoutValues(const std::vector<uint32>& timeouts);
     };

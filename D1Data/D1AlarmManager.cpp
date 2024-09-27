@@ -122,7 +122,7 @@ bool D1AlarmWriter::addAlarm(int32 code, int32 serviceID, int64 taskID, int32 re
 {
     if (zone && zone->zoneID() != D1Consts::ID_INVALID) {
         if (D1ZoneRepository::isOwnerZone(zone->zoneID(), serviceID) != true) {
-            assert(false);  //  only owner can clear the alarm.
+            assert(false);  //  only owner can generate the alarm.
             return false;
         }
     }
