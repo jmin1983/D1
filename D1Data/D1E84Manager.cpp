@@ -26,6 +26,12 @@ D1E84Manager::Data::Data(int32 zoneID)
 {
 }
 
+void D1E84Manager::implProcess()
+{
+    process(&_loadSequences, true);
+    process(&_unloadSequences, false);
+}
+
 bool D1E84Manager::updateSignal(int32 zoneID, D1E84SignalSequence* sequence)
 {
     std::vector<bool> signals;
@@ -122,19 +128,19 @@ bool D1E84Manager::initialize(const std::set<int32>& loadZoneIDs, const std::set
     for (int32 zoneID : unloadZoneIDs) {
         _unloadSequences.insert(std::make_pair(zoneID, zoneID));
     }
-    return true;
+    return implInitialize();
 }
 
 void D1E84Manager::finalize()
 {
+    implFinalize();
     _loadSequences.clear();
     _unloadSequences.clear();
 }
 
 void D1E84Manager::process()
 {
-    process(&_loadSequences, true);
-    process(&_unloadSequences, false);
+    implProcess();
 }
 
 void D1E84Manager::setEmergencyStop(int32 zoneID)

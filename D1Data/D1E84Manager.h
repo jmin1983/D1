@@ -38,6 +38,9 @@ namespace BnD {
         std::map<int32, Data> _loadSequences;   //  map<zone_id, data>
         std::map<int32, Data> _unloadSequences; //  map<zone_id, data>
     protected:
+        virtual bool implInitialize() { return true; }
+        virtual void implFinalize() {}
+        virtual void implProcess();
         virtual bool implGetSignalFromSensor(int32 zoneID, std::vector<bool>* signals) = 0;   //  vector<D1E84SignalSequence::SIGNAL>. return false if get signal from E84 sensor failed.
         virtual bool implSetSingalToSensor(int32 zoneID, D1E84SignalSequence::SIGNAL signal, bool value) = 0;
         virtual bool implIsZoneAvailableToE84(int32 zoneID) { return true; }
