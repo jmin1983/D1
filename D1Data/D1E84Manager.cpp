@@ -53,12 +53,17 @@ void D1E84Manager::process(std::map<int32, Data>* data, bool isLoadSequence)
         }
         if (dataPair.second._emergencyStop) {
             dataPair.second._emergencyStop = false;
-            dataPair.second._sequence.setSignal(D1E84SignalSequence::SIGNAL_ES, true);
+            implSetSingalToSensor(dataPair.first, D1E84SignalSequence::SIGNAL_ES, false);
             implOnEmergencyStopped(dataPair.first);
         }
         else if (dataPair.second._resetSequence) {
             dataPair.second._resetSequence = false;
             dataPair.second._halted = false;
+            implSetSingalToSensor(dataPair.first, D1E84SignalSequence::SIGNAL_HO_AVBL, true);
+            implSetSingalToSensor(dataPair.first, D1E84SignalSequence::SIGNAL_L_REQ, false);
+            implSetSingalToSensor(dataPair.first, D1E84SignalSequence::SIGNAL_U_REQ, false);
+            implSetSingalToSensor(dataPair.first, D1E84SignalSequence::SIGNAL_READY, false);
+            implSetSingalToSensor(dataPair.first, D1E84SignalSequence::SIGNAL_ES, true);
             dataPair.second._sequence.resetSequence();
         }
         else {
@@ -124,9 +129,19 @@ bool D1E84Manager::initialize(const std::set<int32>& loadZoneIDs, const std::set
 {
     for (int32 zoneID : loadZoneIDs) {
         _loadSequences.insert(std::make_pair(zoneID, zoneID));
+        implSetSingalToSensor(zoneID, D1E84SignalSequence::SIGNAL_HO_AVBL, true);
+        implSetSingalToSensor(zoneID, D1E84SignalSequence::SIGNAL_L_REQ, false);
+        implSetSingalToSensor(zoneID, D1E84SignalSequence::SIGNAL_U_REQ, false);
+        implSetSingalToSensor(zoneID, D1E84SignalSequence::SIGNAL_READY, false);
+        implSetSingalToSensor(zoneID, D1E84SignalSequence::SIGNAL_ES, true);
     }
     for (int32 zoneID : unloadZoneIDs) {
         _unloadSequences.insert(std::make_pair(zoneID, zoneID));
+        implSetSingalToSensor(zoneID, D1E84SignalSequence::SIGNAL_HO_AVBL, true);
+        implSetSingalToSensor(zoneID, D1E84SignalSequence::SIGNAL_L_REQ, false);
+        implSetSingalToSensor(zoneID, D1E84SignalSequence::SIGNAL_U_REQ, false);
+        implSetSingalToSensor(zoneID, D1E84SignalSequence::SIGNAL_READY, false);
+        implSetSingalToSensor(zoneID, D1E84SignalSequence::SIGNAL_ES, true);
     }
     return implInitialize();
 }
