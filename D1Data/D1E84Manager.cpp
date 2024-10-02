@@ -34,7 +34,7 @@ void D1E84Manager::implProcess()
 
 bool D1E84Manager::updateSignal(int32 zoneID, D1E84SignalSequence* sequence)
 {
-    std::vector<bool> signals;
+    std::vector<bool> signals(D1E84SignalSequence::SIGNAL_COUNTS, false);
     if (implGetSignalFromSensor(zoneID , &signals) != true) {
         return false;
     }
@@ -77,12 +77,13 @@ void D1E84Manager::process(std::map<int32, Data>* data, bool isLoadSequence)
             }
             else {
                 if (updateSignal(dataPair.first, &dataPair.second._sequence)) {
-                    if (isLoadSequence) {
-                        processLoadSequence(dataPair.first, &dataPair.second._sequence);
-                    }
-                    else {
-                        processUnloadSequence(dataPair.first, &dataPair.second._sequence);
-                    }
+
+                }
+                if (isLoadSequence) {
+                    processLoadSequence(dataPair.first, &dataPair.second._sequence);
+                }
+                else {
+                    processUnloadSequence(dataPair.first, &dataPair.second._sequence);
                 }
             }
         }

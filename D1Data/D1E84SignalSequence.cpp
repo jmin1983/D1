@@ -192,6 +192,9 @@ bool D1E84SignalSequence::isValidSequenceSignal(SEQUENCE sequence, bool isLoadin
 
 uint32 D1E84SignalSequence::timeoutValue(TIMEOUT timeout) const
 {
+    if (_timeouts.empty()) {    //  todo: can not be empty.
+        return CONSTS_DEFAULT_TIMEOUT;
+    }
     return timeout < TIMEOUT_COUNTS ? _timeouts[timeout] : CONSTS_DEFAULT_TIMEOUT;
 }
 
