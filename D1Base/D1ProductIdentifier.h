@@ -48,6 +48,7 @@ namespace BnD {
     protected:
         int32 _site;
         int32 _type;
+        B1String _timeZone;
         D1Consts::SERVICE_ID _serviceID;
     protected:
         static const B1String& productInfoKey();
@@ -73,6 +74,7 @@ namespace BnD {
         bool getProductInfo(D1RedisClientInterface* redisReader);
         int32 site() const { return _site; }
         int32 type() const { return _type; }
+        const B1String& timeZone() const { return _timeZone; }
         D1Consts::SERVICE_ID serviceID() const { return _serviceID; }
         B1String toProductSiteString() const;
         B1String toProductTypeString() const;

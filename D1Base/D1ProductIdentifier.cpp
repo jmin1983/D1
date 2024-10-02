@@ -20,6 +20,7 @@ using namespace D1Consts;
 D1ProductIdentifier::D1ProductIdentifier(SERVICE_ID serviceID)
     : _site(SITE_UNKNOWN)
     , _type(TYPE_UNKNOWN)
+    , _timeZone("Asia/Shanghai")
     , _serviceID(serviceID)
 {
 }
@@ -164,6 +165,10 @@ bool D1ProductIdentifier::getProductInfo(D1RedisClientInterface* redisReader)
     auto siteString = redisReader->hmget(productSiteInfoKey(), B1String::formatAs("%d", serviceID()));
     if (siteString.isEmpty()) {
         siteString = redisReader->hmget(productInfoKey(), "Site");
+    }
+    auto timeZoneString = redisReader->hmget(productInfoKey(), "TimeZone");
+    if (timeZoneString.isEmpty() != true) {
+        _timeZone = std::move(timeZoneString);
     }
     return implGetProductSite(siteString) && implGetProductType(redisReader->hmget(productInfoKey(), "Type"));
 }

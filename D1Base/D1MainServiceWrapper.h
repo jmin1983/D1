@@ -102,6 +102,7 @@ namespace BnD {
                 int32 serviceID = getServiceID(&clientInterface);
                 std::shared_ptr<D1ProductIdentifier> productIdentifier(createProductIdentifier(serviceID));
                 productIdentifier->getProductInfo(&clientInterface);
+                B1Time::setCurrentTimeZone(productIdentifier->timeZone());
                 const B1String logFilePath = logPath + "/" + productIdentifier->serviceName();
                 B1String serviceNameLower(productIdentifier->serviceName());
                 serviceNameLower.makeLower();
