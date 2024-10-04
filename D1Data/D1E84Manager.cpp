@@ -77,13 +77,12 @@ void D1E84Manager::process(std::map<int32, Data>* data, bool isLoadSequence)
             }
             else {
                 if (updateSignal(dataPair.first, &dataPair.second._sequence)) {
-
-                }
-                if (isLoadSequence) {
-                    processLoadSequence(dataPair.first, &dataPair.second._sequence);
-                }
-                else {
-                    processUnloadSequence(dataPair.first, &dataPair.second._sequence);
+                    if (isLoadSequence) {
+                        processLoadSequence(dataPair.first, &dataPair.second._sequence);
+                    }
+                    else {
+                        processUnloadSequence(dataPair.first, &dataPair.second._sequence);
+                    }
                 }
             }
         }
@@ -105,6 +104,9 @@ void D1E84Manager::processLoadSequence(int32 zoneID, D1E84SignalSequence* sequen
         else if (sequence->needToTurnOffREADY()) {
             implSetSingalToSensor(zoneID, D1E84SignalSequence::SIGNAL_READY, false);
         }
+        else if (sequence->isInSequence() != true) {
+            implOnSequenceFinished(zoneID);
+        }
     }
 }
 
@@ -122,6 +124,9 @@ void D1E84Manager::processUnloadSequence(int32 zoneID, D1E84SignalSequence* sequ
         }
         else if (sequence->needToTurnOffREADY()) {
             implSetSingalToSensor(zoneID, D1E84SignalSequence::SIGNAL_READY, false);
+        }
+        else if (sequence->isInSequence() != true) {
+            implOnSequenceFinished(zoneID);
         }
     }
 }
