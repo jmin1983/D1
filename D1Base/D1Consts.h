@@ -65,7 +65,7 @@ namespace BnD {
         enum RESERVED_UNIQUE_ID {
             RESERVED_UNIQUE_ID_INVALID = ID_INVALID,
 
-            RESERVED_UNIQUE_ID_MS_BEGIN = 1,
+            RESERVED_UNIQUE_ID_MS_BEGIN = 0,
             RESERVED_UNIQUE_ID_MS_END = RESERVED_UNIQUE_ID_MS_BEGIN + 1000 * 1000,
         };
     };
