@@ -19,7 +19,8 @@
 namespace BnD {
     namespace D1BaseProtocol {
         enum CONSTS {
-            CONSTS_CLIENT_RECONNECT_INTERVAL = 1000,
+            CONSTS_CLIENT_RECONNECT_INTERVAL_MIN = 1000,
+            CONSTS_CLIENT_RECONNECT_INTERVAL_MAX = 3000,
         };
         struct Header {
             enum TYPE {

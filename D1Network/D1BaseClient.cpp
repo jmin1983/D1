@@ -68,6 +68,7 @@ bool D1BaseClient::initialize()
     if (startup() != true) {
         return false;
     }
+    srand(time(NULL));
     return implInitialize();
 }
 

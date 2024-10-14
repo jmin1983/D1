@@ -32,6 +32,7 @@ namespace BnD {
         const int32 _maxAliveCount;
         int32 _aliveCheckCount;
         uint64 _lastReconnectTick;
+        uint64 _nextReconnectInterval;
     protected:
         const int32 _clientID;
         D1BasePacketMaker* _packetMaker;
@@ -46,6 +47,8 @@ namespace BnD {
         virtual void implOnConnect() override;
         virtual void implProcessConnected(bool firstConnectedProcess) override;
         virtual void implProcessDisconnected() override;
+    protected:
+        int64 generateNextReconnectInterval() const;
     protected:
         D1BasePacketMaker* packetMaker() const { return _packetMaker; }
     public:

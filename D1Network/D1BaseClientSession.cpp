@@ -26,6 +26,7 @@ D1BaseClientSession::D1BaseClientSession(int32 clientID, B1ClientSocket* clientS
     , _maxAliveCount(maxAliveCount)
     , _aliveCheckCount(0)
     , _lastReconnectTick(0)
+    , _nextReconnectInterval(generateNextReconnectInterval())
     , _clientID(clientID)
     , _packetMaker(packetMaker)
     , _messageListener(messageListener)
@@ -98,10 +99,18 @@ void D1BaseClientSession::implProcessConnected(bool firstConnectedProcess)
 void D1BaseClientSession::implProcessDisconnected()
 {
     uint64 now = B1TickUtil::currentTick();
-    if (B1TickUtil::diffTick(_lastReconnectTick, now) >= D1BaseProtocol::CONSTS_CLIENT_RECONNECT_INTERVAL) {
+    if (B1TickUtil::diffTick(_lastReconnectTick, now) >= _nextReconnectInterval) {
         _lastReconnectTick = now;
+        _nextReconnectInterval = generateNextReconnectInterval();
         reconnect();
     }
+}
+
+int64 D1BaseClientSession::generateNextReconnectInterval() const
+{
+    int64 min = D1BaseProtocol::CONSTS_CLIENT_RECONNECT_INTERVAL_MIN;
+    int64 max = D1BaseProtocol::CONSTS_CLIENT_RECONNECT_INTERVAL_MAX;
+    return (rand() % (max - min)) + min;
 }
 
 bool D1BaseClientSession::sendData(const std::vector<uint8>& data)
