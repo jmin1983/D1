@@ -21,7 +21,7 @@ namespace BnD {
     public:
         virtual ~D1ZoneAttributePlugin() {}
     public:
-        virtual void implNotifyAttributesChanged(int32 zoneID, const B1String& message) {}
+        virtual void implNotifyAttributesChanged(int32 zoneID, const B1String& message, bool costAffectable) {}
     };
 }   //  !BnD
 

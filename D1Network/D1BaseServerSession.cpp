@@ -16,6 +16,8 @@
 #include "D1BaseServerHandleManager.h"
 #include "D1BaseServerSessionMessageListener.h"
 
+#include <D1Base/D1Consts.h>
+
 using namespace BnD;
 
 D1BaseServerSession::D1BaseServerSession(B1ServerSocket* serverSocket, B1BaseServerSessionListener* listener, D1BaseServer* owner, int32 maxAliveCount,
@@ -25,7 +27,7 @@ D1BaseServerSession::D1BaseServerSession(B1ServerSocket* serverSocket, B1BaseSer
     , _maxAliveCount(maxAliveCount)
     , _aliveCheckCount(0)
     , _owner(owner)
-    , _id(-1)
+    , _id(D1Consts::ID_INVALID)
     , _messageListener(messageListener)
 {
 }
@@ -127,4 +129,9 @@ bool D1BaseServerSession::sendData(const std::vector<uint8>& data)
         return false;
     }
     return writeData(data);
+}
+
+bool D1BaseServerSession::isValidID() const
+{
+    return id() != D1Consts::ID_INVALID;
 }

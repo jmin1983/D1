@@ -51,6 +51,7 @@ namespace BnD {
         D1BasePacketMaker* packetMaker() const;
     public:
         bool sendData(const std::vector<uint8>& data);
+        bool isValidID() const;
         int32 id() const { return _id; }
     };
 }   //  !BnD

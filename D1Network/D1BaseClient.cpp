@@ -37,7 +37,7 @@ auto D1BaseClient::createPacketMaker() -> D1BasePacketMaker*
     return new D1BasePacketMaker();
 }
 
-auto D1BaseClient::createD1BaseClientSession(B1ClientSocket* clientSocket) -> B1BaseClientSession*
+auto D1BaseClient::createD1BaseClientSession(B1ClientSocket* clientSocket, void* param) -> B1BaseClientSession*
 {
     return new D1BaseClientSession(_clientID, clientSocket, this, _packetMaker.get(), _maxAliveCount);
 }
@@ -49,7 +49,7 @@ auto D1BaseClient::createSessionManager() -> B1BaseSessionManager*
 
 auto D1BaseClient::createSession(B1ClientSocket* clientSocket, void* param) -> B1BaseClientSession*
 {
-    return createD1BaseClientSession(clientSocket);
+    return createD1BaseClientSession(clientSocket, param);
 }
 
 int32 D1BaseClient::connectionStatus(int32 id) const
@@ -79,9 +79,9 @@ void D1BaseClient::finalize()
     _packetMaker.reset();
 }
 
-bool D1BaseClient::connect(const B1String& address, uint16 port, int32 id)
+bool D1BaseClient::connect(const B1String& address, uint16 port, int32 id, void* param)
 {
-    auto clientHandle = B1BaseClient::connect(address.copy(), port, NULL, id);
+    auto clientHandle = B1BaseClient::connect(address.copy(), port, param, id);
     if (0 == clientHandle) {
         B1LOG("unable to connect: address[%s], port[%d], id[%d]", address.cString(), port, id);
         return false;

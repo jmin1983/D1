@@ -35,6 +35,8 @@ namespace BnD {
         DataInt32 _zoneID;
         D1ZoneAttributePlugin* _plugin;
     protected:
+        virtual bool isCostAffectable() const = 0;
+    protected:
         virtual void archiveTo(B1Archive* archive) const override;
         virtual void unarchiveFrom(const B1Archive& archive) override;
     protected:

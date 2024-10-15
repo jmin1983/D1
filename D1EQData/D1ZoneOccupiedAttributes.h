@@ -35,6 +35,8 @@ namespace BnD {
         std::list<std::pair<int64, uint64> > _reserveCandidates;    //  list<pair<task_id, reserved_tick> >
         DataInt64 _reservedTaskID;
     protected:
+        virtual bool isCostAffectable() const override { return true; }
+    protected:
         virtual void archiveTo(B1Archive* archive) const override;
         virtual void unarchiveFrom(const B1Archive& archive) override;
         virtual D1MessageObject* createMessageObject() const override;

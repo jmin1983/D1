@@ -41,7 +41,7 @@ namespace BnD {
         virtual bool implInitialize() { return true; }
         virtual void implFinalize() {}
         virtual D1BasePacketMaker* createPacketMaker();
-        virtual B1BaseClientSession* createD1BaseClientSession(B1ClientSocket* clientSocket);
+        virtual B1BaseClientSession* createD1BaseClientSession(B1ClientSocket* clientSocket, void* param);
     protected:
         virtual B1BaseSessionManager* createSessionManager() override;
         virtual B1BaseClientSession* createSession(B1ClientSocket* clientSocket, void* param) override;
@@ -51,7 +51,7 @@ namespace BnD {
         D1BasePacketMaker* packetMaker() const { return _packetMaker.get(); }
         bool initialize();
         void finalize();
-        bool connect(const B1String& address, uint16 port, int32 id);
+        bool connect(const B1String& address, uint16 port, int32 id, void* param = NULL);
         bool isConnected(int32 id, int32* reason = NULL) const;
         SEND_RESULT sendTextMessage(int32 id, const B1String& message);
         SEND_RESULT sendTextMessageBunch(int32 id, int32 index, int32 indexCount, const B1String& message);

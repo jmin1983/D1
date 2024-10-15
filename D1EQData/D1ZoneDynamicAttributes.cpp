@@ -84,7 +84,7 @@ void D1ZoneDynamicAttributes::notifyAttributesChanged(D1RedisClientInterface* de
 {
     const auto notifyString = toMessage();
     if (_plugin) {
-        _plugin->implNotifyAttributesChanged(zoneID(), notifyString);
+        _plugin->implNotifyAttributesChanged(zoneID(), notifyString, isCostAffectable());
     }
     if (delayedCommander) {
         delayedCommander->publish(D1MessageSender::updateZoneAttributesChannel(D1ZoneRepository::toOwnerID(zoneID())), notifyString, isEssential);

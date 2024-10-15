@@ -35,6 +35,8 @@ namespace BnD {
         std::pair<const B1String, ZONE_STATE> _zoneState;
         DataInt64 _alarmID;
     protected:
+        virtual bool isCostAffectable() const override { return true; }
+    protected:
         virtual void archiveTo(B1Archive* archive) const override;
         virtual void unarchiveFrom(const B1Archive& archive) override;
         virtual D1MessageObject* createMessageObject() const override;
