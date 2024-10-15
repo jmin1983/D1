@@ -20,6 +20,7 @@ const B1String D1Alarm::_alarmKey("Alarm");
 
 D1Alarm::D1Alarm(int64 serialNumber)
     : _serialNumber("SerialNumber", serialNumber)
+    , _baseTime("BaesTime", 0)
     , _taskID("TaskID", D1Consts::ID_INVALID)
     , _zoneID("ZoneID", D1Consts::ID_INVALID)
     , _serviceID("ServiceID", D1Consts::SERVICE_ID_INVALID)
@@ -29,8 +30,9 @@ D1Alarm::D1Alarm(int64 serialNumber)
 {
 }
 
-D1Alarm::D1Alarm(int64 serialNumber, int64 taskID, int32 zoneID, int32 serviceID, int32 code, int32 reason, B1String&& carrierID)
+D1Alarm::D1Alarm(int64 serialNumber, int64 baseTime, int64 taskID, int32 zoneID, int32 serviceID, int32 code, int32 reason, B1String&& carrierID)
     : _serialNumber("SerialNumber", serialNumber)
+    , _baseTime("BaesTime", baseTime)
     , _taskID("TaskID", taskID)
     , _zoneID("ZoneID", zoneID)
     , _serviceID("ServiceID", serviceID)
@@ -56,6 +58,7 @@ bool D1Alarm::isValidToMakeRedisString() const
 
 void D1Alarm::makeRedisStringArgs(std::vector<B1String>* args) const
 {
+    setRedisString(args, _baseTime);
     setRedisString(args, _taskID);
     setRedisString(args, _zoneID);
     setRedisString(args, _serviceID);
@@ -66,6 +69,7 @@ void D1Alarm::makeRedisStringArgs(std::vector<B1String>* args) const
 
 bool D1Alarm::readRedisMap(const std::map<B1String, B1String>& map)
 {
+    readFromRedisMap(map, &_baseTime);
     readFromRedisMap(map, &_taskID);
     readFromRedisMap(map, &_zoneID);
     readFromRedisMap(map, &_serviceID);
