@@ -31,6 +31,7 @@ namespace BnD {
         DataInt32 _serviceID;
         DataInt32 _code;
         DataInt32 _reason;
+        DataString _carrierID;
     protected:
         void archiveMessage(B1Archive* archive) const final;
         void unarchiveMessage(const B1Archive& archive) final;
@@ -43,11 +44,13 @@ namespace BnD {
         int32 serviceID() const { return _serviceID.second; }
         int32 code() const { return _code.second; }
         int32 reason() const { return _reason.second; }
+        const B1String& carrierID() const { return _carrierID.second; }
 
         void setTaskID(int64 value) { _taskID.second = value; }
         void setZoneID(int32 value) { _zoneID.second = value; }
         void setServiceID(int32 value) { _serviceID.second = value; }
         void setReason(int32 value) { _reason.second = value; }
+        void setCarrierID(B1String&& value) { _carrierID.second = std::move(value); }
     public:
         static const B1String& messageString()
         {

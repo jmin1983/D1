@@ -24,6 +24,7 @@ D1MsgAlarmNtf::D1MsgAlarmNtf(int64 serialNumber, int32 code)
     , _serviceID("ServiceID", D1Consts::SERVICE_ID_INVALID)
     , _code("Code", code)
     , _reason("Reason", D1Consts::ID_INVALID)
+    , _carrierID("CarrierID", "")
 {
     _messageID.second = messageString().copy();
 }
@@ -36,6 +37,7 @@ D1MsgAlarmNtf::D1MsgAlarmNtf(D1BaseMessage&& baseMessage)
     , _serviceID("ServiceID", D1Consts::SERVICE_ID_INVALID)
     , _code("Code", D1Consts::ID_INVALID)
     , _reason("Reason", D1Consts::ID_INVALID)
+    , _carrierID("CarrierID", "")
 {
 }
 
@@ -51,6 +53,7 @@ void D1MsgAlarmNtf::archiveMessage(B1Archive* archive) const
     writeDataToArchive(_serviceID, archive);
     writeDataToArchive(_code, archive);
     writeDataToArchive(_reason, archive);
+    writeDataToArchive(_carrierID, archive);
 }
 
 void D1MsgAlarmNtf::unarchiveMessage(const B1Archive& archive)
@@ -61,6 +64,7 @@ void D1MsgAlarmNtf::unarchiveMessage(const B1Archive& archive)
     readDataFromArchive(archive, &_serviceID);
     readDataFromArchive(archive, &_code);
     readDataFromArchive(archive, &_reason);
+    readDataFromArchive(archive, &_carrierID);
 }
 
 B1String D1MsgAlarmNtf::toString() const
@@ -72,5 +76,6 @@ B1String D1MsgAlarmNtf::toString() const
     str.appendf(", serviceID[%d]", serviceID());
     str.appendf(", code[%d]", code());
     str.appendf(", reason[%d]", reason());
+    str.appendf(", carrierID[%s]", carrierID().cString());
     return str;
 }

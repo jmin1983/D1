@@ -130,7 +130,6 @@ bool D1AlarmWriter::addAlarm(int32 code, int32 serviceID, int64 taskID, int32 re
     if (D1Consts::ID_INVALID == serialNumber) {
         return false;
     }
-    D1Alarm(serialNumber, code, taskID, zone ? zone->zoneID() : D1Consts::ID_INVALID, serviceID, reason, carrierID.copy(), data.copy()).writeToRedis(_redisClientInterface);
     if (zone) {
         {
             B1AutoLock al(*_alarmLock);
@@ -147,6 +146,7 @@ bool D1AlarmWriter::addAlarm(int32 code, int32 serviceID, int64 taskID, int32 re
     info.setReason(reason);
     info.setServiceID(serviceID);
     info.setTaskID(taskID);
+    info.setCarrierID(carrierID.copy());
     if (zone) {
         info.setZoneID(zone->zoneID());
     }
