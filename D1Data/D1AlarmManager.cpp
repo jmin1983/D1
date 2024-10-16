@@ -185,8 +185,6 @@ bool D1AlarmWriter::clearAlarm(int64 serialNumber, int32 serviceID, const D1Zone
             }
         }
     }
-
-    _redisClientInterface->del(D1Alarm::redisKey(serialNumber));
     if (zone) {
         {
             B1AutoLock al(*_alarmLock);
