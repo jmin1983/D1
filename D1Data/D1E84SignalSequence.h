@@ -26,7 +26,7 @@ namespace BnD {
     public:
         D1E84SignalSequence(int32 zoneID);
         virtual ~D1E84SignalSequence() {}
-    protected:
+    public:
         enum CONSTS {
             CONSTS_DEFAULT_TIMEOUT = 60 * 1000, //  60sec
         };
@@ -161,7 +161,7 @@ namespace BnD {
         TIMEOUT isSequenceTimedOut();
         std::vector<bool>& signals() { return _signals; }
     public:
-        static void initTimeoutValues(const std::vector<uint32>& timeouts);
+        static void initTimeoutValues(const std::vector<uint32>& timeouts); //  size: TIMEOUT_COUNTS
     };
 }   //  !BnD
 

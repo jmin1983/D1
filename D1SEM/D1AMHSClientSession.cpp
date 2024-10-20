@@ -39,7 +39,7 @@ void D1AMHSClientSession::onRecvMessageS1F4(uint16 sessionID, bool wait, const s
             break;
         }
     }
-    //  todo: continue implementation.
+    //  TODO: continue implementation.
     if (isProcessStatePaused) {
         B1LOG("process state paused: sessionID[%d]", sessionID);
     }
