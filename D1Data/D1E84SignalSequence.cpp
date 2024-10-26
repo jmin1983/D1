@@ -90,38 +90,6 @@ B1String D1E84SignalSequence::toString() const
     return tmp;
 }
 
-bool D1E84SignalSequence::setNextSequence(bool isLoading)
-{
-    SEQUENCE nextSequence = SEQUENCE_0;
-    switch (_sequence) {
-        case SEQUENCE_0: nextSequence = SEQUENCE_1; break;
-        case SEQUENCE_1: nextSequence = SEQUENCE_2; break;
-        case SEQUENCE_2: nextSequence = SEQUENCE_3; break;
-        case SEQUENCE_3: nextSequence = SEQUENCE_4; break;
-        case SEQUENCE_4: nextSequence = SEQUENCE_5; break;
-        case SEQUENCE_5: nextSequence = SEQUENCE_6; break;
-        case SEQUENCE_6: nextSequence = SEQUENCE_7; break;
-        case SEQUENCE_7: nextSequence = SEQUENCE_8; break;
-        case SEQUENCE_8: nextSequence = SEQUENCE_9; break;
-        case SEQUENCE_9: nextSequence = SEQUENCE_10; break;
-        case SEQUENCE_10: nextSequence = SEQUENCE_11; break;
-        case SEQUENCE_11: nextSequence = SEQUENCE_12; break;
-        case SEQUENCE_12: nextSequence = SEQUENCE_13; break;
-        case SEQUENCE_13: nextSequence = SEQUENCE_0; break;
-        default: return false;
-    }
-    if (isValidSequenceSignal(nextSequence, isLoading) != true) {
-        return false;
-    }
-    _timer.stop();
-    if (SEQUENCE_0 != nextSequence) {
-        _timer.start(timeoutValue(sequenceTimeoutType(nextSequence)));
-    }
-    B1LOG("set E84 next_sequence: zoneID[%d], sequence[%d]", _zoneID, nextSequence);
-    _sequence = nextSequence;
-    return true;
-}
-
 bool D1E84SignalSequence::isValidSequenceSignal(SEQUENCE sequence, bool isLoading) const
 {
     if (_signals[SIGNAL_HO_AVBL] != true || _signals[SIGNAL_ES] != true) {
@@ -321,7 +289,7 @@ bool D1E84SignalSequence::isOff(SIGNAL signal) const
 void D1E84SignalSequence::setSignal(SIGNAL signal, bool value)
 {
     if (signal < SIGNAL_COUNTS) {
-        B1LOG("set E84 signal: zoneID[%d], signal:[%s], value[%d]", _zoneID, toRedisField(signal).cString(), value ? 1 : 0);
+        B1LOG("E84_SEQUENCE set signal: zoneID[%d], signal:[%s], value[%d]", _zoneID, toRedisField(signal).cString(), value ? 1 : 0);
         _signals[signal] = value;
     }
 }
@@ -332,14 +300,37 @@ void D1E84SignalSequence::resetSequence()
     _sequence = SEQUENCE_0;
 }
 
-bool D1E84SignalSequence::setNextLoadSequence()
+bool D1E84SignalSequence::proceedNextSequence(bool isLoadingSequence)
 {
-    return setNextSequence(true);
-}
-
-bool D1E84SignalSequence::setNextUnloadSequence()
-{
-    return setNextSequence(false);
+    SEQUENCE nextSequence = SEQUENCE_0;
+    switch (_sequence) {
+    case SEQUENCE_0: nextSequence = SEQUENCE_1; break;
+    case SEQUENCE_1: nextSequence = SEQUENCE_2; break;
+    case SEQUENCE_2: nextSequence = SEQUENCE_3; break;
+    case SEQUENCE_3: nextSequence = SEQUENCE_4; break;
+    case SEQUENCE_4: nextSequence = SEQUENCE_5; break;
+    case SEQUENCE_5: nextSequence = SEQUENCE_6; break;
+    case SEQUENCE_6: nextSequence = SEQUENCE_7; break;
+    case SEQUENCE_7: nextSequence = SEQUENCE_8; break;
+    case SEQUENCE_8: nextSequence = SEQUENCE_9; break;
+    case SEQUENCE_9: nextSequence = SEQUENCE_10; break;
+    case SEQUENCE_10: nextSequence = SEQUENCE_11; break;
+    case SEQUENCE_11: nextSequence = SEQUENCE_12; break;
+    case SEQUENCE_12: nextSequence = SEQUENCE_13; break;
+    case SEQUENCE_13: nextSequence = SEQUENCE_0; break;
+    default: return false;
+    }
+    if (isValidSequenceSignal(nextSequence, isLoadingSequence) != true) {
+        return false;
+    }
+    _timer.stop();
+    if (SEQUENCE_0 != nextSequence) {
+        auto timeoutInterval = timeoutValue(sequenceTimeoutType(nextSequence));
+        B1LOG("E84_SEQUENCE proceed to next_sequence: zoneID[%d], sequence[%d], timeoutInterval[%d]", _zoneID, nextSequence, timeoutInterval);
+        _timer.start(timeoutInterval);
+    }
+    _sequence = nextSequence;
+    return true;
 }
 
 D1E84SignalSequence::TIMEOUT D1E84SignalSequence::isSequenceTimedOut()

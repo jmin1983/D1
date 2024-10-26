@@ -128,7 +128,6 @@ namespace BnD {
         virtual void archiveTo(B1Archive* archive) const override;
         virtual void unarchiveFrom(const B1Archive& archive) override;
     protected:
-        bool setNextSequence(bool isLoading);   //  return true if next sequence condition met.
         bool isValidSequenceSignal(SEQUENCE sequence, bool isLoading) const;    //  return true if _sequence has right signal state.
         uint32 timeoutValue(TIMEOUT timeout) const;
         TIMEOUT sequenceTimeoutType(SEQUENCE sequence) const;
@@ -151,13 +150,11 @@ namespace BnD {
         bool needToTurnOffLREQ() const { return sequence() == SEQUENCE_6; }
         bool needToTurnOffUREQ() const { return sequence() == SEQUENCE_6; }
         bool needToTurnOffREADY() const { return sequence() == SEQUENCE_10; }
-        bool isEndOfSequence() const { return sequence() == SEQUENCE_13; }
         bool isOn(SIGNAL signal) const;
         bool isOff(SIGNAL signal) const;
         void setSignal(SIGNAL signal, bool value);
-        void resetSequence();           //  WARNING. CRITICAL IF E84 SEQUENCE IN PROGRESS.
-        bool setNextLoadSequence();     //  return true if next sequence condition met.
-        bool setNextUnloadSequence();   //  return true if next sequence condition met.
+        void resetSequence();                               //  WARNING. CRITICAL IF E84 SEQUENCE IN PROGRESS.
+        bool proceedNextSequence(bool isLoadingSequence);   //  return true if proceeded to next sequence.
         TIMEOUT isSequenceTimedOut();
         std::vector<bool>& signals() { return _signals; }
     public:
