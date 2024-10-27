@@ -152,6 +152,8 @@ namespace BnD {
         bool needToTurnOffREADY() const { return sequence() == SEQUENCE_10; }
         bool isOn(SIGNAL signal) const;
         bool isOff(SIGNAL signal) const;
+        bool isCarrierDetectedSequence() const { return sequence() == SEQUENCE_7; }
+        bool isCarrierRemovedSequence() const { return sequence() == SEQUENCE_7; }
         void setSignal(SIGNAL signal, bool value);
         void resetSequence();                               //  WARNING. CRITICAL IF E84 SEQUENCE IN PROGRESS.
         bool proceedNextSequence(bool isLoadingSequence);   //  return true if proceeded to next sequence.
