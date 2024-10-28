@@ -49,6 +49,7 @@ namespace BnD {
     protected:
         D1BaseServer* owner() const { return _owner; }
         D1BasePacketMaker* packetMaker() const;
+        void resetAliveCheckCount();
     public:
         bool sendData(const std::vector<uint8>& data);
         bool isValidID() const;

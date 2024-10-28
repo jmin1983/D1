@@ -39,11 +39,12 @@ D1BaseClientSession::~D1BaseClientSession()
 
 void D1BaseClientSession::implOnProtocolTypeAliveCheck()
 {
-    _aliveCheckCount = 0;
+    resetAliveCheckCount();
 }
 
 void D1BaseClientSession::implOnProtocolTypeTextMessage(B1String&& message)
 {
+    resetAliveCheckCount();
     if (_messageListener) {
         _messageListener->onRecvClientDataTextMessage(std::move(message));
     }
@@ -51,6 +52,7 @@ void D1BaseClientSession::implOnProtocolTypeTextMessage(B1String&& message)
 
 void D1BaseClientSession::implOnProtocolTypeTextMessageBunch(int32 index, int32 indexCount, B1String&& message)
 {
+    resetAliveCheckCount();
     if (_messageListener) {
         _messageListener->onRecvClientDataTextMessageBunch(index, indexCount, std::move(message));
     }
@@ -58,6 +60,7 @@ void D1BaseClientSession::implOnProtocolTypeTextMessageBunch(int32 index, int32 
 
 void D1BaseClientSession::implOnProtocolTypeBinary(int32 index, int32 indexCount, std::vector<uint8>&& binaryData)
 {
+    resetAliveCheckCount();
     if (_messageListener) {
         _messageListener->onRecvClientDataBinary(index, indexCount, std::move(binaryData));
     }
@@ -73,7 +76,7 @@ void D1BaseClientSession::onReadComplete(uint8* data, size_t dataSize)
 void D1BaseClientSession::implOnConnect()
 {
     B1LOG("session connected -> clear buffer: id:[%d]", sessionHandleID());
-    _aliveCheckCount = 0;
+    resetAliveCheckCount();
     clearBuffer();
     B1ArrayBufferClientSession::implOnConnect();
 }
@@ -111,6 +114,11 @@ int64 D1BaseClientSession::generateNextReconnectInterval() const
     int64 min = D1BaseProtocol::CONSTS_CLIENT_RECONNECT_INTERVAL_MIN;
     int64 max = D1BaseProtocol::CONSTS_CLIENT_RECONNECT_INTERVAL_MAX;
     return (rand() % (max - min)) + min;
+}
+
+void D1BaseClientSession::resetAliveCheckCount()
+{
+    _aliveCheckCount = 0;
 }
 
 bool D1BaseClientSession::sendData(const std::vector<uint8>& data)

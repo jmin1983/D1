@@ -51,6 +51,7 @@ namespace BnD {
         int64 generateNextReconnectInterval() const;
     protected:
         D1BasePacketMaker* packetMaker() const { return _packetMaker; }
+        void resetAliveCheckCount();
     public:
         bool sendData(const std::vector<uint8>& data);
     };

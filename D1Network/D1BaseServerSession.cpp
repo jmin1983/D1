@@ -38,13 +38,14 @@ D1BaseServerSession::~D1BaseServerSession()
 
 void D1BaseServerSession::implOnProtocolTypeAliveCheck()
 {
-    _aliveCheckCount = 0;
+    resetAliveCheckCount();
     D1BaseProtocol::Header header(D1BaseProtocol::Header::TYPE_ALIVE_CHECK);
     writeData((const uint8*)&header, sizeof(header));
 }
 
 void D1BaseServerSession::implOnProtocolTypeNotifyID(int32 id)
 {
+    resetAliveCheckCount();
     if (id < 0) {
         B1LOG("invalid handle notified -> disconnect: id[%d]", id);
         disconnect();
@@ -61,6 +62,7 @@ void D1BaseServerSession::implOnProtocolTypeNotifyID(int32 id)
 
 void D1BaseServerSession::implOnProtocolTypeTextMessage(B1String&& message)
 {
+    resetAliveCheckCount();
     if (_messageListener) {
         _messageListener->onRecvServerDataTextMessage(std::move(message));
     }
@@ -68,6 +70,7 @@ void D1BaseServerSession::implOnProtocolTypeTextMessage(B1String&& message)
 
 void D1BaseServerSession::implOnProtocolTypeTextMessageBunch(int32 index, int32 indexCount, B1String&& message)
 {
+    resetAliveCheckCount();
     if (_messageListener) {
         _messageListener->onRecvServerDataTextMessageBunch(index, indexCount, std::move(message));
     }
@@ -75,6 +78,7 @@ void D1BaseServerSession::implOnProtocolTypeTextMessageBunch(int32 index, int32 
 
 void D1BaseServerSession::implOnProtocolTypeBinary(int32 index, int32 indexCount, std::vector<uint8>&& binaryData)
 {
+    resetAliveCheckCount();
     if (_messageListener) {
         _messageListener->onRecvServerDataBinary(index, indexCount, std::move(binaryData));
     }
@@ -117,9 +121,14 @@ void D1BaseServerSession::implProcessConnected(bool firstConnectedProcess)
     }
 }
 
-D1BasePacketMaker* D1BaseServerSession::packetMaker() const
+auto D1BaseServerSession::packetMaker() const -> D1BasePacketMaker*
 {
     return owner()->packetMaker();
+}
+
+void D1BaseServerSession::resetAliveCheckCount()
+{
+    _aliveCheckCount = 0;
 }
 
 bool D1BaseServerSession::sendData(const std::vector<uint8>& data)
