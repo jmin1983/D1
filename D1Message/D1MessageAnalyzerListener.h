@@ -31,6 +31,7 @@ namespace BnD {
     DEFINE_MESSAGE_LISTENER_FUNC(D1MsgEventNtf) post_fix\
     DEFINE_MESSAGE_LISTENER_FUNC(D1DCSMsgZoneInfosReq) post_fix\
     DEFINE_MESSAGE_LISTENER_FUNC(D1DCSMsgZoneInfosRsp) post_fix\
+    DEFINE_MESSAGE_LISTENER_FUNC(D1GUIMsgServiceInfosReq) post_fix\
     DEFINE_MESSAGE_LISTENER_FUNC(D1GUIMsgZoneInfosReq) post_fix\
     DEFINE_MESSAGE_LISTENER_FUNC(D1MsgPerformanceCheckNtf) post_fix\
     DEFINE_MESSAGE_LISTENER_FUNC(D1MsgRemoteLogNtf) post_fix\
