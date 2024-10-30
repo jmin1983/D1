@@ -45,6 +45,9 @@ void D1GlobalConstBase::loadData(bool isDynamic, D1RedisClientInterface* redisCl
     if (redisClientInterface->hgetall(key, &values) != true) {
         return;
     }
+    if (values.empty()) {
+        return;
+    }
     for (const auto& itemBunchesPair : _itemBunches) {
         itemBunchesPair.second->loadData(isDynamic, this, values, adjustValue);
     }
