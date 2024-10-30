@@ -29,6 +29,32 @@ namespace BnD {
         D1ServiceInfo(int32 serviceID, int32 buildNum, B1String&& addresses, B1String&& serviceName, B1String&& buildDate, B1String&& startTime, B1String&& systemID);
         D1ServiceInfo(D1ServiceInfo&& r) noexcept;
         virtual ~D1ServiceInfo();
+    public:
+        struct SERVICE_STATE : B1Object {
+            enum ALIVE {
+                ALIVE_NO = 0,
+                ALIVE_YES = 1,
+
+                ALIVE_DEFAULT = ALIVE_NO,
+            };
+            enum ON {
+                ON_NO = 0,
+                ON_YES = 1,
+
+                ON_DEFAULT = ON_YES,
+            };
+            SERVICE_STATE();
+            SERVICE_STATE(SERVICE_STATE&& r);
+            DataInt32 _alive;
+            DataInt32 _on;
+            void archiveTo(B1Archive* archive) const final;
+            void unarchiveFrom(const B1Archive& archive) final;
+            B1String toString() const;
+            bool isAlive() const { return _alive.second == ALIVE_YES; }
+            bool isOn() const { return _on.second != ON_NO; }
+            void setAlive(bool flag) { _alive.second = flag ? ALIVE_YES : ALIVE_NO; }
+            void setOn(bool flag) { _on.second = flag ? ON_YES : ON_NO; }
+        };
     protected:
         DataInt32 _serviceID;
         DataInt32 _buildNum;
@@ -37,6 +63,7 @@ namespace BnD {
         DataString _buildDate;
         DataString _startTime;
         DataString _systemID;
+        std::pair<const B1String, SERVICE_STATE> _serviceState; //  store_in_redis seperately.
     protected:
         virtual void archiveTo(B1Archive* archive) const override;
         virtual void unarchiveFrom(const B1Archive& archive) override;
@@ -55,6 +82,10 @@ namespace BnD {
         const B1String& buildDate() const { return _buildDate.second; }
         const B1String& startTime() const { return _startTime.second; }
         const B1String& systemID() const { return _systemID.second; }
+        bool isServiceStateAlive() const { return _serviceState.second.isAlive(); }
+        bool isServiceStateOn() const { return _serviceState.second.isOn(); }
+        void setServiceStateAlive(bool flag) { _serviceState.second.setAlive(flag); }
+        void setServiceStateOn(bool flag) { _serviceState.second.setOn(flag); }
     };
 }   //  !BnD
 
