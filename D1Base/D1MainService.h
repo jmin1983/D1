@@ -54,6 +54,7 @@ namespace BnD {
         virtual bool implWorking() override;
         virtual void implStop() override;
     public:
+        bool isRedisCanReadWrite() const;
         B1String serviceName() const;
         D1ProductIdentifier* productIdentifier() const { return _productIdentifier.get(); }
         D1RedisClientInterface* redisClientInterface() const { return _redisClientInterface.get(); }

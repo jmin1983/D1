@@ -115,6 +115,11 @@ void D1MainService::implStop()
     }
 }
 
+bool D1MainService::isRedisCanReadWrite() const
+{
+    return _redisDirectClient ? _redisDirectClient->isReadSessionConnected() && _redisDirectClient->isWriteSessionConnected() : false;
+}
+
 B1String D1MainService::serviceName() const
 {
     return productIdentifier() ? productIdentifier()->serviceName() : "UNKNOWN";

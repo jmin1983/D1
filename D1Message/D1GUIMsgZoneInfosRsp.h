@@ -27,8 +27,8 @@ namespace BnD {
     protected:
         DataInt32 _index;
         DataInt32 _indexCount;
-        DataString _zoneString;
-        DataString _zoneGUIDataString;
+        DataVectorString _zoneStrings;
+        DataVectorString _zoneGUIDataStrings;
     protected:
         void archiveMessage(B1Archive* archive) const final;
         void unarchiveMessage(const B1Archive& archive) final;
@@ -37,13 +37,13 @@ namespace BnD {
     public:
         int32 index() const { return _index.second; }
         int32 indexCount() const { return _indexCount.second; }
-        const B1String& zoneString() const { return _zoneString.second; }
-        const B1String& zoneGUIDataString() const { return _zoneGUIDataString.second; }
+        const std::vector<B1String>& zoneStrings() const { return _zoneStrings.second; }
+              std::vector<B1String>& zoneStrings()       { return _zoneStrings.second; }
+        const std::vector<B1String>& zoneGUIDataStrings() const { return _zoneGUIDataStrings.second; }
+              std::vector<B1String>& zoneGUIDataStrings()       { return _zoneGUIDataStrings.second; }
 
         void setIndex(int32 value) { _index.second = value; }
         void setIndexCount(int32 value) { _indexCount.second = value; }
-        void setZoneString(B1String&& value) { _zoneString.second = std::move(value); }
-        void setZoneGUIDataString(B1String&& value) { _zoneGUIDataString.second = std::move(value); }
     public:
         static const B1String& messageString()
         {
