@@ -68,6 +68,20 @@ namespace BnD {
             RESERVED_UNIQUE_ID_MS_BEGIN = 0,
             RESERVED_UNIQUE_ID_MS_END = RESERVED_UNIQUE_ID_MS_BEGIN + 1000 * 1000,
         };
+        inline int32 toDCSIDFromDUSID(int32 dusID)
+        {
+            if (SERVICE_ID_DUS_BEGIN < dusID && dusID < SERVICE_ID_DUS_END) {
+                return dusID - SERVICE_ID_DUS_BEGIN;
+            }
+            return SERVICE_ID_INVALID;
+        }
+        inline int32 toDUSIDFromDCSID(int32 dcsID)
+        {
+            if (SERVICE_ID_DCS_BEGIN < dcsID && dcsID < SERVICE_ID_DCS_END) {
+                return dcsID + SERVICE_ID_DUS_BEGIN;
+            }
+            return SERVICE_ID_INVALID;
+        }
     };
 }   //  !BnD
 
