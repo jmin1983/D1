@@ -125,6 +125,20 @@ namespace BnD {
             }
             return true;
         }
+        bool getData(const std::map<B1String, B1String>& values, const B1String& key, B1String* data)
+        {
+            auto itr = values.find(key);
+            if (itr == values.end()) {
+                return false;
+            }
+            try {
+                *data = itr->second.copy();
+            }
+            catch (...) {
+                return false;
+            }
+            return true;
+        }
     };
 }
 
