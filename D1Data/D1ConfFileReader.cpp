@@ -42,7 +42,7 @@ B1String D1ConfFileReader::defaultLogPath() const
 
 int32 D1ConfFileReader::defaultLogDays() const
 {
-    return 30;  //  30 days.
+    return 30 * 6;  //  6 month.
 }
 
 B1String D1ConfFileReader::implToString() const
