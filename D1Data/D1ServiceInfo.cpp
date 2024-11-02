@@ -68,7 +68,7 @@ D1ServiceInfo::D1ServiceInfo(D1ServiceInfo&& r) noexcept
     , _buildDate("BuildDate", std::move(r._buildDate.second))
     , _startTime("StartTime", std::move(r._startTime.second))
     , _systemID("SystemID", std::move(r._systemID.second))
-    , _serviceState("ServiceState", SERVICE_STATE())
+    , _serviceState("ServiceState", std::move(r._serviceState.second))
 {
 }
 
