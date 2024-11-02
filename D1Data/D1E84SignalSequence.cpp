@@ -17,8 +17,7 @@ using namespace BnD;
 std::vector<uint32> D1E84SignalSequence::_timeouts;
 
 D1E84SignalSequence::D1E84SignalSequence(int32 zoneID)
-    : B1Object()
-    , _zoneID(zoneID)
+    : _zoneID(zoneID)
     , _sequence(SEQUENCE_0)
     , _signals(SIGNAL_COUNTS, false)
 {
@@ -32,62 +31,6 @@ bool D1E84SignalSequence::isSignalOn(SIGNAL signal) const
 bool D1E84SignalSequence::isSignalOff(SIGNAL signal) const
 {
     return _signals[signal] != true;
-}
-
-void D1E84SignalSequence::archiveTo(B1Archive* archive) const
-{
-    writeDataToArchive(toRedisFieldFromSequence(), _sequence, archive);
-#define WRITE_SIGNAL(s) writeDataToArchive(toRedisField(s), _signals[s], archive);
-    WRITE_SIGNAL(SIGNAL_VALID);
-    WRITE_SIGNAL(SIGNAL_CS_0);
-    WRITE_SIGNAL(SIGNAL_CS_1);
-    WRITE_SIGNAL(SIGNAL_TR_REQ);
-    WRITE_SIGNAL(SIGNAL_L_REQ);
-    WRITE_SIGNAL(SIGNAL_U_REQ);
-    WRITE_SIGNAL(SIGNAL_READY);
-    WRITE_SIGNAL(SIGNAL_BUSY);
-    WRITE_SIGNAL(SIGNAL_COMPT);
-    WRITE_SIGNAL(SIGNAL_CONT);
-    WRITE_SIGNAL(SIGNAL_HO_AVBL);
-    WRITE_SIGNAL(SIGNAL_ES);
-}
-
-void D1E84SignalSequence::unarchiveFrom(const B1Archive& archive)
-{
-    readDataFromArchiveCastInt32<SEQUENCE>(toRedisFieldFromSequence(), archive, &_sequence);
-#define READ_SIGNAL(s) { bool temp = false; readDataFromArchive(toRedisField(s), archive, &temp); _signals[s] = temp; }
-    READ_SIGNAL(SIGNAL_VALID);
-    READ_SIGNAL(SIGNAL_CS_0);
-    READ_SIGNAL(SIGNAL_CS_1);
-    READ_SIGNAL(SIGNAL_TR_REQ);
-    READ_SIGNAL(SIGNAL_L_REQ);
-    READ_SIGNAL(SIGNAL_U_REQ);
-    READ_SIGNAL(SIGNAL_READY);
-    READ_SIGNAL(SIGNAL_BUSY);
-    READ_SIGNAL(SIGNAL_COMPT);
-    READ_SIGNAL(SIGNAL_CONT);
-    READ_SIGNAL(SIGNAL_HO_AVBL);
-    READ_SIGNAL(SIGNAL_ES);
-}
-
-B1String D1E84SignalSequence::toString() const
-{
-    B1String tmp;
-    tmp.format("E84_SEQUENCE[%d]", _sequence);
-#define APPEND_SIGNAL_STRING(s) tmp.appendf(", %s:[%d]", toRedisField(s).cString(), isSignalOn(s) ? 1 : 0);
-    APPEND_SIGNAL_STRING(SIGNAL_VALID);
-    APPEND_SIGNAL_STRING(SIGNAL_CS_0);
-    APPEND_SIGNAL_STRING(SIGNAL_CS_1);
-    APPEND_SIGNAL_STRING(SIGNAL_TR_REQ);
-    APPEND_SIGNAL_STRING(SIGNAL_L_REQ);
-    APPEND_SIGNAL_STRING(SIGNAL_U_REQ);
-    APPEND_SIGNAL_STRING(SIGNAL_READY);
-    APPEND_SIGNAL_STRING(SIGNAL_BUSY);
-    APPEND_SIGNAL_STRING(SIGNAL_COMPT);
-    APPEND_SIGNAL_STRING(SIGNAL_CONT);
-    APPEND_SIGNAL_STRING(SIGNAL_HO_AVBL);
-    APPEND_SIGNAL_STRING(SIGNAL_ES);
-    return tmp;
 }
 
 bool D1E84SignalSequence::isValidSequenceSignal(SEQUENCE sequence, bool isLoading) const
@@ -192,32 +135,6 @@ D1E84SignalSequence::TIMEOUT D1E84SignalSequence::sequenceTimeoutType(SEQUENCE s
     return TIMEOUT_NA;
 }
 
-B1String D1E84SignalSequence::toRedisFieldFromSequence() const
-{
-    return "E84_SEQUENCE";
-}
-
-B1String D1E84SignalSequence::toRedisField(SIGNAL signal) const
-{
-    switch (signal) {
-        case SIGNAL_VALID: return "E84_VALID";
-        case SIGNAL_CS_0: return "E84_CS_0";
-        case SIGNAL_CS_1: return "E84_CS_1";
-        case SIGNAL_TR_REQ: return "E84_TR_REQ";
-        case SIGNAL_L_REQ: return "E84_L_REQ";
-        case SIGNAL_U_REQ: return "E84_U_REQ";
-        case SIGNAL_READY: return "E84_READY";
-        case SIGNAL_BUSY: return "E84_BUSY";
-        case SIGNAL_COMPT: return "E84_COMPT";
-        case SIGNAL_CONT: return "E84_CONT";
-        case SIGNAL_HO_AVBL: return "E84_HO_AVBL";
-        case SIGNAL_ES: return "E84_ES";
-        default:
-            break;
-    }
-    return "E84_UNKNOWN";
-}
-
 D1E84SignalSequence& D1E84SignalSequence::operator=(const D1E84SignalSequence& r)
 {
     _sequence = r._sequence;
@@ -231,51 +148,6 @@ bool D1E84SignalSequence::operator==(const D1E84SignalSequence& r) const
            _signals == r._signals;
 }
 
-void D1E84SignalSequence::makeRedisStringArgs(std::vector<B1String>* args) const
-{
-    args->push_back(toRedisFieldFromSequence());
-    args->push_back(B1String::formatAs("%d", _sequence));
-
-#define PUSH_BACK_SIGNAL(s) args->push_back(toRedisField(s)); args->push_back(B1String::formatAs("%d", isSignalOn(s) ? 1 : 0));
-    PUSH_BACK_SIGNAL(SIGNAL_VALID);
-    PUSH_BACK_SIGNAL(SIGNAL_CS_0);
-    PUSH_BACK_SIGNAL(SIGNAL_CS_1);
-    PUSH_BACK_SIGNAL(SIGNAL_TR_REQ);
-    PUSH_BACK_SIGNAL(SIGNAL_L_REQ);
-    PUSH_BACK_SIGNAL(SIGNAL_U_REQ);
-    PUSH_BACK_SIGNAL(SIGNAL_READY);
-    PUSH_BACK_SIGNAL(SIGNAL_BUSY);
-    PUSH_BACK_SIGNAL(SIGNAL_COMPT);
-    PUSH_BACK_SIGNAL(SIGNAL_CONT);
-    PUSH_BACK_SIGNAL(SIGNAL_HO_AVBL);
-    PUSH_BACK_SIGNAL(SIGNAL_ES);
-}
-
-bool D1E84SignalSequence::readRedisMap(const std::map<B1String, B1String>& map)
-{
-    auto itr = map.find(toRedisFieldFromSequence());
-    if (itr != map.end() && itr->second.isEmpty() != true) {
-        try { _sequence = static_cast<SEQUENCE>(itr->second.toInt32()); } catch (...) {}
-    }
-
-#define FIND_SIGNAL_DATA_AND_SET(s)\
-    itr = map.find(toRedisField(s));\
-    if (itr != map.end() && itr->second.isEmpty() != true) { try { _signals[s] = itr->second.toInt32() == 1 ? true : false; } catch (...) {} }
-    FIND_SIGNAL_DATA_AND_SET(SIGNAL_VALID);
-    FIND_SIGNAL_DATA_AND_SET(SIGNAL_CS_0);
-    FIND_SIGNAL_DATA_AND_SET(SIGNAL_CS_1);
-    FIND_SIGNAL_DATA_AND_SET(SIGNAL_TR_REQ);
-    FIND_SIGNAL_DATA_AND_SET(SIGNAL_L_REQ);
-    FIND_SIGNAL_DATA_AND_SET(SIGNAL_U_REQ);
-    FIND_SIGNAL_DATA_AND_SET(SIGNAL_READY);
-    FIND_SIGNAL_DATA_AND_SET(SIGNAL_BUSY);
-    FIND_SIGNAL_DATA_AND_SET(SIGNAL_COMPT);
-    FIND_SIGNAL_DATA_AND_SET(SIGNAL_CONT);
-    FIND_SIGNAL_DATA_AND_SET(SIGNAL_HO_AVBL);
-    FIND_SIGNAL_DATA_AND_SET(SIGNAL_ES);
-    return true;
-}
-
 bool D1E84SignalSequence::isOn(SIGNAL signal) const
 {
     return signal < SIGNAL_COUNTS ? _signals[signal] : false;
@@ -284,14 +156,6 @@ bool D1E84SignalSequence::isOn(SIGNAL signal) const
 bool D1E84SignalSequence::isOff(SIGNAL signal) const
 {
     return signal < SIGNAL_COUNTS ? _signals[signal] != true : true;
-}
-
-void D1E84SignalSequence::setSignal(SIGNAL signal, bool value)
-{
-    if (signal < SIGNAL_COUNTS) {
-        B1LOG("E84_SEQUENCE set signal: zoneID[%d], signal:[%s], value[%d]", _zoneID, toRedisField(signal).cString(), value ? 1 : 0);
-        _signals[signal] = value;
-    }
 }
 
 void D1E84SignalSequence::resetSequence()

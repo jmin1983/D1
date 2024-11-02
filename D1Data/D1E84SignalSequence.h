@@ -16,13 +16,12 @@
 #pragma once
 #endif
 
-#include <B1Base/B1Object.h>
 #include <B1Util/B1TimeChecker.h>
 
 #include <map>
 
 namespace BnD {
-    class D1E84SignalSequence : public B1Object {
+    class D1E84SignalSequence {
     public:
         D1E84SignalSequence(int32 zoneID);
         virtual ~D1E84SignalSequence() {}
@@ -125,22 +124,13 @@ namespace BnD {
         bool isSignalOn(SIGNAL signal) const;   //  use private only.
         bool isSignalOff(SIGNAL signal) const;  //  use private only.
     protected:
-        virtual void archiveTo(B1Archive* archive) const override;
-        virtual void unarchiveFrom(const B1Archive& archive) override;
-    protected:
         bool isValidSequenceSignal(SEQUENCE sequence, bool isLoading) const;    //  return true if _sequence has right signal state.
         uint32 timeoutValue(TIMEOUT timeout) const;
         TIMEOUT sequenceTimeoutType(SEQUENCE sequence) const;
-        B1String toRedisFieldFromSequence() const;
-        B1String toRedisField(SIGNAL signal) const;
     public:
         D1E84SignalSequence& operator=(const D1E84SignalSequence& r);
         bool operator==(const D1E84SignalSequence& r) const;
         bool operator!=(const D1E84SignalSequence& r) const { return operator==(r) != true; }
-    public:
-        void makeRedisStringArgs(std::vector<B1String>* args) const;
-        bool readRedisMap(const std::map<B1String, B1String>& map);
-        B1String toString() const;
     public:
         SEQUENCE sequence() const { return _sequence; }
         bool isInSequence() const { return sequence() != SEQUENCE_0; }
@@ -154,7 +144,6 @@ namespace BnD {
         bool isOff(SIGNAL signal) const;
         bool isCarrierDetectedSequence() const { return sequence() == SEQUENCE_7; }
         bool isCarrierRemovedSequence() const { return sequence() == SEQUENCE_7; }
-        void setSignal(SIGNAL signal, bool value);
         void resetSequence();                               //  WARNING. CRITICAL IF E84 SEQUENCE IN PROGRESS.
         bool proceedNextSequence(bool isLoadingSequence);   //  return true if proceeded to next sequence.
         TIMEOUT isSequenceTimedOut();
