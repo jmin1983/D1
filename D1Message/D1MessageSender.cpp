@@ -35,6 +35,11 @@ bool D1MessageSender::rpushMessage(const B1String& key, const D1BaseMessage& mes
     return redisClientInterface->rpush(key, m);
 }
 
+bool D1MessageSender::publishMessage(const B1String& channel, const B1String& message, bool essential, D1RedisClientInterface* redisClientInterface) const
+{
+    return redisClientInterface->publish(channel, message, essential);
+}
+
 bool D1MessageSender::publishMessage(const B1String& channel, const D1BaseMessage& message, bool essential, D1RedisClientInterface* redisClientInterface) const
 {
     B1String m;

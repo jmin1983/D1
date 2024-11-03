@@ -25,6 +25,7 @@ namespace BnD {
         virtual ~D1MessageSender();
     protected:
         bool rpushMessage(const B1String& key, const D1BaseMessage& message, D1RedisClientInterface* redisClientInterface) const;
+        bool publishMessage(const B1String& channel, const B1String& message, bool essential, D1RedisClientInterface* redisClientInterface) const;
         bool publishMessage(const B1String& channel, const D1BaseMessage& message, bool essential, D1RedisClientInterface* redisClientInterface) const;
         bool publishMessageWithTime(const B1String& channel, D1BaseMessage* message, bool essential, D1RedisClientInterface* redisClientInterface) const;
     public:
