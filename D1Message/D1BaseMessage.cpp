@@ -76,7 +76,6 @@ bool D1BaseMessage::composeToJson(B1String* json) const
 
 bool D1BaseMessage::composeToJsonWithBaseTime(B1String* json)
 {
-    int32 microSecond = 0;
-    B1Time::getCurrentTime(&_baseTime.second, &microSecond);
+    B1Time::getCurrentTime(&_baseTime.second);
     return composeToJson(json);
 }
