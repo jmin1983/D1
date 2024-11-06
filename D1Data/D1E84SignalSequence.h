@@ -39,10 +39,10 @@ namespace BnD {
             SIGNAL_U_REQ,       //  P->A. load port is assigned. turns ON when VALID_on. turns OFF when the carrier on the load port is removed.
             SIGNAL_READY,       //  P->A. EQ has accepted the transfer request from OHT. turns ON when EQ accepts the transfer request. turns OFF when the COMPT_on.
             SIGNAL_BUSY,        //  A->P. handoff is in progress. turns ON when the OHT starts handoff operation(must be READY_on). turns OFF when after confirming L_REQ/R_REQ off.
-            SIGNAL_COMPT,       //  A->P. OHT compelted the handoff operation. turns ON when OHT completed the handoff(BUSY_off). turns OFF when EQ completed the handoff(READY_off).
-            SIGNAL_CONT,        //  A->P. Specifies the handoff is continuous handoff.
+            SIGNAL_COMPT,       //  A->P. OHT completed the handoff operation. turns ON when OHT completed the handoff(BUSY_off). turns OFF when EQ completed the handoff(READY_off).
+            SIGNAL_CONT,        //  A->P. Specifies the handoff is continuous_handoff.
             SIGNAL_HO_AVBL,     //  P->A. EQ is not available for the handoff operation. turns ON when EQ is normal. turns OFF and keeps OFF when EQ port has exception.
-            SIGNAL_ES,          //  P->A. Request to stop OHT activity immediately. turns ON when EQ is normal. turns OFF when critical situation like ES buttons is pressed.
+            SIGNAL_ES,          //  P->A. Request to stop OHT activity immediately. turns ON when EQ is normal. turns OFF when critical situation like ES buttons is pressed or alarmed.
 
             SIGNAL_COUNTS,
         };
