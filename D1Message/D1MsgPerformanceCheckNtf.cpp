@@ -18,6 +18,7 @@ using namespace BnD;
 
 D1MsgPerformanceCheckNtf::D1MsgPerformanceCheckNtf()
     : D1BaseMessage()
+    , _serviceID("ServiceID", D1Consts::SERVICE_ID_INVALID)
     , _pid("PID", 0)
     , _memUsage("MemUsage", 0)
     , _memTotal("MemTotal", 0)
@@ -28,6 +29,7 @@ D1MsgPerformanceCheckNtf::D1MsgPerformanceCheckNtf()
 
 D1MsgPerformanceCheckNtf::D1MsgPerformanceCheckNtf(D1BaseMessage&& baseMessage)
     : D1BaseMessage(std::move(baseMessage))
+    , _serviceID("ServiceID", D1Consts::SERVICE_ID_INVALID)
     , _pid("PID", 0)
     , _memUsage("MemUsage", 0)
     , _memTotal("MemTotal", 0)
@@ -41,6 +43,7 @@ D1MsgPerformanceCheckNtf::~D1MsgPerformanceCheckNtf()
 
 void D1MsgPerformanceCheckNtf::archiveMessage(B1Archive* archive) const
 {
+    writeDataToArchive(_serviceID, archive);
     writeDataToArchive(_pid, archive);
     writeDataToArchive(_memUsage, archive);
     writeDataToArchive(_memTotal, archive);
@@ -49,6 +52,7 @@ void D1MsgPerformanceCheckNtf::archiveMessage(B1Archive* archive) const
 
 void D1MsgPerformanceCheckNtf::unarchiveMessage(const B1Archive& archive)
 {
+    readDataFromArchive(archive, &_serviceID);
     readDataFromArchive(archive, &_pid);
     readDataFromArchive(archive, &_memUsage);
     readDataFromArchive(archive, &_memTotal);
@@ -58,6 +62,7 @@ void D1MsgPerformanceCheckNtf::unarchiveMessage(const B1Archive& archive)
 B1String D1MsgPerformanceCheckNtf::toString() const
 {
     B1String str = D1BaseMessage::toString();
+    str.appendf(", serviceID[%d]", serviceID());
     str.appendf(", pid[%u]", pid());
     str.appendf(", memUsage[%lld]", memUsage());
     str.appendf(", memTotal[%d]", memTotal());

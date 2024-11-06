@@ -25,6 +25,7 @@ namespace BnD {
         D1MsgPerformanceCheckNtf(D1BaseMessage&& baseMessage);
         virtual ~D1MsgPerformanceCheckNtf();
     protected:
+        DataInt32 _serviceID;
         DataUint32 _pid;
         DataInt64 _memUsage;
         DataInt64 _memTotal;
@@ -35,11 +36,13 @@ namespace BnD {
     public:
         B1String toString() const final;
     public:
+        int32 serviceID() const { return _serviceID.second; }
         uint32 pid() const { return _pid.second; }
         int64 memUsage() const { return _memUsage.second; }
         int64 memTotal() const { return _memTotal.second; }
         float64 cpuUsagePercent() const { return _cpuUsagePercent.second; }
 
+        void setServiceID(int32 value) { _serviceID.second = value; }
         void setPid(uint32 value) { _pid.second = value; }
         void setMemUsage(int64 value) { _memUsage.second = value; }
         void setMemTotal(int64 value) { _memTotal.second = value; }

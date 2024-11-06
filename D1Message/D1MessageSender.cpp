@@ -12,6 +12,7 @@
 #include "D1Message.h"
 #include "D1MessageSender.h"
 #include "D1BaseMessage.h"
+#include "D1MsgPerformanceCheckNtf.h"
 #include "D1MsgRemoteLogNtf.h"
 #include "D1MSMsgKeepAliveRsp.h"
 
@@ -79,6 +80,17 @@ bool D1MessageSender::sendLogMessageError(int32 serviceID, int64 taskID, int32 z
     D1MsgRemoteLogNtf msg;
     msg.setError(serviceID, taskID, zoneID, std::move(comment));
     return publishMessageWithTime(logMessageChannel(), &msg, false, redisClientInterface);
+}
+
+bool D1MessageSender::sendPerformanceCheckResult(int32 serviceID, uint32 pid, int64 memUsage, int64 memTotal, float64 cpuUsagePercent, D1RedisClientInterface* redisClientInterface) const
+{
+    D1MsgPerformanceCheckNtf msg;
+    msg.setServiceID(serviceID);
+    msg.setPid(pid);
+    msg.setMemUsage(memUsage);
+    msg.setMemTotal(memTotal);
+    msg.setCpuUsagePercent(cpuUsagePercent);
+    return publishMessage(logMessageChannel(), msg, false, redisClientInterface);
 }
 
 const B1String& D1MessageSender::alarmEventChannel()

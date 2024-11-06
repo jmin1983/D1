@@ -33,6 +33,7 @@ namespace BnD {
         bool sendLogMessageDebug(int32 serviceID, int64 taskID, int32 zoneID, B1String&& comment, D1RedisClientInterface* redisClientInterface) const;
         bool sendLogMessageInfo(int32 serviceID, int64 taskID, int32 zoneID, B1String&& comment, D1RedisClientInterface* redisClientInterface) const;
         bool sendLogMessageError(int32 serviceID, int64 taskID, int32 zoneID, B1String&& comment, D1RedisClientInterface* redisClientInterface) const;
+        bool sendPerformanceCheckResult(int32 serviceID, uint32 pid, int64 memUsage, int64 memTotal, float64 cpuUsagePercent, D1RedisClientInterface* redisClientInterface) const;
     public:
         static const B1String& alarmEventChannel();
         static const B1String& systemChannel();
