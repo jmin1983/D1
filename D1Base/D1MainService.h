@@ -32,6 +32,7 @@ namespace BnD {
         enum CONSTS {
             CONSTS_REDIS_TIME_CHECK_INTERVAL = 1 * 60 * 1000,
             CONSTS_DISABLE_PERFORMANCE_CHECK = 0,
+            CONSTS_PERFORMANCE_CHECK_LOG_INTERVAL = 1 * 60 * 1000,
         };
     private:
         std::shared_ptr<D1ProductIdentifier> _productIdentifier;
@@ -39,6 +40,7 @@ namespace BnD {
         std::shared_ptr<B1RedisDirectClient> _redisDirectClient;
         std::shared_ptr<D1RedisClientInterface> _redisClientInterface;
         B1TimeChecker _performanceCheckTimer;
+        B1TimeChecker _performanceCheckLogTimer;
         B1TimeChecker _redisTimeCheckTimer;
     private:
         void checkPerformance();

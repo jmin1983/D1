@@ -39,7 +39,9 @@ void D1MainService::checkPerformance()
     int64 memTotal = _performanceProfiler->memTotal();
     float64 memUsagePercent = static_cast<float64>(memUsage) * 100 / memTotal;
     float64 cpuUsagePercent = _performanceProfiler->cpuUsage();
-    B1LOG("performance check: pid[%u], cpu[%f], mem[%lld/%lld][%f%%]", pid, cpuUsagePercent, memUsage, memTotal, memUsagePercent);
+    if (_performanceCheckLogTimer.isTimeover()) {
+        B1LOG("performance check: pid[%u], cpu[%f], mem[%lld/%lld][%f%%]", pid, cpuUsagePercent, memUsage, memTotal, memUsagePercent);
+    }
     onCheckPerformance(pid, memUsage, memTotal, memUsagePercent, cpuUsagePercent);
 }
 
@@ -77,6 +79,7 @@ bool D1MainService::implStart()
         if (_performanceProfiler->initialize()) {
             checkPerformance();
             _performanceCheckTimer.start(perfInterval);
+            _performanceCheckLogTimer.start(CONSTS_PERFORMANCE_CHECK_LOG_INTERVAL);
         }
         else {
             B1LOG("initialize profiler failed");
