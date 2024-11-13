@@ -12,6 +12,8 @@
 #include "D1Data.h"
 #include "D1ServiceInfo.h"
 
+#include <B1Base/B1Archive.hpp>
+
 #include <D1Base/D1Consts.h>
 
 using namespace BnD;
@@ -80,13 +82,15 @@ D1ServiceInfo::SERVICE_STATE::SERVICE_STATE()
     : B1Object()
     , _alive("Alive", ALIVE_DEFAULT)
     , _on("On", ON_DEFAULT)
+    , _connections("Connections", std::map<int32, int32>())
 {
 }
 
-D1ServiceInfo::SERVICE_STATE::SERVICE_STATE(SERVICE_STATE&& r)
+D1ServiceInfo::SERVICE_STATE::SERVICE_STATE(SERVICE_STATE&& r) noexcept
     : B1Object()
     , _alive("Alive", r._alive.second)
     , _on("On", r._on.second)
+    , _connections("Connections", std::move(r._connections.second))
 {
 }
 
@@ -94,19 +98,30 @@ void D1ServiceInfo::SERVICE_STATE::archiveTo(B1Archive* archive) const
 {
     writeDataToArchive(_alive, archive);
     writeDataToArchive(_on, archive);
+    writeDataToArchive(_connections, archive);
 }
 
 void D1ServiceInfo::SERVICE_STATE::unarchiveFrom(const B1Archive& archive)
 {
     readDataFromArchive(archive, &_alive);
     readDataFromArchive(archive, &_on);
+    readDataFromArchive(archive, &_connections);
 }
 
 B1String D1ServiceInfo::SERVICE_STATE::toString() const
 {
     B1String str;
-    str.format("alive[%d]", _alive.second);
-    str.format(", on[%d]", _on.second);
+    str.appendf("alive[%d]", _alive.second);
+    str.appendf(", on[%d]", _on.second);
+    str.append(", connections");
+    if (_connections.second.empty()) {
+        str.append("[empty]");
+    }
+    else {
+        for (const auto& connectionsPair : _connections.second) {
+            str.appendf("[%d:%d]", connectionsPair.first, connectionsPair.second);
+        }
+    }
     return str;
 }
 

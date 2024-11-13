@@ -44,9 +44,10 @@ namespace BnD {
                 ON_DEFAULT = ON_YES,
             };
             SERVICE_STATE();
-            SERVICE_STATE(SERVICE_STATE&& r);
+            SERVICE_STATE(SERVICE_STATE&& r) noexcept;
             DataInt32 _alive;
             DataInt32 _on;
+            DataMapInt32 _connections;  //  map<service_id, connection_state>. connection_state:1(connected)/0(disconnected)
             void archiveTo(B1Archive* archive) const final;
             void unarchiveFrom(const B1Archive& archive) final;
             B1String toString() const;
@@ -86,6 +87,8 @@ namespace BnD {
         bool isServiceStateOn() const { return _serviceState.second.isOn(); }
         void setServiceStateAlive(bool flag) { _serviceState.second.setAlive(flag); }
         void setServiceStateOn(bool flag) { _serviceState.second.setOn(flag); }
+        void setServiceStateConnection(std::map<int32, int32>&& connections) { _serviceState.second._connections.second.swap(connections); }
+        void addServiceStateConnection(int32 serviceID, int32 connection) { _serviceState.second._connections.second.insert(std::make_pair(serviceID, connection)); }
     };
 }   //  !BnD
 
