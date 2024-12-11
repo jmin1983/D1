@@ -77,7 +77,7 @@ namespace BnD {
         virtual D1ProductIdentifier* createProductIdentifier(int32 serviceID) = 0;
         virtual void onMainServiceStartBefore() {}
     public:
-        bool start(const B1String& address, uint16 port, int32 db, const B1String& logPath, int32 logCounts,
+        bool start(const B1String& address, uint16 port, int32 db, const B1String& logPath, int32 logCounts, const B1String& startingLog,
                    bool useServiceIDForLog = false, bool ignoreFileLogFailure = false)
         {
             if (_service) {
@@ -120,7 +120,7 @@ namespace BnD {
                         return false;
                     }
                 }
-                B1LOG("initializing service: name[%s]", productIdentifier->serviceName().cString());
+                B1LOG("initializing service: name[%s] %s", productIdentifier->serviceName().cString(), startingLog.cString());
                 B1LOG("cleanup product initializer -> disconnect sessions: site[%d], type[%d]", productIdentifier->site(), productIdentifier->type());
                 client.finalize();
                 _service.reset(createMainService(productIdentifier));
