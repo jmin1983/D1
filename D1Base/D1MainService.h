@@ -32,7 +32,7 @@ namespace BnD {
         enum CONSTS {
             CONSTS_REDIS_TIME_CHECK_INTERVAL = 1 * 60 * 1000,
             CONSTS_DISABLE_PERFORMANCE_CHECK = 0,
-            CONSTS_PERFORMANCE_CHECK_LOG_INTERVAL = 1 * 60 * 1000,
+            CONSTS_PERFORMANCE_CHECK_LOG_INTERVAL = 10 * 60 * 1000,
         };
     private:
         std::shared_ptr<D1ProductIdentifier> _productIdentifier;
