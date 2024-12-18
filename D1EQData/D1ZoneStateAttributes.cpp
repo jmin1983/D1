@@ -161,7 +161,7 @@ void D1ZoneStateAttributes::setAlarmed(int64 id, D1RedisClientInterface* delayed
     }
     _alarmID.second = id;
     if (delayedCommander) {
-        notifyAttributesChanged(delayedCommander);
+        notifyAttributesChanged(delayedCommander, true);
     }
 }
 
@@ -172,6 +172,6 @@ void D1ZoneStateAttributes::clearAlarmed(D1RedisClientInterface* delayedCommande
     }
     _alarmID.second = D1Consts::ID_INVALID;
     if (delayedCommander) {
-        notifyAttributesChanged(delayedCommander);
+        notifyAttributesChanged(delayedCommander, true);
     }
 }
