@@ -39,7 +39,7 @@ D1Zone::D1Zone(int32 D1ZoneID)
 {
 }
 
-void D1Zone::implInitializeAttributes(int32 serviceID, D1RedisClientInterface* redisReader)
+void D1Zone::implInitializeAttributes(int32 serviceID, D1RedisClientInterface* redisReader, bool loadFromRedisAllData)
 {
     _occupiedAttributes.reset(new D1ZoneOccupiedAttributes(zoneID(), serviceID, redisReader, NULL));
     _stateAttributes.reset(new D1ZoneStateAttributes(zoneID(), serviceID, redisReader));
@@ -118,9 +118,9 @@ bool D1Zone::readRedisMap(const std::map<B1String, B1String>& map)
     return true;
 }
 
-void D1Zone::initializeAttributes(int32 serviceID, D1RedisClientInterface* redisReader)
+void D1Zone::initializeAttributes(int32 serviceID, D1RedisClientInterface* redisReader, bool loadFromRedisAllData)
 {
-    implInitializeAttributes(serviceID, redisReader);
+    implInitializeAttributes(serviceID, redisReader, loadFromRedisAllData);
 }
 
 void D1Zone::initializePlugins(D1ZoneAttributePlugin* attributePlugin)

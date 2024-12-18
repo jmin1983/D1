@@ -58,7 +58,7 @@ namespace BnD {
         std::shared_ptr<D1ZoneOccupiedAttributes> _occupiedAttributes;
         std::shared_ptr<D1ZoneStateAttributes> _stateAttributes;
     protected:
-        virtual void implInitializeAttributes(int32 serviceID, D1RedisClientInterface* redisReader);
+        virtual void implInitializeAttributes(int32 serviceID, D1RedisClientInterface* redisReader, bool loadFromRedisAllData);
         virtual void implIitializePlugins(D1ZoneAttributePlugin* attributePlugin);
     protected:
         virtual void archiveTo(B1Archive* archive) const override;
@@ -67,7 +67,7 @@ namespace BnD {
         virtual void makeRedisStringArgs(std::vector<B1String>* args) const override;
         virtual bool readRedisMap(const std::map<B1String, B1String>& map) override;
     public:
-        void initializeAttributes(int32 serviceID, D1RedisClientInterface* redisReader);
+        void initializeAttributes(int32 serviceID, D1RedisClientInterface* redisReader, bool loadFromRedisAllData);
         void initializePlugins(D1ZoneAttributePlugin* attributePlugin);
         int32 zoneID() const { return _zoneID.second; }
         int32 slaveID() const;
