@@ -134,11 +134,11 @@ namespace BnD {
     public:
         SEQUENCE sequence() const { return _sequence; }
         bool isInSequence() const { return sequence() != SEQUENCE_0; }
-        bool needToTurnOnLREQ() const { return sequence() == SEQUENCE_2; }
-        bool needToTurnOnUREQ() const { return sequence() == SEQUENCE_2; }
+        bool needToTurnOnLREQ(bool isLoadingSequence) const { return isLoadingSequence && sequence() == SEQUENCE_2; }
+        bool needToTurnOnUREQ(bool isLoadingSequence) const { return isLoadingSequence != true && sequence() == SEQUENCE_2; }
         bool needToTurnOnREADY() const { return sequence() == SEQUENCE_4; }
-        bool needToTurnOffLREQ() const { return sequence() == SEQUENCE_6; }
-        bool needToTurnOffUREQ() const { return sequence() == SEQUENCE_6; }
+        bool needToTurnOffLREQ(bool isLoadingSequence) const { return isLoadingSequence && sequence() == SEQUENCE_6; }
+        bool needToTurnOffUREQ(bool isLoadingSequence) const { return isLoadingSequence != true && sequence() == SEQUENCE_6; }
         bool needToTurnOffREADY() const { return sequence() == SEQUENCE_10; }
         bool isOn(SIGNAL signal) const;
         bool isOff(SIGNAL signal) const;
@@ -146,8 +146,10 @@ namespace BnD {
         bool isCarrierRemovedSequence() const { return sequence() == SEQUENCE_7; }
         void resetSequence();                               //  WARNING. CRITICAL IF E84 SEQUENCE IN PROGRESS.
         bool proceedNextSequence(bool isLoadingSequence);   //  return true if proceeded to next sequence.
+        bool isSequenceSignalInvalid() const;
         TIMEOUT isSequenceTimedOut();
         std::vector<bool>& signals() { return _signals; }
+        B1String toString() const;
     public:
         static void initTimeoutValues(const std::vector<uint32>& timeouts); //  size: TIMEOUT_COUNTS
     };

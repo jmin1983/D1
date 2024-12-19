@@ -48,6 +48,7 @@ namespace BnD {
         std::shared_ptr<B1Lock> _alarmLock;
     protected:
         virtual int64 implMakeNewSerialNumber() = 0;
+        virtual bool canClearAlarm(const D1Alarm& alarm) const { return true; }
         virtual void onAlarmAdded(int64 serialNumber, int32 code, int32 serviceID, int64 taskID, int32 reason, const D1Zone* zone, const B1String& carrierID, const B1String& data);
         virtual void onAlarmCleared(int64 serialNumber, int32 serviceID, int32 zoneID);
     protected:

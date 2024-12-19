@@ -176,13 +176,17 @@ bool D1AlarmWriter::clearAlarm(int64 serialNumber, int32 serviceID, const D1Zone
     if (auto alarm = getAlarmInfo(serialNumber)) {
         if (alarm->zoneID() != D1Consts::ID_INVALID) {
             if (D1ZoneRepository::isOwnerZone(alarm->zoneID(), serviceID) != true) {
-                B1LOG("unable to clear zone_alarm if not a zone owner: zoneID[%d], serviceID[d]", alarm->zoneID(), serviceID);
+                B1LOG("unable to clear zone_alarm if not a zone owner: zoneID[%d], serviceID[%d]", alarm->zoneID(), serviceID);
                 D1MsgAlarmClearRsp rsp(serialNumber, serviceID, zone ? zone->zoneID() : D1Consts::ID_INVALID, false);
                 B1String json;
                 rsp.composeToJsonWithBaseTime(&json);
                 _redisClientInterface->publish(D1MessageSender::alarmEventChannel(), json, false);
                 return false;
             }
+        }
+        if (canClearAlarm(*alarm) != true) {
+            B1LOG("can not clear alarm: serialNumber[%lld], zoneID[%d], serviceID[%d]", serialNumber, alarm->zoneID(), serviceID);
+            return false;
         }
     }
     if (zone) {
