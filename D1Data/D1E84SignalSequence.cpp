@@ -208,8 +208,7 @@ bool D1E84SignalSequence::isSequenceSignalInvalid() const
             break;
         }
         case SEQUENCE_2:
-        case SEQUENCE_3:
-        case SEQUENCE_9: {
+        case SEQUENCE_3: {
             if (isSignalOff(SIGNAL_CS_0)) {
                 B1LOG("E84_SEQUENCE invalid signal. CS_0 off: zoneID[%d], sequence[%d]", _zoneID, _sequence);
                 return true;
@@ -221,8 +220,7 @@ bool D1E84SignalSequence::isSequenceSignalInvalid() const
             break;
         }
         case SEQUENCE_4:
-        case SEQUENCE_5:
-        case SEQUENCE_8: {
+        case SEQUENCE_5: {
             if (isSignalOff(SIGNAL_CS_0)) {
                 B1LOG("E84_SEQUENCE invalid signal. CS_0 off: zoneID[%d], sequence[%d]", _zoneID, _sequence);
                 return true;
