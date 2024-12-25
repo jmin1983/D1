@@ -124,7 +124,7 @@ namespace BnD {
         bool isSignalOn(SIGNAL signal) const;   //  use private only.
         bool isSignalOff(SIGNAL signal) const;  //  use private only.
     protected:
-        bool isValidSequenceSignal(SEQUENCE sequence, bool isLoading) const;    //  return true if _sequence has right signal state.
+        bool isSequenceSignalReadyToProceed(SEQUENCE sequence, bool isLoading) const;   //  return true if signal is ready to procceed to next _sequence.
         uint32 timeoutValue(TIMEOUT timeout) const;
         TIMEOUT sequenceTimeoutType(SEQUENCE sequence) const;
     public:

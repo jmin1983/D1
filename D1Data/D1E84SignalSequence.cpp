@@ -33,7 +33,7 @@ bool D1E84SignalSequence::isSignalOff(SIGNAL signal) const
     return _signals[signal] != true;
 }
 
-bool D1E84SignalSequence::isValidSequenceSignal(SEQUENCE sequence, bool isLoading) const
+bool D1E84SignalSequence::isSequenceSignalReadyToProceed(SEQUENCE sequence, bool isLoading) const
 {
     if (_signals[SIGNAL_HO_AVBL] != true || _signals[SIGNAL_ES] != true) {
         return false;
@@ -184,7 +184,7 @@ bool D1E84SignalSequence::proceedNextSequence(bool isLoadingSequence)
         case SEQUENCE_13: nextSequence = SEQUENCE_0; break;
         default: return false;
     }
-    if (isValidSequenceSignal(nextSequence, isLoadingSequence) != true) {
+    if (isSequenceSignalReadyToProceed(nextSequence, isLoadingSequence) != true) {
         return false;
     }
     _timer.stop();
