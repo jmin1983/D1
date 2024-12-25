@@ -40,7 +40,8 @@ void D1MainService::checkPerformance()
     float64 memUsagePercent = static_cast<float64>(memUsage) * 100 / memTotal;
     float64 cpuUsagePercent = _performanceProfiler->cpuUsage();
     if (_performanceCheckLogTimer.isTimeover()) {
-        B1LOG("performance check: pid[%u], cpu[%f], mem[%lld/%lld][%f%%]", pid, cpuUsagePercent, memUsage, memTotal, memUsagePercent);
+        B1LOG("performance check: version[%d], build_date[%s], pid[%u], cpu[%f], mem[%lld/%lld][%f%%]",
+            version(), buildDate().cString(), pid, cpuUsagePercent, memUsage, memTotal, memUsagePercent);
     }
     onCheckPerformance(pid, memUsage, memTotal, memUsagePercent, cpuUsagePercent);
 }
