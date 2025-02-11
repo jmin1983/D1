@@ -25,6 +25,7 @@ namespace BnD {
         enum SERVICE_ID {
             SERVICE_ID_INVALID = ID_INVALID,
 
+            // DISTRIBUTED SERVICES BEGIN   ///////////////////////////////////////////////////////
             SERVICE_ID_DISTRIBUTED_BEGIN = 0,
 
             SERVICE_ID_DCS_BEGIN = SERVICE_ID_DISTRIBUTED_BEGIN,
@@ -40,13 +41,17 @@ namespace BnD {
             SERVICE_ID_DSS_END = SERVICE_ID_DSS_BEGIN + 100 * 1000,
 
             SERVICE_ID_DISTRIBUTED_END = SERVICE_ID_DCS_BEGIN + 1000 * 1000,
+            // DISTRIBUTED SERVICES END ///////////////////////////////////////////////////////////
 
+            // LOCAL SERVICES BEGIN ///////////////////////////////////////////////////////////////
             SERVICE_ID_LOCAL_BEGIN = SERVICE_ID_DISTRIBUTED_END,
 
             SERVICE_ID_RS = SERVICE_ID_LOCAL_BEGIN + 1,
 
             SERVICE_ID_LOCAL_END = SERVICE_ID_LOCAL_BEGIN + 1000,
+            // LOCAL SERVICES END   ///////////////////////////////////////////////////////////////
 
+            // STAND_ALONE SERVICES BEGIN   ///////////////////////////////////////////////////////
             SERVICE_ID_STAND_ALONE_BEGIN = SERVICE_ID_LOCAL_END,
 
             SERVICE_ID_CENTRAL_RESERVED_BEGIN = SERVICE_ID_STAND_ALONE_BEGIN,
@@ -61,13 +66,26 @@ namespace BnD {
             SERVICE_ID_WAS,
 
             SERVICE_ID_STAND_ALONE_END = SERVICE_ID_STAND_ALONE_BEGIN + 1000,
+            // STAND_ALONE SERVICES END ///////////////////////////////////////////////////////////
 
-            SERVICE_ID_DEPENDENT_BEGIN = SERVICE_ID_STAND_ALONE_END,
+            // LOAD_BALANCE SERVICES BEGIN  ///////////////////////////////////////////////////////
+            SERVICE_ID_LOAD_BALANCE_BEGIN = SERVICE_ID_STAND_ALONE_END,
+
+            SERVICE_ID_LMS_BEGIN = SERVICE_ID_LOAD_BALANCE_BEGIN,
+            SERVICE_ID_LMS_ALL = SERVICE_ID_LMS_BEGIN,
+            SERVICE_ID_LMS_END = SERVICE_ID_LMS_BEGIN + 100,
+
+            SERVICE_ID_LOAD_BALANCE_END = SERVICE_ID_LOAD_BALANCE_BEGIN + 1000,
+            // LOAD_BALANCE SERVICES END    ///////////////////////////////////////////////////////
+
+            // DEPENDENT SERVICES BEGIN ///////////////////////////////////////////////////////////
+            SERVICE_ID_DEPENDENT_BEGIN = SERVICE_ID_LOAD_BALANCE_END,
 
             SERVICE_ID_FMS_PRIMARY = SERVICE_ID_DEPENDENT_BEGIN + 1,
             SERVICE_ID_FMS_SECONDARY,
 
             SERVICE_ID_DEPENDENT_END = SERVICE_ID_DEPENDENT_BEGIN + 1000,
+            // DEPENDENT SERVICES END   ///////////////////////////////////////////////////////////
         };
         enum RESERVED_UNIQUE_ID {
             RESERVED_UNIQUE_ID_INVALID = ID_INVALID,
