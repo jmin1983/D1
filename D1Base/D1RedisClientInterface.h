@@ -30,6 +30,7 @@ namespace BnD {
         B1RedisDirectClient* _redisDirectClient;
     public:
         bool startPolling();
+        void stopPolling();
         void startWriting();
     public:
         bool getAllStrings(const std::vector<B1String>& args, std::list<B1String>* out);

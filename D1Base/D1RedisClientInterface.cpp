@@ -33,6 +33,13 @@ bool D1RedisClientInterface::startPolling()
     return false;
 }
 
+void D1RedisClientInterface::stopPolling()
+{
+    if (_redisDirectClient) {
+        _redisDirectClient->stopPolling();
+    }
+}
+
 void D1RedisClientInterface::startWriting()
 {
     if (_redisDirectClient) {
