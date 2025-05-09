@@ -60,10 +60,11 @@ namespace BnD {
             SERVICE_ID_CSS,
             SERVICE_ID_CENTRAL_RESERVED_END = SERVICE_ID_CENTRAL_RESERVED_BEGIN + 10,
 
-            SERVICE_ID_MS,
-            SERVICE_ID_ECS,
-            SERVICE_ID_DWS,
-            SERVICE_ID_WAS,
+            SERVICE_ID_MS,  //  Monitoring Service.
+            SERVICE_ID_ECS, //  External Communication Service.
+            SERVICE_ID_DWS, //  Database Writing Service.
+            SERVICE_ID_WAS, //  Web Assistant Service.
+            SERVICE_ID_SMS, //  System Management Service.
 
             SERVICE_ID_STAND_ALONE_END = SERVICE_ID_STAND_ALONE_BEGIN + 1000,
             // STAND_ALONE SERVICES END ///////////////////////////////////////////////////////////
@@ -81,8 +82,9 @@ namespace BnD {
             // DEPENDENT SERVICES BEGIN ///////////////////////////////////////////////////////////
             SERVICE_ID_DEPENDENT_BEGIN = SERVICE_ID_LOAD_BALANCE_END,
 
-            SERVICE_ID_FMS_PRIMARY = SERVICE_ID_DEPENDENT_BEGIN + 1,
-            SERVICE_ID_FMS_SECONDARY,
+            SERVICE_ID_FMS_BEGIN = SERVICE_ID_DEPENDENT_BEGIN,
+            SERVICE_ID_FMS_ALL = SERVICE_ID_FMS_BEGIN,
+            SERVICE_ID_FMS_END = SERVICE_ID_FMS_BEGIN + 100,
 
             SERVICE_ID_DEPENDENT_END = SERVICE_ID_DEPENDENT_BEGIN + 1000,
             // DEPENDENT SERVICES END   ///////////////////////////////////////////////////////////
