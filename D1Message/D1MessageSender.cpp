@@ -82,13 +82,20 @@ bool D1MessageSender::sendLogMessageError(int32 serviceID, int64 taskID, int32 z
     return publishMessageWithTime(logMessageChannel(), &msg, false, redisClientInterface);
 }
 
-bool D1MessageSender::sendPerformanceCheckResult(int32 serviceID, uint32 pid, int64 memUsage, int64 memTotal, float64 cpuUsagePercent, D1RedisClientInterface* redisClientInterface) const
+bool D1MessageSender::sendPerformanceCheckResult(int32 serviceID, uint32 pid,
+                                                 int64 memUsage, int64 memCurrentProcessUsage, int64 memTotal, 
+                                                 int64 vmemUsage, int64 vmemCurrentProcessUsage, int64 vmemTotal,
+                                                 float64 cpuUsagePercent, D1RedisClientInterface* redisClientInterface) const
 {
     D1MsgPerformanceCheckNtf msg;
     msg.setServiceID(serviceID);
     msg.setPid(pid);
     msg.setMemUsage(memUsage);
+    msg.setMemCurrentProcessUsage(memCurrentProcessUsage);
     msg.setMemTotal(memTotal);
+    msg.setVMemUsage(vmemUsage);
+    msg.setVMemCurrentProcessUsage(vmemCurrentProcessUsage);
+    msg.setVMemTotal(vmemTotal);
     msg.setCpuUsagePercent(cpuUsagePercent);
     return publishMessage(logMessageChannel(), msg, false, redisClientInterface);
 }

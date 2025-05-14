@@ -36,7 +36,7 @@ namespace BnD {
         std::shared_ptr<T> _service;
         std::shared_ptr<B1FileLog> _fileLog;
     protected:
-        bool initFileLog(B1String&& logFilePath, B1String&& fileName, int32 logCounts)
+        bool initFileLog(int32 serviceID, B1String&& logFilePath, B1String&& fileName, int32 logCounts)
         {
             if (_fileLog != NULL) {
                 return false;
@@ -46,13 +46,13 @@ namespace BnD {
                 _fileLog.reset();
                 return false;
             }
-            setLogger(_fileLog.get());
+            setLogger(_fileLog.get(), serviceID);
             return true;
         }
         void deinitFileLog()
         {
             if (_fileLog) {
-                setLogger(NULL);
+                setLogger(NULL, 0);
                 _fileLog->stop();
                 _fileLog.reset();
             }
@@ -107,7 +107,7 @@ namespace BnD {
                 B1String serviceNameLower(productIdentifier->serviceName());
                 serviceNameLower.makeLower();
                 const B1String logFileName = useServiceIDForLog ? B1String::formatAs("%s_%d", serviceNameLower.cString(), serviceID) : serviceNameLower;
-                if (initFileLog(logFilePath.copy(), logFileName.copy(), logCounts) != true) {
+                if (initFileLog(serviceID, logFilePath.copy(), logFileName.copy(), logCounts) != true) {
                     if (ignoreFileLogFailure != true) {
                         B1String errorMessage(B1String::formatAs("unable to start log file[%s/%s]\n", logFilePath.cString(), logFileName.cString()));
                         printf("%s\n", errorMessage.cString());

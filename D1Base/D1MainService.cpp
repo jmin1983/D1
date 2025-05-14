@@ -36,14 +36,22 @@ void D1MainService::checkPerformance()
     _performanceProfiler->process();
     uint32 pid = B1SystemUtil::getCurrentProcessID();
     int64 memUsage = _performanceProfiler->memUsage();
+    int64 memCurrentProcessUsage = _performanceProfiler->memCurrentProcessUsage();
     int64 memTotal = _performanceProfiler->memTotal();
+    int64 vmemUsage = _performanceProfiler->vmemUsage();
+    int64 vmemCurrentProcessUsage = _performanceProfiler->vmemCurrentProcessUsage();
+    int64 vmemTotal = _performanceProfiler->vmemTotal();
     float64 memUsagePercent = static_cast<float64>(memUsage) * 100 / memTotal;
+    float64 vmemUsagePercent = static_cast<float64>(vmemUsage) * 100 / vmemTotal;
     float64 cpuUsagePercent = _performanceProfiler->cpuUsage();
     if (_performanceCheckLogTimer.isTimeover()) {
-        B1LOG("performance check: version[%d], build_date[%s], pid[%u], cpu[%f], mem[%lld/%lld][%f%%]",
-            version(), buildDate().cString(), pid, cpuUsagePercent, memUsage, memTotal, memUsagePercent);
+        B1LOG("performance check: version[%d], build_date[%s], pid[%u], cpu[%f], mem[%lld/%lld][%f%%], vmem[%lld/%lld][%f%%], self_mem[%lld], self_vmem[%lld]",
+            version(), buildDate().cString(), pid, cpuUsagePercent,
+            memUsage, memTotal, memUsagePercent,
+            vmemUsage, vmemTotal, vmemUsagePercent,
+            memCurrentProcessUsage, vmemCurrentProcessUsage);
     }
-    onCheckPerformance(pid, memUsage, memTotal, memUsagePercent, cpuUsagePercent);
+    onCheckPerformance(pid, memUsage, memCurrentProcessUsage, memTotal, vmemUsage, vmemCurrentProcessUsage, vmemTotal, cpuUsagePercent);
 }
 
 void D1MainService::syncWithRedisTime()

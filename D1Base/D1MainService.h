@@ -49,7 +49,10 @@ namespace BnD {
         virtual bool useSyncWithRedisTime() const { return false; }
         virtual uint32 performanceProfilerInterval() const { return CONSTS_DISABLE_PERFORMANCE_CHECK; } //  return 0 if disable performance_profiler
         virtual auto initializeRedisClient() -> B1RedisDirectClient* = 0;
-        virtual void onCheckPerformance(uint32 pid, int64 memUsage, int64 memTotal, float64 memUsagePercent, float64 cpuUsagePercent) {}
+        virtual void onCheckPerformance(uint32 pid,
+                                        int64 memUsage, int64 memCurrentProcessUsage, int64 memTotal,
+                                        int64 vmemUsage, int64 vmemCurrentProcessUsage, int64 vmemTotal,
+                                        float64 cpuUsagePercent) {}
         virtual B1String serviceInfoKey() const;
     protected:
         virtual bool implStart() override;

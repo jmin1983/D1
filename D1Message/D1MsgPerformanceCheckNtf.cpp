@@ -21,7 +21,11 @@ D1MsgPerformanceCheckNtf::D1MsgPerformanceCheckNtf()
     , _serviceID("ServiceID", D1Consts::SERVICE_ID_INVALID)
     , _pid("PID", 0)
     , _memUsage("MemUsage", 0)
+    , _memCurrentProcessUsage("MemCurrentProcessUsage", 0)
     , _memTotal("MemTotal", 0)
+    , _vmemUsage("VMemUsage", 0)
+    , _vmemCurrentProcessUsage("VMemCurrentProcessUsage", 0)
+    , _vmemTotal("VMemTotal", 0)
     , _cpuUsagePercent("CpuUsagePercent", 0)
 {
     _messageID.second = messageString().copy();
@@ -32,7 +36,11 @@ D1MsgPerformanceCheckNtf::D1MsgPerformanceCheckNtf(D1BaseMessage&& baseMessage)
     , _serviceID("ServiceID", D1Consts::SERVICE_ID_INVALID)
     , _pid("PID", 0)
     , _memUsage("MemUsage", 0)
+    , _memCurrentProcessUsage("MemCurrentProcessUsage", 0)
     , _memTotal("MemTotal", 0)
+    , _vmemUsage("VMemUsage", 0)
+    , _vmemCurrentProcessUsage("VMemCurrentProcessUsage", 0)
+    , _vmemTotal("VMemTotal", 0)
     , _cpuUsagePercent("CpuUsagePercent", 0)
 {
 }
@@ -46,7 +54,11 @@ void D1MsgPerformanceCheckNtf::archiveMessage(B1Archive* archive) const
     writeDataToArchive(_serviceID, archive);
     writeDataToArchive(_pid, archive);
     writeDataToArchive(_memUsage, archive);
+    writeDataToArchive(_memCurrentProcessUsage, archive);
     writeDataToArchive(_memTotal, archive);
+    writeDataToArchive(_vmemUsage, archive);
+    writeDataToArchive(_vmemCurrentProcessUsage, archive);
+    writeDataToArchive(_vmemTotal, archive);
     writeDataToArchive(_cpuUsagePercent, archive);
 }
 
@@ -55,7 +67,11 @@ void D1MsgPerformanceCheckNtf::unarchiveMessage(const B1Archive& archive)
     readDataFromArchive(archive, &_serviceID);
     readDataFromArchive(archive, &_pid);
     readDataFromArchive(archive, &_memUsage);
+    readDataFromArchive(archive, &_memCurrentProcessUsage);
     readDataFromArchive(archive, &_memTotal);
+    readDataFromArchive(archive, &_vmemUsage);
+    readDataFromArchive(archive, &_vmemCurrentProcessUsage);
+    readDataFromArchive(archive, &_vmemTotal);
     readDataFromArchive(archive, &_cpuUsagePercent);
 }
 
@@ -65,7 +81,11 @@ B1String D1MsgPerformanceCheckNtf::toString() const
     str.appendf(", serviceID[%d]", serviceID());
     str.appendf(", pid[%u]", pid());
     str.appendf(", memUsage[%lld]", memUsage());
+    str.appendf(", memCurrentProcessUsage[%lld]", memCurrentProcessUsage());
     str.appendf(", memTotal[%d]", memTotal());
+    str.appendf(", vmemUsage[%lld]", vmemUsage());
+    str.appendf(", vmemCurrentProcessUsage[%lld]", vmemCurrentProcessUsage());
+    str.appendf(", vmemTotal[%d]", vmemTotal());
     str.appendf(", cpuUsagePercent[%lf]", cpuUsagePercent());
     return str;
 }
