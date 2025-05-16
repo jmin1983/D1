@@ -67,8 +67,11 @@ namespace BnD {
         virtual B1String serviceNameDSS() const;
         virtual B1String serviceNameDUS() const;
         virtual B1String serviceNameECS() const;
+        virtual B1String serviceNameFMS() const;
+        virtual B1String serviceNameLMS() const;
         virtual B1String serviceNameMS() const;
         virtual B1String serviceNameRS() const;
+        virtual B1String serviceNameSMS() const;
         virtual B1String serviceNameWAS() const;
     public:
         bool getProductInfo(D1RedisClientInterface* redisReader);

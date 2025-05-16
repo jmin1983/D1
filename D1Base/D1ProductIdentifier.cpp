@@ -145,6 +145,16 @@ B1String D1ProductIdentifier::serviceNameECS() const
     return "ECS";
 }
 
+B1String D1ProductIdentifier::serviceNameFMS() const
+{
+    return "FMS";
+}
+
+B1String D1ProductIdentifier::serviceNameLMS() const
+{
+    return "LMS";
+}
+
 B1String D1ProductIdentifier::serviceNameMS() const
 {
     return "MS";
@@ -153,6 +163,11 @@ B1String D1ProductIdentifier::serviceNameMS() const
 B1String D1ProductIdentifier::serviceNameRS() const
 {
     return "RS";
+}
+
+B1String D1ProductIdentifier::serviceNameSMS() const
+{
+    return "SMS";
 }
 
 B1String D1ProductIdentifier::serviceNameWAS() const
@@ -211,6 +226,12 @@ B1String D1ProductIdentifier::serviceNameByID(int32 serviceID) const
     if (SERVICE_ID_DSS_BEGIN < serviceID && serviceID < SERVICE_ID_DSS_END) {
         return serviceNameDSS();
     }
+    if (SERVICE_ID_LMS_BEGIN < serviceID && serviceID < SERVICE_ID_LMS_END) {
+        return serviceNameLMS();
+    }
+    if (SERVICE_ID_FMS_BEGIN < serviceID && serviceID < SERVICE_ID_FMS_END) {
+        return serviceNameFMS();
+    }
     switch (serviceID) {
         case SERVICE_ID_CCS:
             return serviceNameCCS();
@@ -218,16 +239,18 @@ B1String D1ProductIdentifier::serviceNameByID(int32 serviceID) const
             return serviceNameCUS();
         case SERVICE_ID_CSS:
             return serviceNameCSS();
-        case SERVICE_ID_MS:
-            return serviceNameMS();
-        case SERVICE_ID_ECS:
-            return serviceNameECS();
         case SERVICE_ID_DWS:
             return serviceNameDWS();
-        case SERVICE_ID_WAS:
-            return serviceNameWAS();
+        case SERVICE_ID_ECS:
+            return serviceNameECS();
+        case SERVICE_ID_MS:
+            return serviceNameMS();
         case SERVICE_ID_RS:
             return serviceNameRS();
+        case SERVICE_ID_SMS:
+            return serviceNameSMS();
+        case SERVICE_ID_WAS:
+            return serviceNameWAS();
         default:
             break;
 
