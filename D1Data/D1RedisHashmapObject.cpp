@@ -52,6 +52,18 @@ bool D1RedisHashmapObject::implReadFromRedis(D1RedisClientInterface* reader)
     return readRedisMap(out);
 }
 
+void D1RedisHashmapObject::setRedisString(std::vector<B1String>* args, B1String&& field, int8 value) const
+{
+    args->push_back(std::move(field));
+    args->push_back(B1String::formatAs("%d", value));
+}
+
+void D1RedisHashmapObject::setRedisString(std::vector<B1String>* args, B1String&& field, int16 value) const
+{
+    args->push_back(std::move(field));
+    args->push_back(B1String::formatAs("%d", value));
+}
+
 void D1RedisHashmapObject::setRedisString(std::vector<B1String>* args, B1String&& field, int32 value) const
 {
     args->push_back(std::move(field));
@@ -64,6 +76,18 @@ void D1RedisHashmapObject::setRedisString(std::vector<B1String>* args, B1String&
     args->push_back(B1String::formatAs("%lld", value));
 }
 
+void D1RedisHashmapObject::setRedisString(std::vector<B1String>* args, B1String&& field, uint8 value) const
+{
+    args->push_back(std::move(field));
+    args->push_back(B1String::formatAs("%u", value));
+}
+
+void D1RedisHashmapObject::setRedisString(std::vector<B1String>* args, B1String&& field, uint16 value) const
+{
+    args->push_back(std::move(field));
+    args->push_back(B1String::formatAs("%u", value));
+}
+
 void D1RedisHashmapObject::setRedisString(std::vector<B1String>* args, B1String&& field, uint32 value) const
 {
     args->push_back(std::move(field));
@@ -74,6 +98,12 @@ void D1RedisHashmapObject::setRedisString(std::vector<B1String>* args, B1String&
 {
     args->push_back(std::move(field));
     args->push_back(B1String::formatAs("%llu", value));
+}
+
+void D1RedisHashmapObject::setRedisString(std::vector<B1String>* args, B1String&& field, float32 value) const
+{
+    args->push_back(std::move(field));
+    args->push_back(B1String::formatAs("%f", value));
 }
 
 void D1RedisHashmapObject::setRedisString(std::vector<B1String>* args, B1String&& field, float64 value) const
@@ -106,6 +136,42 @@ void D1RedisHashmapObject::setRedisString(std::vector<B1String>* args, B1String&
     }
 }
 
+bool D1RedisHashmapObject::readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, int8* data, int8 defaultValue) const
+{
+    auto itr = map.find(field);
+    if (itr != map.end() && itr->second.isEmpty() != true) {
+        try {
+            *data = itr->second.toInt8();
+            return true;
+        }
+        catch (...) {
+            *data = defaultValue;
+        }
+    }
+    else {
+        *data = defaultValue;
+    }
+    return false;
+}
+
+bool D1RedisHashmapObject::readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, int16* data, int16 defaultValue) const
+{
+    auto itr = map.find(field);
+    if (itr != map.end() && itr->second.isEmpty() != true) {
+        try {
+            *data = itr->second.toInt16();
+            return true;
+        }
+        catch (...) {
+            *data = defaultValue;
+        }
+    }
+    else {
+        *data = defaultValue;
+    }
+    return false;
+}
+
 bool D1RedisHashmapObject::readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, int32* data, int32 defaultValue) const
 {
     auto itr = map.find(field);
@@ -124,12 +190,48 @@ bool D1RedisHashmapObject::readFromRedisMap(const std::map<B1String, B1String>& 
     return false;
 }
 
-bool D1RedisHashmapObject::readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, int64* data, int32 defaultValue) const
+bool D1RedisHashmapObject::readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, int64* data, int64 defaultValue) const
 {
     auto itr = map.find(field);
     if (itr != map.end() && itr->second.isEmpty() != true) {
         try {
             *data = itr->second.toInt64();
+            return true;
+        }
+        catch (...) {
+            *data = defaultValue;
+        }
+    }
+    else {
+        *data = defaultValue;
+    }
+    return false;
+}
+
+bool D1RedisHashmapObject::readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, uint8* data, uint8 defaultValue) const
+{
+    auto itr = map.find(field);
+    if (itr != map.end() && itr->second.isEmpty() != true) {
+        try {
+            *data = itr->second.toUint8();
+            return true;
+        }
+        catch (...) {
+            *data = defaultValue;
+        }
+    }
+    else {
+        *data = defaultValue;
+    }
+    return false;
+}
+
+bool D1RedisHashmapObject::readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, uint16* data, uint16 defaultValue) const
+{
+    auto itr = map.find(field);
+    if (itr != map.end() && itr->second.isEmpty() != true) {
+        try {
+            *data = itr->second.toUint16();
             return true;
         }
         catch (...) {
@@ -160,7 +262,7 @@ bool D1RedisHashmapObject::readFromRedisMap(const std::map<B1String, B1String>& 
     return false;
 }
 
-bool D1RedisHashmapObject::readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, uint64* data, uint32 defaultValue) const
+bool D1RedisHashmapObject::readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, uint64* data, uint64 defaultValue) const
 {
     auto itr = map.find(field);
     if (itr != map.end() && itr->second.isEmpty() != true) {
@@ -178,7 +280,25 @@ bool D1RedisHashmapObject::readFromRedisMap(const std::map<B1String, B1String>& 
     return false;
 }
 
-bool D1RedisHashmapObject::readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, float64* data, uint32 defaultValue) const
+bool D1RedisHashmapObject::readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, float32* data, float32 defaultValue) const
+{
+    auto itr = map.find(field);
+    if (itr != map.end() && itr->second.isEmpty() != true) {
+        try {
+            *data = itr->second.toFloat32();
+            return true;
+        }
+        catch (...) {
+            *data = defaultValue;
+        }
+    }
+    else {
+        *data = defaultValue;
+    }
+    return false;
+}
+
+bool D1RedisHashmapObject::readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, float64* data, float64 defaultValue) const
 {
     auto itr = map.find(field);
     if (itr != map.end() && itr->second.isEmpty() != true) {

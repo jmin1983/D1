@@ -35,10 +35,15 @@ namespace BnD {
         virtual bool implWriteToRedis(D1RedisClientInterface* writer) const;
         virtual bool implReadFromRedis(D1RedisClientInterface* reader);
     protected:
+        void setRedisString(std::vector<B1String>* args, B1String&& field, int8 value) const;
+        void setRedisString(std::vector<B1String>* args, B1String&& field, int16 value) const;
         void setRedisString(std::vector<B1String>* args, B1String&& field, int32 value) const;
         void setRedisString(std::vector<B1String>* args, B1String&& field, int64 value) const;
+        void setRedisString(std::vector<B1String>* args, B1String&& field, uint8 value) const;
+        void setRedisString(std::vector<B1String>* args, B1String&& field, uint16 value) const;
         void setRedisString(std::vector<B1String>* args, B1String&& field, uint32 value) const;
         void setRedisString(std::vector<B1String>* args, B1String&& field, uint64 value) const;
+        void setRedisString(std::vector<B1String>* args, B1String&& field, float32 value) const;
         void setRedisString(std::vector<B1String>* args, B1String&& field, float64 value) const;
         void setRedisString(std::vector<B1String>* args, B1String&& field, const B1String& value) const;
         void setRedisString(std::vector<B1String>* args, B1String&& field, B1String&& value) const;
@@ -48,11 +53,16 @@ namespace BnD {
         {
             setRedisString(args, data.first.copy(), data.second);
         }
+        bool readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, int8* data, int8 defaultValue = -1) const;
+        bool readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, int16* data, int16 defaultValue = -1) const;
         bool readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, int32* data, int32 defaultValue = -1) const;
-        bool readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, int64* data, int32 defaultValue = -1) const;
+        bool readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, int64* data, int64 defaultValue = -1) const;
+        bool readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, uint8* data, uint8 defaultValue = 0) const;
+        bool readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, uint16* data, uint16 defaultValue = 0) const;
         bool readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, uint32* data, uint32 defaultValue = 0) const;
-        bool readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, uint64* data, uint32 defaultValue = 0) const;
-        bool readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, float64* data, uint32 defaultValue = -1) const;
+        bool readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, uint64* data, uint64 defaultValue = 0) const;
+        bool readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, float32* data, float32 defaultValue = 0) const;
+        bool readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, float64* data, float64 defaultValue = 0) const;
         bool readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, B1String* data, B1String&& defaultValue = "") const;
         bool readFromRedisMap(const std::map<B1String, B1String>& map, const B1String& field, std::vector<int32>* data) const;
         template <typename T>
