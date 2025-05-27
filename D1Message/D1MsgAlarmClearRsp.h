@@ -21,13 +21,14 @@
 namespace BnD {
     class D1MsgAlarmClearRsp : public D1BaseMessage {
     public:
-        D1MsgAlarmClearRsp(int64 serialNumber, int32 serviceID, int32 zoneID, bool alarmCleared);
+        D1MsgAlarmClearRsp(int64 serialNumber, int32 serviceID, int32 zoneID, int32 code, bool alarmCleared);
         D1MsgAlarmClearRsp(D1BaseMessage&& baseMessage);
         virtual ~D1MsgAlarmClearRsp();
     protected:
         DataInt64 _serialNumber;
         DataInt32 _zoneID;
         DataInt32 _serviceID;   //  which service handled the alarm.
+        DataInt32 _code;
         DataBool _alarmCleared;
     protected:
         void archiveMessage(B1Archive* archive) const final;
@@ -38,11 +39,13 @@ namespace BnD {
         int64 serialNumber() const { return _serialNumber.second; }
         int32 zoneID() const { return _zoneID.second; }
         int32 serviceID() const { return _serviceID.second; }
+        int32 code() const { return _code.second; }
         bool isAlarmCleared() const { return _alarmCleared.second; }
         
         void setSerialNumbererialNo(int64 value) { _serialNumber.second = value; }
         void setZoneID(int32 value) { _zoneID.second = value; }
         void setServiceID(int32 value) { _serviceID.second = value; }
+        void setCode(int32 value) { _code.second = value; }
         void setAlarmCleared(bool value) { _alarmCleared.second = value; }
     public:
         static const B1String& messageString()

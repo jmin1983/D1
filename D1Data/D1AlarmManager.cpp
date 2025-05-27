@@ -166,18 +166,19 @@ bool D1AlarmWriter::clearAlarm(int64 serialNumber, int32 serviceID, const D1Zone
         if (D1ZoneRepository::isOwnerZone(zone->zoneID(), serviceID) != true) {
             assert(false);  //  only owner can clear the alarm.
             B1LOG("unable to clear alarm if not a zone owner: zoneID[%d], serviceID[%d]", zone->zoneID(), serviceID);
-            D1MsgAlarmClearRsp rsp(serialNumber, serviceID, zone ? zone->zoneID() : D1Consts::ID_INVALID, false);
+            D1MsgAlarmClearRsp rsp(serialNumber, serviceID, zone ? zone->zoneID() : D1Consts::ID_INVALID, 0, false);
             B1String json;
             rsp.composeToJsonWithBaseTime(&json);
             _redisClientInterface->publish(D1MessageSender::alarmEventChannel(), json, false);
             return false;
         }
     }
+    int32 alarmCode = 0;
     if (auto alarm = getAlarmInfo(serialNumber)) {
         if (alarm->zoneID() != D1Consts::ID_INVALID) {
             if (D1ZoneRepository::isOwnerZone(alarm->zoneID(), serviceID) != true) {
                 B1LOG("unable to clear zone_alarm if not a zone owner: zoneID[%d], serviceID[%d]", alarm->zoneID(), serviceID);
-                D1MsgAlarmClearRsp rsp(serialNumber, serviceID, zone ? zone->zoneID() : D1Consts::ID_INVALID, false);
+                D1MsgAlarmClearRsp rsp(serialNumber, serviceID, zone ? zone->zoneID() : D1Consts::ID_INVALID, 0, false);
                 B1String json;
                 rsp.composeToJsonWithBaseTime(&json);
                 _redisClientInterface->publish(D1MessageSender::alarmEventChannel(), json, false);
@@ -188,6 +189,7 @@ bool D1AlarmWriter::clearAlarm(int64 serialNumber, int32 serviceID, const D1Zone
             B1LOG("can not clear alarm: serialNumber[%lld], zoneID[%d], serviceID[%d]", serialNumber, alarm->zoneID(), serviceID);
             return false;
         }
+        alarmCode = alarm->code();
     }
     if (zone) {
         {
@@ -198,7 +200,7 @@ bool D1AlarmWriter::clearAlarm(int64 serialNumber, int32 serviceID, const D1Zone
     }
     onAlarmCleared(serialNumber, serviceID, zone ? zone->zoneID() : D1Consts::ID_INVALID);
 
-    D1MsgAlarmClearRsp rsp(serialNumber, serviceID, zone ? zone->zoneID() : D1Consts::ID_INVALID, true);
+    D1MsgAlarmClearRsp rsp(serialNumber, serviceID, zone ? zone->zoneID() : D1Consts::ID_INVALID, alarmCode, true);
     B1String json;
     rsp.composeToJsonWithBaseTime(&json);
     return _redisClientInterface->publish(D1MessageSender::alarmEventChannel(), json, true);

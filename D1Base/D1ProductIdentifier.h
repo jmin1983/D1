@@ -51,9 +51,6 @@ namespace BnD {
         B1String _timeZone;
         D1Consts::SERVICE_ID _serviceID;
     protected:
-        static const B1String& productInfoKey();
-        static const B1String& productSiteInfoKey();
-    protected:
         virtual bool implGetProductSite(const B1String& siteString);
         virtual bool implGetProductType(const B1String& typeString);
         virtual bool implToProductSiteString(B1String* result) const;
@@ -84,6 +81,9 @@ namespace BnD {
         B1String serviceName() const;
         B1String serviceNameByID(int32 serviceID) const;
         B1String toString() const;
+    public:
+        static const B1String& productInfoKey();
+        static const B1String& productSiteInfoKey();
     };
 }   //  !BnD
 

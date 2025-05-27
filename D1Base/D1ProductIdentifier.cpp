@@ -29,18 +29,6 @@ D1ProductIdentifier::~D1ProductIdentifier()
 {
 }
 
-const B1String& D1ProductIdentifier::productInfoKey()
-{
-    static const B1String s_productInfoKey("System:ProductInfo");
-    return s_productInfoKey;
-}
-
-const B1String& D1ProductIdentifier::productSiteInfoKey()
-{
-    static const B1String s_productSiteInfoKey("System:ProductSiteInfo");
-    return s_productSiteInfoKey;
-}
-
 bool D1ProductIdentifier::implGetProductSite(const B1String& siteString)
 {
     int32 site = SITE_UNKNOWN;
@@ -261,4 +249,16 @@ B1String D1ProductIdentifier::serviceNameByID(int32 serviceID) const
 B1String D1ProductIdentifier::toString() const
 {
     return B1String::formatAs("Product: site[%s], type[%s]", toProductSiteString().cString(), toProductTypeString().cString());
+}
+
+const B1String& D1ProductIdentifier::productInfoKey()
+{
+    static const B1String s_productInfoKey("System:ProductInfo");
+    return s_productInfoKey;
+}
+
+const B1String& D1ProductIdentifier::productSiteInfoKey()
+{
+    static const B1String s_productSiteInfoKey("System:ProductSiteInfo");
+    return s_productSiteInfoKey;
 }
