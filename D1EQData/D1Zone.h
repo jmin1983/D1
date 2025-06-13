@@ -60,6 +60,7 @@ namespace BnD {
     protected:
         virtual void implInitializeAttributes(int32 serviceID, D1RedisClientInterface* redisReader, bool loadFromRedisAllData);
         virtual void implIitializePlugins(D1ZoneAttributePlugin* attributePlugin);
+        virtual void archiveToWithoutAttributes(B1Archive* archive) const;
     protected:
         virtual void archiveTo(B1Archive* archive) const override;
         virtual void unarchiveFrom(const B1Archive& archive) override;
@@ -84,6 +85,8 @@ namespace BnD {
 
         D1ZoneOccupiedAttributes* occupiedAttributes() const { return _occupiedAttributes.get(); }
         D1ZoneStateAttributes* stateAttributes() const { return _stateAttributes.get(); }
+
+        bool archiveToStringWithoutAttributes(B1String* result, bool pretty = false) const;
     public:
         static bool isReverseDirection(DIRECTION l, DIRECTION r);
     };

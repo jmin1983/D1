@@ -55,12 +55,17 @@ void D1Zone::implIitializePlugins(D1ZoneAttributePlugin* attributePlugin)
     }
 }
 
-void D1Zone::archiveTo(B1Archive* archive) const
+void D1Zone::archiveToWithoutAttributes(B1Archive* archive) const
 {
     writeDataToArchive(_zoneID, archive);
     writeDataToArchive(_name, archive);
     writeDataToArchive(_level.first, (int32)_level.second, archive);
     writeDataToArchive(_direction.first, (int32)_direction.second, archive);
+}
+
+void D1Zone::archiveTo(B1Archive* archive) const
+{
+    archiveToWithoutAttributes(archive);
     if (_occupiedAttributes) {
         writeDataToArchive("OccupiedAttributes", *_occupiedAttributes, archive);
     }
@@ -162,6 +167,13 @@ bool D1Zone::isOutOfService() const
 bool D1Zone::isOffLine() const
 {
     return _stateAttributes ? _stateAttributes->zoneState() == D1ZoneStateAttributes::ZONE_STATE_OFFLINE : false;
+}
+
+bool D1Zone::archiveToStringWithoutAttributes(B1String* result, bool pretty) const
+{
+    B1Archive archive;
+    archiveToWithoutAttributes(&archive);
+    return archive.toString(result, pretty);
 }
 
 bool D1Zone::isReverseDirection(DIRECTION l, DIRECTION r)
