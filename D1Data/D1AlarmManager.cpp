@@ -98,9 +98,9 @@ void D1AlarmWriter::onAlarmAdded(int64 serialNumber, int32 code, int32 serviceID
         serialNumber, code, serviceID, taskID, reason, zone ? zone->zoneID() : D1Consts::ID_INVALID, carrierID.cString(), data.cString());
 }
 
-void D1AlarmWriter::onAlarmCleared(int64 serialNumber, int32 serviceID, int32 zoneID)
+void D1AlarmWriter::onAlarmCleared(int64 serialNumber, int32 code, int32 serviceID, int32 zoneID)
 {
-    B1LOG("alarm cleared: serialNumber[%lld], serviceID[%d], zoneID[%d]", serialNumber, serviceID, zoneID);
+    B1LOG("alarm cleared: serialNumber[%lld], code[%d], serviceID[%d], zoneID[%d]", serialNumber, code, serviceID, zoneID);
 }
 
 int64 D1AlarmWriter::makeNewSerialNumber()
@@ -198,7 +198,7 @@ bool D1AlarmWriter::clearAlarm(int64 serialNumber, int32 serviceID, const D1Zone
         }
         zone->stateAttributes()->notifyAttributesChanged(_redisClientInterface, true);
     }
-    onAlarmCleared(serialNumber, serviceID, zone ? zone->zoneID() : D1Consts::ID_INVALID);
+    onAlarmCleared(serialNumber, alarmCode, serviceID, zone ? zone->zoneID() : D1Consts::ID_INVALID);
 
     D1MsgAlarmClearRsp rsp(serialNumber, serviceID, zone ? zone->zoneID() : D1Consts::ID_INVALID, alarmCode, true);
     B1String json;
