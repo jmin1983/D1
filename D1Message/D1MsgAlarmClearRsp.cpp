@@ -23,6 +23,7 @@ D1MsgAlarmClearRsp::D1MsgAlarmClearRsp(int64 serialNumber, int32 serviceID, int3
     , _serviceID("ServiceID", serviceID)
     , _code("Code", code)
     , _alarmCleared("AlarmCleared", alarmCleared)
+    , _resolvedBy("ResolvedBy", "")
 {
     _messageID.second = messageString().copy();
 }
@@ -34,6 +35,7 @@ D1MsgAlarmClearRsp::D1MsgAlarmClearRsp(D1BaseMessage&& baseMessage)
     , _serviceID("ServiceID", D1Consts::SERVICE_ID_INVALID)
     , _code("Code", 0)
     , _alarmCleared("AlarmCleared", false)
+    , _resolvedBy("ResolvedBy", "")
 {
 }
 
@@ -48,6 +50,7 @@ void D1MsgAlarmClearRsp::archiveMessage(B1Archive* archive) const
     writeDataToArchive(_serviceID, archive);
     writeDataToArchive(_code, archive);
     writeDataToArchive(_alarmCleared, archive);
+    writeDataToArchive(_resolvedBy, archive);
 }
 
 void D1MsgAlarmClearRsp::unarchiveMessage(const B1Archive& archive)
@@ -57,6 +60,7 @@ void D1MsgAlarmClearRsp::unarchiveMessage(const B1Archive& archive)
     readDataFromArchive(archive, &_serviceID);
     readDataFromArchive(archive, &_code);
     readDataFromArchive(archive, &_alarmCleared);
+    readDataFromArchive(archive, &_resolvedBy);
 }
 
 B1String D1MsgAlarmClearRsp::toString() const
@@ -67,5 +71,6 @@ B1String D1MsgAlarmClearRsp::toString() const
     str.appendf(", serviceID[%d]", serviceID());
     str.appendf(", code[%d]", code());
     str.appendf(", alarmCleared[%d]", isAlarmCleared() ? 1 : 0);
+    str.appendf(", resolvedBy[%s]", resolvedBy().cString());
     return str;
 }

@@ -30,6 +30,7 @@ namespace BnD {
         DataInt32 _serviceID;   //  which service handled the alarm.
         DataInt32 _code;
         DataBool _alarmCleared;
+        DataString _resolvedBy;
     protected:
         void archiveMessage(B1Archive* archive) const final;
         void unarchiveMessage(const B1Archive& archive) final;
@@ -41,12 +42,14 @@ namespace BnD {
         int32 serviceID() const { return _serviceID.second; }
         int32 code() const { return _code.second; }
         bool isAlarmCleared() const { return _alarmCleared.second; }
+        const B1String& resolvedBy() const { return _resolvedBy.second; }
         
         void setSerialNumbererialNo(int64 value) { _serialNumber.second = value; }
         void setZoneID(int32 value) { _zoneID.second = value; }
         void setServiceID(int32 value) { _serviceID.second = value; }
         void setCode(int32 value) { _code.second = value; }
         void setAlarmCleared(bool value) { _alarmCleared.second = value; }
+        void setResolvedBy(B1String&& value) { _resolvedBy.second = std::move(value); }
     public:
         static const B1String& messageString()
         {
