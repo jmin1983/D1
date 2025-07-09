@@ -90,7 +90,7 @@ namespace BnD {
                 if (client.initializeReadOnly(address, port, db) != true) {
                     B1String errorMessage(B1String::formatAs("unable to connect Administration Service: address[%s], port[%d], db[%d]", address.cString(), port, db));
                     printf("%s\n", errorMessage.cString());
-                    if (FILE* fp = fopen((B1SystemUtil::getCurrentDirectory() + "/can_not_connect_to_server.err").cString(), "w")) {
+                    if (FILE* fp = fopen((B1SystemUtil::getCurrentDirectory() + "/can_not_connect_to_server." + B1SystemUtil::getFileNameOnly()).cString(), "w")) {
                         fwrite(errorMessage.cString(), sizeof(char), errorMessage.length(), fp);
                         fclose(fp);
                     }
@@ -111,7 +111,7 @@ namespace BnD {
                     if (ignoreFileLogFailure != true) {
                         B1String errorMessage(B1String::formatAs("unable to start log file[%s/%s]\n", logFilePath.cString(), logFileName.cString()));
                         printf("%s\n", errorMessage.cString());
-                        if (FILE* fp = fopen((B1SystemUtil::getCurrentDirectory() + "/can_not_create_log.err").cString(), "w")) {
+                        if (FILE* fp = fopen((B1SystemUtil::getCurrentDirectory() + "/can_not_create_log." + B1SystemUtil::getFileNameOnly()).cString(), "w")) {
                             fwrite(errorMessage.cString(), sizeof(char), errorMessage.length(), fp);
                             fclose(fp);
                         }
