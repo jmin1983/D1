@@ -88,6 +88,21 @@ bool D1RawFileReader::getString(const B1String& path, B1String* value) const
     return true;
 }
 
+bool D1RawFileReader::getData(DataBool* data) const
+{
+    return getBool(data->first, &data->second);
+}
+
+bool D1RawFileReader::getData(DataInt32* data) const
+{
+    return getInt32(data->first, &data->second);
+}
+
+bool D1RawFileReader::getData(DataString* data) const
+{
+    return getString(data->first, &data->second);
+}
+
 bool D1RawFileReader::putBool(const B1String& path, bool value)
 {
     return _jsonReadWriter->put(path, value);
@@ -101,6 +116,21 @@ bool D1RawFileReader::putInt32(const B1String& path, int32 value)
 bool D1RawFileReader::putString(const B1String& path, const B1String& value)
 {
     return _jsonReadWriter->put(path, value.to_string());
+}
+
+bool D1RawFileReader::putData(const DataBool& data)
+{
+    return putBool(data.first, data.second);
+}
+
+bool D1RawFileReader::putData(const DataInt32& data)
+{
+    return putInt32(data.first, data.second);
+}
+
+bool D1RawFileReader::putData(const DataString& data)
+{
+    return putString(data.first, data.second);
 }
 
 B1String D1RawFileReader::toString() const

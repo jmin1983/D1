@@ -18,11 +18,11 @@ using namespace BnD;
 
 D1ConfFileReader::D1ConfFileReader()
     : D1RawFileReader()
-    , _logPath("")
-    , _adminAddress("127.0.0.1")
-    , _logDays(0)
-    , _adminPort(6379)
-    , _adminDB(0)
+    , _logPath("LogPath", "")
+    , _adminAddress("AdminAddress", "127.0.0.1")
+    , _logDays("LogDays", 0)
+    , _adminPort("AdminPort", 6379)
+    , _adminDB("AdminDB", 0)
 {
 }
 
@@ -48,30 +48,30 @@ int32 D1ConfFileReader::defaultLogDays() const
 B1String D1ConfFileReader::implToString() const
 {
     B1String result;
-    result.appendf("\nconfig_logPath(empty to default):[%s], defalut:[%s]", _logPath.cString(), defaultLogPath().cString());
-    result.appendf("\nconfig_adminAddress:[%s]", _adminAddress.cString());
-    result.appendf("\nconfig_logDays(0 to default):[%d], default[%d]", _logDays, defaultLogDays());
-    result.appendf("\nconfig_adminPort:[%d]", _adminPort);
-    result.appendf("\nconfig_adminDB:[%d]", _adminDB);
+    result.appendf("\nconfig_logPath(empty to default):[%s], defalut:[%s]", logPath().cString(), defaultLogPath().cString());
+    result.appendf("\nconfig_adminAddress:[%s]", adminAddress().cString());
+    result.appendf("\nconfig_logDays(0 to default):[%d], default[%d]", logDays(), defaultLogDays());
+    result.appendf("\nconfig_adminPort:[%d]", adminPort());
+    result.appendf("\nconfig_adminDB:[%d]", adminDB());
     return result;
 }
 
 bool D1ConfFileReader::validate() const
 {
-    return _adminAddress.isEmpty() != true && _adminPort > 0;
+    return adminAddress().isEmpty() != true && adminPort() > 0;
 }
 
 bool D1ConfFileReader::readData()
 {
-    getString("LogPath", &_logPath);
-    getInt32("LogDays", &_logDays);
-    if (getString("AdminAddress", &_adminAddress) != true) {
+    getData(&_logPath);
+    getData(&_logDays);
+    if (getData(&_adminAddress) != true) {
         return false;
     }
-    if (getInt32("AdminPort", &_adminPort) != true) {
+    if (getData(&_adminPort) != true) {
         return false;
     }
-    if (getInt32("AdminDB", &_adminDB) != true) {
+    if (getData(&_adminDB) != true) {
         return false;
     }
     return true;
@@ -79,15 +79,15 @@ bool D1ConfFileReader::readData()
 
 bool D1ConfFileReader::writeData()
 {
-    putString("LogPath", _logPath);
-    putInt32("LogDays", _logDays);
-    if (putString("AdminAddress", _adminAddress) != true) {
+    putData(_logPath);
+    putData(_logDays);
+    if (putData(_adminAddress) != true) {
         return false;
     }
-    if (putInt32("AdminPort", _adminPort) != true) {
+    if (putData(_adminPort) != true) {
         return false;
     }
-    if (putInt32("AdminDB", _adminDB) != true) {
+    if (putData(_adminDB) != true) {
         return false;
     }
     return true;
@@ -110,11 +110,11 @@ bool D1ConfFileReader::saveDefault()
 
 B1String D1ConfFileReader::logPath() const
 {
-    return _logPath.isEmpty() ? defaultLogPath() : _logPath.copy();
+    return _logPath.second.isEmpty() ? defaultLogPath() : _logPath.second.copy();
 }
 
 int32 D1ConfFileReader::logCounts() const
 {
     const int32 hoursPerDay = 24;
-    return hoursPerDay * (_logDays > 0 ? _logDays : defaultLogDays());
+    return hoursPerDay * (logDays() > 0 ? logDays() : defaultLogDays());
 }

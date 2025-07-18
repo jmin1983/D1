@@ -24,11 +24,11 @@ namespace BnD {
         D1ConfFileReader();
         virtual ~D1ConfFileReader();
     protected:
-        B1String _logPath;
-        B1String _adminAddress;
-        int32 _logDays;
-        int32 _adminPort;
-        int32 _adminDB;
+        DataString _logPath;
+        DataString _adminAddress;
+        DataInt32 _logDays;
+        DataInt32 _adminPort;
+        DataInt32 _adminDB;
     protected:
         virtual B1String implConfigFilePath() const;
         virtual B1String defaultLogPath() const;
@@ -42,17 +42,18 @@ namespace BnD {
         B1String configFilePath() const;
         bool loadDefault();
         bool saveDefault();
-        const B1String& adminAddress() const { return _adminAddress; }
+        const B1String& adminAddress() const { return _adminAddress.second; }
         B1String logPath() const;
         int32 logCounts() const;
-        int32 adminPort() const { return _adminPort; }
-        int32 adminDB() const { return _adminDB; }
+        int32 logDays() const { return _logDays.second; }
+        int32 adminPort() const { return _adminPort.second; }
+        int32 adminDB() const { return _adminDB.second; }
 
-        void setLogPath(B1String&& path) { _logPath = std::move(path); }
-        void setAdminAddress(B1String&& address) { _adminAddress = std::move(address); }
-        void setLogDays(int32 days) { _logDays = days; }
-        void setAdminPort(int32 port) { _adminPort = port; }
-        void setAdminDB(int32 db) { _adminDB = db; }
+        void setLogPath(B1String&& path) { _logPath.second = std::move(path); }
+        void setAdminAddress(B1String&& address) { _adminAddress.second = std::move(address); }
+        void setLogDays(int32 days) { _logDays.second = days; }
+        void setAdminPort(int32 port) { _adminPort.second = port; }
+        void setAdminDB(int32 db) { _adminDB.second = db; }
     };
 }   //  !BnD
 

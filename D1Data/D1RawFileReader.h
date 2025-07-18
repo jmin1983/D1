@@ -16,6 +16,8 @@
 #pragma once
 #endif
 
+#include <B1Base/B1DataType.h>
+
 namespace BnD {
     class D1JSONReadWriter;
     class D1RawFileReader {
@@ -37,9 +39,15 @@ namespace BnD {
         bool getBool(const B1String& path, bool* value) const;
         bool getInt32(const B1String& path, int32* value) const;
         bool getString(const B1String& path, B1String* value) const;
+        bool getData(DataBool* data) const;
+        bool getData(DataInt32* data) const;
+        bool getData(DataString* data) const;
         bool putBool(const B1String& path, bool value);
         bool putInt32(const B1String& path, int32 value);
         bool putString(const B1String& path, const B1String& value);
+        bool putData(const DataBool& data);
+        bool putData(const DataInt32& data);
+        bool putData(const DataString& data);
     public:
         B1String toString() const;
         bool load(const B1String& filePath);
