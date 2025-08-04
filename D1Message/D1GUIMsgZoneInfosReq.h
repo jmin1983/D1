@@ -25,6 +25,13 @@ namespace BnD {
         D1GUIMsgZoneInfosReq(D1BaseMessage&& baseMessage);
         virtual ~D1GUIMsgZoneInfosReq();
     protected:
+        enum TYPE {
+            TYPE_ALL = 0,
+            TYPE_ZONE_WITHOUT_ATTRIBUTES,
+            TYPE_ZONE_ATTRIBUTES_ONLY,
+        };
+    protected:
+        DataInt32 _type;
         DataVectorInt32 _ownerIDs;  //  empty for all zones.
     protected:
         void archiveMessage(B1Archive* archive) const final;
@@ -32,8 +39,16 @@ namespace BnD {
     public:
         B1String toString() const final;
     public:
+        int32 type() const { return _type.second; }
+        bool isTypeAll() const { return TYPE_ALL == type(); }
+        bool isTypeZoneWithoutAttributes() const { return TYPE_ZONE_WITHOUT_ATTRIBUTES == type(); }
+        bool isTypeZoneAttributesOnly() const { return TYPE_ZONE_ATTRIBUTES_ONLY == type(); }
         const std::vector<int32>& ownerIDs() const { return _ownerIDs.second; }
               std::vector<int32>& ownerIDs()       { return _ownerIDs.second; }
+
+        void setTypeAll() { _type.second = TYPE_ALL; }
+        void setTypeZoneWithoutAttributes() { _type.second = TYPE_ZONE_WITHOUT_ATTRIBUTES; }
+        void setTypeZoneAttributesOnly() { _type.second = TYPE_ZONE_ATTRIBUTES_ONLY; }
     public:
         static const B1String& messageString()
         {
