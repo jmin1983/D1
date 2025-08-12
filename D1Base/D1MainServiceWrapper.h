@@ -100,6 +100,13 @@ namespace BnD {
                 D1RedisClientInterface clientInterface(&client);
                 syncWithRedisTime(&clientInterface);
                 int32 serviceID = getServiceID(&clientInterface);
+                if (D1Consts::SERVICE_ID_INVALID == serviceID) {
+                    if (FILE* fp = fopen((B1SystemUtil::getCurrentDirectory() + "/can_not_get_service_id." + B1SystemUtil::getFileNameOnly()).cString(), "w")) {
+                        fclose(fp);
+                    }
+                    assert(false);
+                    return false;
+                }
                 std::shared_ptr<D1ProductIdentifier> productIdentifier(createProductIdentifier(serviceID));
                 productIdentifier->getProductInfo(&clientInterface);
                 B1Time::setCurrentTimeZone(productIdentifier->timeZone());

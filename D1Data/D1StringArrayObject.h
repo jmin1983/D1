@@ -24,13 +24,13 @@ namespace BnD {
         D1StringArrayObject();
         virtual ~D1StringArrayObject();
     protected:
-        std::vector<B1String> _values;
+        DataVectorString _values;
     protected:
         virtual void archiveTo(B1Archive* archive) const override;
         virtual void unarchiveFrom(const B1Archive& archive) override;
     public:
-        const std::vector<B1String>& values() const { return _values; }
-              std::vector<B1String>& values()       { return _values; }
+        const std::vector<B1String>& values() const { return _values.second; }
+              std::vector<B1String>& values()       { return _values.second; }
     };
 }   //  !BnD
 

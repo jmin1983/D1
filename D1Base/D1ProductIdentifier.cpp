@@ -153,11 +153,6 @@ B1String D1ProductIdentifier::serviceNameRS() const
     return "RS";
 }
 
-B1String D1ProductIdentifier::serviceNameSMS() const
-{
-    return "SMS";
-}
-
 B1String D1ProductIdentifier::serviceNameWAS() const
 {
     return "WAS";
@@ -236,7 +231,7 @@ B1String D1ProductIdentifier::serviceNameByID(int32 serviceID) const
         case SERVICE_ID_RS:
             return serviceNameRS();
         case SERVICE_ID_SMS:
-            return serviceNameSMS();
+            return serviceNameSMS().copy();
         case SERVICE_ID_WAS:
             return serviceNameWAS();
         default:
@@ -261,4 +256,10 @@ const B1String& D1ProductIdentifier::productSiteInfoKey()
 {
     static const B1String s_productSiteInfoKey("System:ProductSiteInfo");
     return s_productSiteInfoKey;
+}
+
+const B1String& D1ProductIdentifier::serviceNameSMS()
+{
+    static const B1String s_smsName("SMS");
+    return s_smsName;
 }

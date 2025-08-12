@@ -68,7 +68,6 @@ namespace BnD {
         virtual B1String serviceNameLMS() const;
         virtual B1String serviceNameMS() const;
         virtual B1String serviceNameRS() const;
-        virtual B1String serviceNameSMS() const;
         virtual B1String serviceNameWAS() const;
     public:
         bool getProductInfo(D1RedisClientInterface* redisReader);
@@ -84,6 +83,7 @@ namespace BnD {
     public:
         static const B1String& productInfoKey();
         static const B1String& productSiteInfoKey();
+        static const B1String& serviceNameSMS();    //  SMS name can not be changed.
     };
 }   //  !BnD
 

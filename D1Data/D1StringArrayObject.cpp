@@ -16,6 +16,7 @@ using namespace BnD;
 
 D1StringArrayObject::D1StringArrayObject()
     : B1Object()
+    , _values("Values", std::vector<B1String>())
 {
 }
 
@@ -25,10 +26,10 @@ D1StringArrayObject::~D1StringArrayObject()
 
 void D1StringArrayObject::archiveTo(B1Archive* archive) const
 {
-    writeDataToArchive("", _values, archive);
+    writeDataToArchive(_values, archive);
 }
 
 void D1StringArrayObject::unarchiveFrom(const B1Archive& archive)
 {
-    readDataFromArchive("", archive, &_values);
+    readDataFromArchive(archive, &_values);
 }
