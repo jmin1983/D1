@@ -26,7 +26,7 @@ namespace BnD {
     public:
         D1ServiceInfo();
         D1ServiceInfo(int32 serviceID, B1String&& serviceName);
-        D1ServiceInfo(int32 serviceID, int32 buildNum, B1String&& addresses, B1String&& serviceName, B1String&& buildDate, B1String&& startTime, B1String&& systemID);
+        D1ServiceInfo(int32 serviceID, int32 buildNum, B1String&& addresses, B1String&& serviceName, B1String&& buildDate, B1String&& startTime, B1String&& systemID, B1String&& controllerVersion = "");
         D1ServiceInfo(D1ServiceInfo&& r) noexcept;
         virtual ~D1ServiceInfo();
     public:
@@ -64,6 +64,7 @@ namespace BnD {
         DataString _buildDate;
         DataString _startTime;
         DataString _systemID;
+        DataString _controllerVersion;
         std::pair<const B1String, SERVICE_STATE> _serviceState; //  store_in_redis seperately.
     protected:
         virtual void archiveTo(B1Archive* archive) const override;
@@ -83,6 +84,7 @@ namespace BnD {
         const B1String& buildDate() const { return _buildDate.second; }
         const B1String& startTime() const { return _startTime.second; }
         const B1String& systemID() const { return _systemID.second; }
+        const B1String& controllerVersion() const { return _controllerVersion.second; }
         bool isServiceStateAlive() const { return _serviceState.second.isAlive(); }
         bool isServiceStateOn() const { return _serviceState.second.isOn(); }
         void setServiceStateAlive(bool flag) { _serviceState.second.setAlive(flag); }

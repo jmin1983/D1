@@ -28,6 +28,7 @@ D1ServiceInfo::D1ServiceInfo()
     , _buildDate("BuildDate", "")
     , _startTime("StartTime", "")
     , _systemID("SystemID", "")
+    , _controllerVersion("ControllerVersion", "")
     , _serviceState("ServiceState", SERVICE_STATE())
 {
 }
@@ -42,11 +43,12 @@ D1ServiceInfo::D1ServiceInfo(int32 serviceID, B1String&& serviceName)
     , _buildDate("BuildDate", "")
     , _startTime("StartTime", "")
     , _systemID("SystemID", "")
+    , _controllerVersion("ControllerVersion", "")
     , _serviceState("ServiceState", SERVICE_STATE())
 {
 }
 
-D1ServiceInfo::D1ServiceInfo(int32 serviceID, int32 buildNum, B1String&& addresses, B1String&& serviceName, B1String&& buildDate, B1String&& startTime, B1String&& systemID)
+D1ServiceInfo::D1ServiceInfo(int32 serviceID, int32 buildNum, B1String&& addresses, B1String&& serviceName, B1String&& buildDate, B1String&& startTime, B1String&& systemID, B1String&& controllerVersion)
     : B1Object()
     , D1RedisHashmapObject()
     , _serviceID("ServiceID", D1Consts::SERVICE_ID_INVALID)
@@ -56,6 +58,7 @@ D1ServiceInfo::D1ServiceInfo(int32 serviceID, int32 buildNum, B1String&& address
     , _buildDate("BuildDate", std::move(buildDate))
     , _startTime("StartTime", std::move(startTime))
     , _systemID("SystemID", std::move(systemID))
+    , _controllerVersion("ControllerVersion", std::move(controllerVersion))
     , _serviceState("ServiceState", SERVICE_STATE())
 {
 }
@@ -70,6 +73,7 @@ D1ServiceInfo::D1ServiceInfo(D1ServiceInfo&& r) noexcept
     , _buildDate("BuildDate", std::move(r._buildDate.second))
     , _startTime("StartTime", std::move(r._startTime.second))
     , _systemID("SystemID", std::move(r._systemID.second))
+    , _controllerVersion("ControllerVersion", std::move(r._controllerVersion.second))
     , _serviceState("ServiceState", std::move(r._serviceState.second))
 {
 }
@@ -134,6 +138,7 @@ void D1ServiceInfo::archiveTo(B1Archive* archive) const
     writeDataToArchive(_buildDate, archive);
     writeDataToArchive(_startTime, archive);
     writeDataToArchive(_systemID, archive);
+    writeDataToArchive(_controllerVersion, archive);
     writeDataToArchive(_serviceState, archive);
 }
 
@@ -146,6 +151,7 @@ void D1ServiceInfo::unarchiveFrom(const B1Archive& archive)
     readDataFromArchive(archive, &_buildDate);
     readDataFromArchive(archive, &_startTime);
     readDataFromArchive(archive, &_systemID);
+    readDataFromArchive(archive, &_controllerVersion);
     readDataFromArchive(archive, &_serviceState);
 }
 
@@ -173,6 +179,7 @@ void D1ServiceInfo::makeRedisStringArgs(std::vector<B1String>* args) const
     setRedisString(args, _buildDate);
     setRedisString(args, _startTime);
     setRedisString(args, _systemID);
+    setRedisString(args, _controllerVersion);
     //_serviceState //  store_in_redis seperately.
 }
 
@@ -185,6 +192,7 @@ bool D1ServiceInfo::readRedisMap(const std::map<B1String, B1String>& map)
     readFromRedisMap(map, &_buildDate);
     readFromRedisMap(map, &_startTime);
     readFromRedisMap(map, &_systemID);
+    readFromRedisMap(map, &_controllerVersion);
     //_serviceState //  store_in_redis seperately.
     return true;
 }
