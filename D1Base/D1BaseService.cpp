@@ -1,5 +1,5 @@
 //
-// D1MainService.cpp
+// D1BaseService.cpp
 //
 // Library: D1Base
 // Package: D1Base
@@ -10,7 +10,7 @@
 //
 
 #include "D1Base.h"
-#include "D1MainService.h"
+#include "D1BaseService.h"
 #include "D1ProductIdentifier.h"
 #include "D1RedisClientInterface.h"
 
@@ -21,17 +21,17 @@
 
 using namespace BnD;
 
-D1MainService::D1MainService(std::shared_ptr<D1ProductIdentifier> productIdentifier, int32 version, B1String&& buildDate, B1String&& systemName)
+D1BaseService::D1BaseService(std::shared_ptr<D1ProductIdentifier> productIdentifier, int32 version, B1String&& buildDate, B1String&& systemName)
     : B1MainService(productIdentifier->serviceID(), version, std::move(buildDate), productIdentifier->serviceName(), std::move(systemName))
     , _productIdentifier(productIdentifier)
 {
 }
 
-D1MainService::~D1MainService()
+D1BaseService::~D1BaseService()
 {
 }
 
-void D1MainService::checkPerformance()
+void D1BaseService::checkPerformance()
 {
     _performanceProfiler->process();
     uint32 pid = B1SystemUtil::getCurrentProcessID();
@@ -56,7 +56,7 @@ void D1MainService::checkPerformance()
     onCheckPerformance(pid, memAvailable, memUsage, memCurrentProcessUsage, memTotal, vmemUsage, vmemCurrentProcessUsage, vmemTotal, cpuUsagePercent, cpuTemperature);
 }
 
-void D1MainService::syncWithRedisTime()
+void D1BaseService::syncWithRedisTime()
 {
     uint64 redisSeconds = 0;
     uint32 redisMicroSeconds = 0;
@@ -69,12 +69,12 @@ void D1MainService::syncWithRedisTime()
     }
 }
 
-B1String D1MainService::serviceInfoKey() const
+B1String D1BaseService::serviceInfoKey() const
 {
     return "ServiceInfo:" + mainServiceName();
 }
 
-bool D1MainService::implStart()
+bool D1BaseService::implStart()
 {
     {
         auto redisDirectClient = initializeRedisClient();
@@ -105,7 +105,7 @@ bool D1MainService::implStart()
     return true;
 }
 
-bool D1MainService::implWorking()
+bool D1BaseService::implWorking()
 {
     if (_redisTimeCheckTimer.isTimeover()) {
         syncWithRedisTime();
@@ -116,7 +116,7 @@ bool D1MainService::implWorking()
     return true;
 }
 
-void D1MainService::implStop()
+void D1BaseService::implStop()
 {
     if (_performanceProfiler) {
         _performanceProfiler->finalize();
@@ -129,12 +129,12 @@ void D1MainService::implStop()
     }
 }
 
-bool D1MainService::isRedisCanReadWrite() const
+bool D1BaseService::isRedisCanReadWrite() const
 {
     return _redisDirectClient ? _redisDirectClient->isReadSessionConnected() && _redisDirectClient->isWriteSessionConnected() : false;
 }
 
-B1String D1MainService::serviceName() const
+B1String D1BaseService::serviceName() const
 {
     return productIdentifier() ? productIdentifier()->serviceName() : "UNKNOWN";
 }

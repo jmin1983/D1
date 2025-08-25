@@ -1,5 +1,5 @@
 //
-// D1MainService.h
+// D1BaseService.h
 //
 // Library: D1Base
 // Package: D1Base
@@ -9,8 +9,8 @@
 // Feel free to use, for any purpose.
 //
 
-#ifndef _D1BASE_MAIN_SERVICE_H
-#define _D1BASE_MAIN_SERVICE_H
+#ifndef _D1BASE_BASE_SERVICE_H
+#define _D1BASE_BASE_SERVICE_H
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #pragma once
@@ -24,10 +24,10 @@ namespace BnD {
     class B1RedisDirectClient;
     class D1RedisClientInterface;
     class D1ProductIdentifier;
-    class D1MainService : public B1MainService {
+    class D1BaseService : public B1MainService {
     public:
-        D1MainService(std::shared_ptr<D1ProductIdentifier> productIdentifier, int32 version, B1String&& buildDate, B1String&& systemName);
-        virtual ~D1MainService();
+        D1BaseService(std::shared_ptr<D1ProductIdentifier> productIdentifier, int32 version, B1String&& buildDate, B1String&& systemName);
+        virtual ~D1BaseService();
     private:
         enum CONSTS {
             CONSTS_REDIS_TIME_CHECK_INTERVAL = 1 * 60 * 1000,
@@ -66,4 +66,4 @@ namespace BnD {
     };
 }   //  !BnD
 
-#endif  // !_D1BASE_MAIN_SERVICE_H
+#endif  // !_D1BASE_BASE_SERVICE_H

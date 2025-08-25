@@ -1,5 +1,5 @@
 //
-// D1MainServiceWrapper.h
+// D1BaseServiceWrapper.h
 //
 // Library: D1Base
 // Package: D1Base
@@ -9,8 +9,8 @@
 // Feel free to use, for any purpose.
 //
 
-#ifndef _D1BASE_MAIN_SERVICE_WRAPPER_H
-#define _D1BASE_MAIN_SERVICE_WRAPPER_H
+#ifndef _D1BASE_BASE_SERVICE_WRAPPER_H
+#define _D1BASE_BASE_SERVICE_WRAPPER_H
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #pragma once
@@ -28,10 +28,10 @@
 
 namespace BnD {
     template <typename T, typename U>
-    class D1MainServiceWrapper : public B1Singleton<U> {
+    class D1BaseServiceWrapper : public B1Singleton<U> {
     public:
-        D1MainServiceWrapper() {}
-        virtual ~D1MainServiceWrapper() { deinitFileLog(); }
+        D1BaseServiceWrapper() {}
+        virtual ~D1BaseServiceWrapper() { deinitFileLog(); }
     protected:
         std::shared_ptr<T> _service;
         std::shared_ptr<B1FileLog> _fileLog;
@@ -179,4 +179,4 @@ namespace BnD {
     };
 }   //  !BnD
 
-#endif  // !_D1BASE_MAIN_SERVICE_WRAPPER_H
+#endif  // !_D1BASE_BASE_SERVICE_WRAPPER_H
