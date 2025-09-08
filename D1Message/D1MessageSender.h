@@ -15,6 +15,8 @@
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #pragma once
 #endif
+
+#include <map>
  
 namespace BnD {
     class D1BaseMessage;
@@ -37,6 +39,7 @@ namespace BnD {
                                         int64 memAvailable, int64 memUsage, int64 memCurrentProcessUsage, int64 memTotal,
                                         int64 vmemUsage, int64 vmemCurrentProcessUsage, int64 vmemTotal,
                                         float64 cpuUsagePercent, float64 cpuTemperature,
+                                        const std::map<B1String, std::pair<int64, float64> >& diskUsage,
                                         D1RedisClientInterface* redisClientInterface) const;
     public:
         static const B1String& alarmEventChannel();

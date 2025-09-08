@@ -12,6 +12,8 @@
 #include "D1Message.h"
 #include "D1MsgPerformanceCheckNtf.h"
 
+#include <B1Base/B1Archive.hpp>
+
 #include <D1Base/D1Consts.h>
 
 using namespace BnD;
@@ -29,6 +31,7 @@ D1MsgPerformanceCheckNtf::D1MsgPerformanceCheckNtf()
     , _vmemTotal("VMemTotal", 0)
     , _cpuUsagePercent("CpuUsagePercent", 0)
     , _cpuTemperature("CpuTemperature", 0)
+    , _diskUsage("DiskUsage", std::vector<DiskUsage>())
 {
     _messageID.second = messageString().copy();
 }
@@ -46,6 +49,7 @@ D1MsgPerformanceCheckNtf::D1MsgPerformanceCheckNtf(D1BaseMessage&& baseMessage)
     , _vmemTotal("VMemTotal", 0)
     , _cpuUsagePercent("CpuUsagePercent", 0)
     , _cpuTemperature("CpuTemperature", 0)
+    , _diskUsage("DiskUsage", std::vector<DiskUsage>())
 {
 }
 
@@ -66,6 +70,7 @@ void D1MsgPerformanceCheckNtf::archiveMessage(B1Archive* archive) const
     writeDataToArchive(_vmemTotal, archive);
     writeDataToArchive(_cpuUsagePercent, archive);
     writeDataToArchive(_cpuTemperature, archive);
+    writeObjectArrayToArchive(_diskUsage, archive);
 }
 
 void D1MsgPerformanceCheckNtf::unarchiveMessage(const B1Archive& archive)
@@ -81,6 +86,7 @@ void D1MsgPerformanceCheckNtf::unarchiveMessage(const B1Archive& archive)
     readDataFromArchive(archive, &_vmemTotal);
     readDataFromArchive(archive, &_cpuUsagePercent);
     readDataFromArchive(archive, &_cpuTemperature);
+    readObjectArrayFromArchive(archive, &_diskUsage);
 }
 
 B1String D1MsgPerformanceCheckNtf::toString() const

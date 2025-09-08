@@ -24,6 +24,29 @@ namespace BnD {
         D1MsgPerformanceCheckNtf();
         D1MsgPerformanceCheckNtf(D1BaseMessage&& baseMessage);
         virtual ~D1MsgPerformanceCheckNtf();
+    public:
+        struct DiskUsage : B1Object {
+            DiskUsage() : _path("Path", ""), _capacity("Capacity", 0), _usedPercent("UsedPercent", 0.) {}
+            DiskUsage(B1String&& path, int64 capacity, float64 usedPercent)
+                : _path("Path", std::move(path)), _capacity("Capacity", capacity), _usedPercent("UsedPercent", usedPercent) {}
+            DiskUsage(DiskUsage&& r)
+                : _path("Path", std::move(r._path.second)), _capacity("Capacity", r._capacity.second), _usedPercent("UsedPercent", r._usedPercent.second) {}
+            DataString _path;
+            DataInt64 _capacity;
+            DataFloat64 _usedPercent;
+            void archiveTo(B1Archive* archive) const final
+            {
+                writeDataToArchive(_path, archive);
+                writeDataToArchive(_capacity, archive);
+                writeDataToArchive(_usedPercent, archive);
+            }
+            void unarchiveFrom(const B1Archive& archive) final
+            {
+                readDataFromArchive(archive, &_path);
+                readDataFromArchive(archive, &_capacity);
+                readDataFromArchive(archive, &_usedPercent);
+            }
+        };
     protected:
         DataInt32 _serviceID;
         DataUint32 _pid;
@@ -36,6 +59,7 @@ namespace BnD {
         DataInt64 _vmemTotal;
         DataFloat64 _cpuUsagePercent;
         DataFloat64 _cpuTemperature;
+        std::pair<const B1String, std::vector<DiskUsage> > _diskUsage;
     protected:
         void archiveMessage(B1Archive* archive) const final;
         void unarchiveMessage(const B1Archive& archive) final;
@@ -53,6 +77,8 @@ namespace BnD {
         int64 vmemTotal() const { return _vmemTotal.second; }
         float64 cpuUsagePercent() const { return _cpuUsagePercent.second; }
         float64 cpuTemperature() const { return _cpuTemperature.second; }
+        const std::vector<DiskUsage>& diskUsage() const { return _diskUsage.second; }
+              std::vector<DiskUsage>& diskUsage()       { return _diskUsage.second; }
 
         void setServiceID(int32 value) { _serviceID.second = value; }
         void setPid(uint32 value) { _pid.second = value; }

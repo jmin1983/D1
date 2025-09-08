@@ -19,6 +19,8 @@
 #include <B1Base/B1MainService.h>
 #include <B1Util/B1TimeChecker.h>
 
+#include <set>
+
 namespace BnD {
     class B1PerformanceProfiler;
     class B1RedisDirectClient;
@@ -48,11 +50,13 @@ namespace BnD {
     protected:
         virtual bool useSyncWithRedisTime() const { return false; }
         virtual uint32 performanceProfilerInterval() const { return CONSTS_DISABLE_PERFORMANCE_CHECK; } //  return 0 if disable performance_profiler
+        virtual std::set<B1String> performanceProfilerDiskPath() { return std::set<B1String>(); }
         virtual auto initializeRedisClient() -> B1RedisDirectClient* = 0;
         virtual void onCheckPerformance(uint32 pid,
                                         int64 memAvailable, int64 memUsage, int64 memCurrentProcessUsage, int64 memTotal,
                                         int64 vmemUsage, int64 vmemCurrentProcessUsage, int64 vmemTotal,
-                                        float64 cpuUsagePercent, float64 cpuTemperature) {}
+                                        float64 cpuUsagePercent, float64 cpuTemperature,
+                                        const std::map<B1String, std::pair<int64, float64> >& diskUsage) {} //  disk_usage: map<path, pair<capacity, used_percent> >
         virtual B1String serviceInfoKey() const;
     protected:
         virtual bool implStart() override;

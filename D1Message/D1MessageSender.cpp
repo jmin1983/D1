@@ -86,6 +86,7 @@ bool D1MessageSender::sendPerformanceCheckResult(int32 serviceID, uint32 pid,
                                                  int64 memAvailable, int64 memUsage, int64 memCurrentProcessUsage, int64 memTotal,
                                                  int64 vmemUsage, int64 vmemCurrentProcessUsage, int64 vmemTotal,
                                                  float64 cpuUsagePercent, float64 cpuTemperature,
+                                                 const std::map<B1String, std::pair<int64, float64> >& diskUsage,
                                                  D1RedisClientInterface* redisClientInterface) const
 {
     D1MsgPerformanceCheckNtf msg;
@@ -100,6 +101,12 @@ bool D1MessageSender::sendPerformanceCheckResult(int32 serviceID, uint32 pid,
     msg.setVMemTotal(vmemTotal);
     msg.setCpuUsagePercent(cpuUsagePercent);
     msg.setCpuTemperature(cpuTemperature);
+    if (diskUsage.empty() != true) {
+        msg.diskUsage().reserve(diskUsage.size());
+        for (const auto& usage : diskUsage) {
+            msg.diskUsage().push_back(D1MsgPerformanceCheckNtf::DiskUsage(usage.first.copy(), usage.second.first, usage.second.second));
+        }
+    }
     return publishMessage(logMessageChannel(), msg, false, redisClientInterface);
 }
 

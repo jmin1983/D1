@@ -34,6 +34,11 @@ D1BaseService::~D1BaseService()
 void D1BaseService::checkPerformance()
 {
     _performanceProfiler->process();
+    std::map<B1String, std::pair<int64, float64> > diskUsage;   //  map<path, pair<capacity, used_percent> >
+    const auto diskPath = performanceProfilerDiskPath();
+    for (const auto& path : diskPath) {
+        diskUsage.emplace(path.copy(), _performanceProfiler->getDiskUsage(path));
+    }
     uint32 pid = B1SystemUtil::getCurrentProcessID();
     int64 memAvailable = _performanceProfiler->memAvailable();
     int64 memUsage = _performanceProfiler->memUsage();
@@ -47,13 +52,23 @@ void D1BaseService::checkPerformance()
     float64 cpuUsagePercent = _performanceProfiler->cpuUsage();
     float64 cpuTemperature = _performanceProfiler->cpuTemperature();
     if (_performanceCheckLogTimer.isTimeover()) {
-        B1LOG("performance check: version[%d], build_date[%s], pid[%u], cpu_temp[%f], cpu_used[%f], mem_used[%lld/%lld][%f%%], mem_avail[%lld], vmem[%lld/%lld][%f%%], self_mem[%lld], self_vmem[%lld]",
+        B1String msg("performance check: ");
+        msg.appendf("version[%d], build_date[%s], pid[%u], cpu_temp[%f], cpu_used[%.02f%%], "
+                    "mem_used[%lld/%lld][%f%%], mem_avail[%lld], "
+                    "vmem[%lld/%lld][%f%%], self_mem[%lld], self_vmem[%lld]",
             version(), buildDate().cString(), pid, cpuTemperature, cpuUsagePercent,
             memUsage, memTotal, memUsagePercent, memAvailable,
             vmemUsage, vmemTotal, vmemUsagePercent,
             memCurrentProcessUsage, vmemCurrentProcessUsage);
+        if (diskUsage.empty() != true) {
+            msg.append(", disk_usage");
+            for (const auto& diskUsagePair : diskUsage) {
+                msg.appendf("[path:%s, capacity:%lldGB, used:%.02f%%]", diskUsagePair.first.cString(), diskUsagePair.second.first / (1024 * 1024 * 1024), diskUsagePair.second.second);
+            }
+        }
+        B1LOG("%s", msg.cString());
     }
-    onCheckPerformance(pid, memAvailable, memUsage, memCurrentProcessUsage, memTotal, vmemUsage, vmemCurrentProcessUsage, vmemTotal, cpuUsagePercent, cpuTemperature);
+    onCheckPerformance(pid, memAvailable, memUsage, memCurrentProcessUsage, memTotal, vmemUsage, vmemCurrentProcessUsage, vmemTotal, cpuUsagePercent, cpuTemperature, diskUsage);
 }
 
 void D1BaseService::syncWithRedisTime()
