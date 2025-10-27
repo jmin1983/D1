@@ -51,6 +51,11 @@ void D1BaseServerSession::implOnProtocolTypeNotifyID(int32 id)
         disconnect();
         return;
     }
+    if (_id != D1Consts::ID_INVALID) {
+        B1LOG("handle already set -> disconnect: current_id[%d], requested_id[%d]", _id, id);
+        disconnect();
+        return;
+    }
     B1LOG("add handle: id[%d]", id);
     if (owner()->handleManager()->addID(id, sessionHandleID()) != true) {
         B1LOG("already added handle -> disconnect: id[%d]", id);
