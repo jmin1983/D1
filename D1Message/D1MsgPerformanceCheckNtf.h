@@ -29,7 +29,7 @@ namespace BnD {
             DiskUsage() : _path("Path", ""), _capacity("Capacity", 0), _usedPercent("UsedPercent", 0.) {}
             DiskUsage(B1String&& path, int64 capacity, float64 usedPercent)
                 : _path("Path", std::move(path)), _capacity("Capacity", capacity), _usedPercent("UsedPercent", usedPercent) {}
-            DiskUsage(DiskUsage&& r)
+            DiskUsage(DiskUsage&& r) noexcept
                 : _path("Path", std::move(r._path.second)), _capacity("Capacity", r._capacity.second), _usedPercent("UsedPercent", r._usedPercent.second) {}
             DataString _path;
             DataInt64 _capacity;

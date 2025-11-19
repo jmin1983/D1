@@ -16,18 +16,16 @@
 #pragma once
 #endif
 
-#include <B1SECS2/B1SECS2Client.h>
+#include <B1GEM/B1GEMClient.h>
 
 namespace BnD {
     class D1AMHSClientListener;
-    class D1AMHSDataManager;
-    class D1AMHSClient : public B1SECS2Client {
+    class D1AMHSClient : public B1GEMClient {
     public:
-        D1AMHSClient(const D1AMHSDataManager* secs2DataManager, D1AMHSClientListener* listener = NULL);
+        D1AMHSClient(D1AMHSClientListener* listener = NULL);
+        virtual ~D1AMHSClient();
     protected:
         D1AMHSClientListener* _listener;
-    protected:
-        virtual B1BaseClientSession* createSession(B1ClientSocket* clientSocket, void* param) override;
     public:
         bool requestOnline(uint16 deviceID);
     };

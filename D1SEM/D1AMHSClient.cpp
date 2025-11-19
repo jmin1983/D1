@@ -20,15 +20,14 @@
 
 using namespace BnD;
 
-D1AMHSClient::D1AMHSClient(const D1AMHSDataManager* secs2DataManager, D1AMHSClientListener* listener)
-    : B1SECS2Client(secs2DataManager)
+D1AMHSClient::D1AMHSClient(D1AMHSClientListener* listener)
+    : B1GEMClient()
     , _listener(listener)
 {
 }
 
-B1BaseClientSession* D1AMHSClient::createSession(B1ClientSocket* clientSocket, void* param)
+D1AMHSClient::~D1AMHSClient()
 {
-    return new D1AMHSClientSession(clientSocket, this, *(uint16*)param, static_cast<const D1AMHSDataManager*>(_secs2DataManager), _listener);
 }
 
 bool D1AMHSClient::requestOnline(uint16 deviceID)
