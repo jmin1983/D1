@@ -16,14 +16,14 @@
 
 using namespace BnD;
 
-D1MsgAlarmClearRsp::D1MsgAlarmClearRsp(int64 serialNumber, int32 serviceID, int32 zoneID, int32 code, bool alarmCleared)
+D1MsgAlarmClearRsp::D1MsgAlarmClearRsp(int64 serialNumber, int32 serviceID, int32 zoneID, int32 code, bool alarmCleared, B1String&& resolvedby)
     : D1BaseMessage()
     , _serialNumber("SerialNumber", serialNumber)
     , _zoneID("ZoneID", zoneID)
     , _serviceID("ServiceID", serviceID)
     , _code("Code", code)
     , _alarmCleared("AlarmCleared", alarmCleared)
-    , _resolvedBy("ResolvedBy", "")
+    , _resolvedBy("ResolvedBy", std::move(resolvedby))
 {
     _messageID.second = messageString().copy();
 }

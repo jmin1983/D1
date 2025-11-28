@@ -57,8 +57,8 @@ namespace BnD {
         bool addAlarm(int32 code, int32 serviceID, int64 taskID, int32 reason);
         bool addAlarm(int32 code, int32 serviceID, int64 taskID, int32 reason, const D1Zone* zone);
         bool addAlarm(int32 code, int32 serviceID, int64 taskID, int32 reason, const D1Zone* zone, const B1String& carrierID, B1String&& data = "");
-        bool clearAlarm(int64 serialNumber, int32 serviceID);
-        bool clearAlarm(int64 serialNumber, int32 serviceID, const D1Zone* zone);
+        bool clearAlarm(int64 serialNumber, int32 serviceID, B1String&& resolvedby);
+        bool clearAlarm(int64 serialNumber, int32 serviceID, const D1Zone* zone, B1String&& resolvedby);
     };
 }   //  !BnD
 

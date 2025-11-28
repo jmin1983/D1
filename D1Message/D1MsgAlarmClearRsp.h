@@ -21,7 +21,7 @@
 namespace BnD {
     class D1MsgAlarmClearRsp : public D1BaseMessage {
     public:
-        D1MsgAlarmClearRsp(int64 serialNumber, int32 serviceID, int32 zoneID, int32 code, bool alarmCleared);
+        D1MsgAlarmClearRsp(int64 serialNumber, int32 serviceID, int32 zoneID, int32 code, bool alarmCleared, B1String&& resolvedby);
         D1MsgAlarmClearRsp(D1BaseMessage&& baseMessage);
         virtual ~D1MsgAlarmClearRsp();
     protected:
