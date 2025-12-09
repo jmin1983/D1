@@ -226,12 +226,16 @@ bool D1AMHSServer::setSystemStateAuto()
 
 void D1AMHSServer::setSystemAvailStateInService()
 {
-    return _tsscStateRepository ? _tsscStateRepository->setSystemAvailStateInService() : false;
+    if (_tsscStateRepository) {
+        _tsscStateRepository->setSystemAvailStateInService();
+    }
 }
 
 void D1AMHSServer::setSystemAvailStateOutOfService()
 {
-    return _tsscStateRepository ? _tsscStateRepository->setSystemAvailStateOutOfService() : false;
+    if (_tsscStateRepository) {
+        _tsscStateRepository->setSystemAvailStateOutOfService();
+    }
 }
 
 bool D1AMHSServer::isSystemStatePausing() const
