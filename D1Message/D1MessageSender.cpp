@@ -179,6 +179,11 @@ const B1String& D1MessageSender::cusPollingListKey()
     return s_cusPollingListKey;
 }
 
+B1String D1MessageSender::lmsPollingListKey(int32 lmsID)
+{
+    return B1String::formatAs("PollingList:Loadbalancer:%d", lmsID);
+}
+
 const B1String& D1MessageSender::msSubscribingChannel()
 {
     const static B1String s_msSubscribingChannel("MSSubscribingChannel");
