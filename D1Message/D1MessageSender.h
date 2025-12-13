@@ -54,6 +54,7 @@ namespace BnD {
         static const B1String& ecsPollingListKey();
         static const B1String& ccsPollingListKey();
         static const B1String& cusPollingListKey();
+        static       B1String  lmsPollingListKey(int32 lmsID);
         static const B1String& msSubscribingChannel();  //  The channel the MS is subscribed to. All programs except MS must send alive_check_rsp through this channel.
         static const B1String& logMessageChannel();
     };

@@ -53,6 +53,18 @@ namespace BnD {
             {
                 return owner->getStringData(values, itemField(data->first), &data->second);
             }
+            template <typename T>
+            void addIntToRedisStringArgs(const T& data, std::vector<B1String>* args) const
+            {
+                args->push_back(itemField(data.first));
+                args->push_back(std::to_string(data.second));
+            }
+            template <typename T>
+            void addStringToRedisStringArgs(const T& data, std::vector<B1String>* args) const
+            {
+                args->push_back(itemField(data.first));
+                args->push_back(data.second.copy());
+            }
         public:
             bool operator< (const ItemBunch& d) const { return _itemBunchName < d._itemBunchName; }
         public:
