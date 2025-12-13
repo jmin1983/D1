@@ -51,6 +51,27 @@ void D1SMSClientSession::implOnProtocolTypeSystemResourceUsagesRsp(const B1Strin
     }
 }
 
+void D1SMSClientSession::implOnProtocolTypeStartSystemServiceRsp(const B1String& name, bool result)
+{
+    if (smsClientlistener()) {
+        smsClientlistener()->onRecvSMSClientDataStartSystemServiceRsp(name, result);
+    }
+}
+
+void D1SMSClientSession::implOnProtocolTypeStopSystemServiceRsp(const B1String& name, bool result)
+{
+    if (smsClientlistener()) {
+        smsClientlistener()->onRecvSMSClientDataStopSystemServiceRsp(name, result);
+    }
+}
+
+void D1SMSClientSession::implOnProtocolTypeStatusSystemServiceRsp(const B1String& name, bool result, bool isActive)
+{
+    if (smsClientlistener()) {
+        smsClientlistener()->onRecvSMSClientDataStatusSystemServiceRsp(name, result, isActive);
+    }
+}
+
 auto D1SMSClientSession::implAnalyzeData(const D1BaseProtocol::Header& header, uint8* data, size_t size, size_t* pos) -> ANALYZE_RESULT
 {
     switch (header._type) {
@@ -60,6 +81,12 @@ auto D1SMSClientSession::implAnalyzeData(const D1BaseProtocol::Header& header, u
             return analyzeProtocolTypeHostNameRsp(data, size, pos);
         case D1SMSProtocol::TYPE_SYSTEM_RESOURCE_USAGES_RSP:
             return analyzeProtocolTypeSystemResourceUsagesRsp(data, size, pos);
+        case D1SMSProtocol::TYPE_START_SYSTEM_SERVICE_RSP:
+            return analyzeProtocolTypeStartSystemServiceRsp(data, size, pos);
+        case D1SMSProtocol::TYPE_STOP_SYSTEM_SERVICE_RSP:
+            return analyzeProtocolTypeStopSystemServiceRsp(data, size, pos);
+        case D1SMSProtocol::TYPE_STATUS_SYSTEM_SERVICE_RSP:
+            return analyzeProtocolTypeStatusSystemServiceRsp(data, size, pos);
         default:
             break;
     }
@@ -145,6 +172,59 @@ auto D1SMSClientSession::analyzeProtocolTypeSystemResourceUsagesRsp(uint8* data,
         return result;
     }
     implOnProtocolTypeSystemResourceUsagesRsp(usages);
+    return ANALYZE_RESULT_SUCCESS;
+}
+
+auto D1SMSClientSession::analyzeProtocolTypeStartSystemServiceRsp(uint8* data, size_t size, size_t* pos) -> ANALYZE_RESULT
+{
+    B1String rsp;
+    auto result = analyzeDataTypeString(data, size, pos, &rsp);
+    if (result != ANALYZE_RESULT_SUCCESS) {
+        return result;
+    }
+    B1String name = rsp.substring(0, rsp.length() - 1);
+    uint8 retCodeVal = rsp.substring(rsp.length() - 1, 1).toUint8();
+    if (retCodeVal != 0 && retCodeVal != 1) {
+        return ANALYZE_RESULT_FAIL;
+    }
+    bool bRetCode = (retCodeVal == 1);
+    implOnProtocolTypeStopSystemServiceRsp(name, bRetCode);
+    return ANALYZE_RESULT_SUCCESS;
+}
+
+auto D1SMSClientSession::analyzeProtocolTypeStopSystemServiceRsp(uint8* data, size_t size, size_t* pos) -> ANALYZE_RESULT
+{
+    B1String rsp;
+    auto result = analyzeDataTypeString(data, size, pos, &rsp);
+    if (result != ANALYZE_RESULT_SUCCESS) {
+        return result;
+    }
+    B1String name = rsp.substring(0, rsp.length() - 1);
+    uint8 retCodeVal = rsp.substring(rsp.length() - 1, 1).toUint8();
+    if (retCodeVal != 0 && retCodeVal != 1) {
+        return ANALYZE_RESULT_FAIL;
+    }
+    bool bRetCode = (retCodeVal == 1);
+    implOnProtocolTypeStopSystemServiceRsp(name, bRetCode);
+    return ANALYZE_RESULT_SUCCESS;
+}
+
+auto D1SMSClientSession::analyzeProtocolTypeStatusSystemServiceRsp(uint8* data, size_t size, size_t* pos) -> ANALYZE_RESULT
+{
+    B1String rsp;
+    auto result = analyzeDataTypeString(data, size, pos, &rsp);
+    if (result != ANALYZE_RESULT_SUCCESS) {
+        return result;
+    }
+    B1String name = rsp.substring(0, rsp.length() - 2);
+    uint8 retCodeVal = rsp.substring(rsp.length() - 2, 1).toUint8();
+    uint8 isActiveVal = rsp.substring(rsp.length() - 1, 1).toUint8();
+    if ((retCodeVal != 0 && retCodeVal != 1) || (isActiveVal != 0 && isActiveVal != 1))
+        return ANALYZE_RESULT_FAIL;
+
+    bool bRetCode = (retCodeVal == 1);
+    bool bIsActive = (isActiveVal == 1);
+    implOnProtocolTypeStatusSystemServiceRsp(name, bRetCode, bIsActive);
     return ANALYZE_RESULT_SUCCESS;
 }
 

@@ -99,8 +99,7 @@ auto D1SMSPacketMaker::makeDataStartSystemServiceRsp(const B1String& name, bool 
     buffer.reserve(1024);
     D1BaseProtocol::Header header(D1SMSProtocol::TYPE_START_SYSTEM_SERVICE_RSP);
     buffer.insert(buffer.end(), (uint8*)&header, (uint8*)&header + sizeof(header));
-    appendDataString(name, &buffer);
-    buffer.push_back(result ? 1 : 0);
+    appendDataString(B1String::formatAs("%s%d", name.cString(), result ? 1 : 0), &buffer);
     return buffer;
 }
 
@@ -120,8 +119,7 @@ auto D1SMSPacketMaker::makeDataStopSystemServiceRsp(const B1String& name, bool r
     buffer.reserve(1024);
     D1BaseProtocol::Header header(D1SMSProtocol::TYPE_STOP_SYSTEM_SERVICE_RSP);
     buffer.insert(buffer.end(), (uint8*)&header, (uint8*)&header + sizeof(header));
-    appendDataString(name, &buffer);
-    buffer.push_back(result ? 1 : 0);
+    appendDataString(B1String::formatAs("%s%d", name.cString(), result ? 1 : 0), &buffer);
     return buffer;
 }
 
@@ -141,8 +139,6 @@ auto D1SMSPacketMaker::makeDataStatusSystemServiceRsp(const B1String& name, bool
     buffer.reserve(1024);
     D1BaseProtocol::Header header(D1SMSProtocol::TYPE_STATUS_SYSTEM_SERVICE_RSP);
     buffer.insert(buffer.end(), (uint8*)&header, (uint8*)&header + sizeof(header));
-    appendDataString(name, &buffer);
-    buffer.push_back(result ? 1 : 0);
-    buffer.push_back(isActive ? 1 : 0);
+    appendDataString(B1String::formatAs("%s%d%d", name.cString(), result ? 1 : 0, isActive ? 1 : 0), &buffer);
     return buffer;
 }
