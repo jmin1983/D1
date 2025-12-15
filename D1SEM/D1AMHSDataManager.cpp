@@ -60,13 +60,3 @@ B1SECS2Data* D1AMHSDataManager::createOriginalData(B1SECS2DataBase::INDEX index)
     }
     return NULL;
 }
-
-B1SECS2DataSVID D1AMHSDataManager::makeSVIDProcessState() const
-{
-    return implMakeSVIDProcessState();
-}
-
-bool D1AMHSDataManager::isSVIDProcessStatePaused(const B1SECS2DataSV& sv) const
-{
-    return implIsSVIDProcessStatePaused(sv);
-}

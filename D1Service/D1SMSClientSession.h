@@ -30,6 +30,9 @@ namespace BnD {
         virtual void implOnProtocolTypeHostAddressesRsp(const B1String& addressesString);
         virtual void implOnProtocolTypeHostNameRsp(const B1String& name);
         virtual void implOnProtocolTypeSystemResourceUsagesRsp(const B1String& usages);
+        virtual void implOnProtocolTypeStartSystemServiceRsp(const B1String& name, bool result);
+        virtual void implOnProtocolTypeStopSystemServiceRsp(const B1String& name, bool result);
+        virtual void implOnProtocolTypeStatusSystemServiceRsp(const B1String& name, bool result, bool isActive);
     protected:
         ANALYZE_RESULT implAnalyzeData(const D1BaseProtocol::Header& header, uint8* data, size_t size, size_t* pos) final;
         void implOnDisconnected(int32 reason) final;
@@ -37,10 +40,14 @@ namespace BnD {
         D1SMSPacketMaker* packetMaker() const;
         D1SMSClientSessionListener* smsClientlistener() const;
         B1String getOperationEncString(D1SMSProtocol::OPERATION operation) const;
-        ANALYZE_RESULT analyzeDataTypeString(uint8* data, size_t size, size_t* pos, B1String* string) const;
+        ANALYZE_RESULT analyzeDataTypeBool(uint8* data, size_t size, size_t* pos, bool* value) const;
+        ANALYZE_RESULT analyzeDataTypeString(uint8* data, size_t size, size_t* pos, B1String* value) const;
         ANALYZE_RESULT analyzeProtocolTypeHostAddressesRsp(uint8* data, size_t size, size_t* pos);
         ANALYZE_RESULT analyzeProtocolTypeHostNameRsp(uint8* data, size_t size, size_t* pos);
         ANALYZE_RESULT analyzeProtocolTypeSystemResourceUsagesRsp(uint8* data, size_t size, size_t* pos);
+        ANALYZE_RESULT analyzeProtocolTypeStartSystemServiceRsp(uint8* data, size_t size, size_t* pos);
+        ANALYZE_RESULT analyzeProtocolTypeStopSystemServiceRsp(uint8* data, size_t size, size_t* pos);
+        ANALYZE_RESULT analyzeProtocolTypeStatusSystemServiceRsp(uint8* data, size_t size, size_t* pos);
     public:
         bool sendDropCacheMemoryNtf();
         bool sendRebootSystemNtf();

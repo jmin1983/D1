@@ -11,7 +11,6 @@
 
 #include "D1SEM.h"
 #include "D1AMHSClient.h"
-#include "D1AMHSClientListener.h"
 #include "D1AMHSClientSession.h"
 #include "D1AMHSDataManager.h"
 
@@ -20,9 +19,8 @@
 
 using namespace BnD;
 
-D1AMHSClient::D1AMHSClient(D1AMHSClientListener* listener)
+D1AMHSClient::D1AMHSClient()
     : B1GEMClient()
-    , _listener(listener)
 {
 }
 

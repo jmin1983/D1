@@ -19,13 +19,10 @@
 #include <B1GEM/B1GEMClient.h>
 
 namespace BnD {
-    class D1AMHSClientListener;
     class D1AMHSClient : public B1GEMClient {
     public:
-        D1AMHSClient(D1AMHSClientListener* listener = NULL);
+        D1AMHSClient();
         virtual ~D1AMHSClient();
-    protected:
-        D1AMHSClientListener* _listener;
     public:
         bool requestOnline(uint16 deviceID);
     };

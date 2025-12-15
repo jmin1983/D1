@@ -31,8 +31,6 @@ namespace BnD {
     protected:
         B1SECS2Data* createOriginalData(B1SECS2DataBase::INDEX index) const final;
     protected:
-        virtual B1SECS2DataSVID implMakeSVIDProcessState() const = 0;
-        virtual bool implIsSVIDProcessStatePaused(const B1SECS2DataSV& sv) const = 0;
         virtual B1SECS2Data* createALID() const = 0;
         virtual B1SECS2Data* createALTX() const = 0;
         virtual B1SECS2Data* createCEID() const = 0;
@@ -45,8 +43,6 @@ namespace BnD {
         virtual B1SECS2Data* createSVNAME() const = 0;
         virtual B1SECS2Data* createVID() const = 0;
     public:
-        B1SECS2DataSVID makeSVIDProcessState() const;
-        bool isSVIDProcessStatePaused(const B1SECS2DataSV& sv) const;
 #define IMPL_AMHS_DATA_FUNCTION_BASE(d) IMPL_AMHS_DATA_FUNCTION(D1AMHSData, d)
         IMPL_AMHS_DATA_FUNCTION_BASE(ACKC5);
         IMPL_AMHS_DATA_FUNCTION_BASE(ACKC6);
