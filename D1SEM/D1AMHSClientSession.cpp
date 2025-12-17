@@ -127,7 +127,7 @@ void D1AMHSClientSession::onRecvMessageS64F2(const std::vector<uint8>& systemByt
 {
 }
 
-B1SECS2DataManager* D1AMHSClientSession::createSECS2DataManager()
+auto D1AMHSClientSession::createSECS2DataManager() -> std::shared_ptr<B1SECS2DataManager>
 {
     return createAMHSDataManager();
 }

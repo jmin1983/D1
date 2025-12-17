@@ -24,7 +24,7 @@ namespace BnD {
     public:
         D1AMHSClientSession(B1ClientSocket* clientSocket, B1BaseClientSessionListener* listener);
     protected:
-        virtual D1AMHSDataManager* createAMHSDataManager() = 0;
+        virtual std::shared_ptr<D1AMHSDataManager> createAMHSDataManager() = 0;
         virtual void onAMHSConnect() {}
         virtual void onAMHSDisconnected(int32 reason) {}
         virtual void onAMHSSelectCompleted() {}
@@ -50,7 +50,7 @@ namespace BnD {
         virtual void onRecvMessageS64F2(const std::vector<uint8>& systemBytes,
                                         const B1SECS2DataHCACK& hcAck, const std::map<B1SECS2DataCPNAME, B1SECS2DataCPACK>& cps) override;
     protected:
-        B1SECS2DataManager* createSECS2DataManager() final;
+        std::shared_ptr<B1SECS2DataManager> createSECS2DataManager() final;
         void onSelectCompleted() final;
         void implOnConnect() final;
         void implOnDisconnected(int32 reason) final;
