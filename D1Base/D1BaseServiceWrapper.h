@@ -127,7 +127,8 @@ namespace BnD {
                         return false;
                     }
                 }
-                B1LOG("initializing service: name[%s] %s", productIdentifier->serviceName().cString(), startingLog.cString());
+                B1LOG("initializing service: time_zone[%s], name[%s] %s",
+                    productIdentifier->timeZone().cString(), productIdentifier->serviceName().cString(), startingLog.cString());
 #if defined(_DEBUG)
                 B1LOG("cleanup product initializer -> disconnect sessions: site[%d][%s], type[%d][%s]",
                     productIdentifier->site(), productIdentifier->toProductSiteString().cString(), productIdentifier->type(), productIdentifier->toProductTypeString().cString());
