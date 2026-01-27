@@ -144,6 +144,11 @@ void D1BaseService::implStop()
     }
 }
 
+void D1BaseService::finalizeRedisSubscribe()
+{
+    _redisDirectClient->closeSubscribeSession();
+}
+
 bool D1BaseService::isRedisCanReadWrite() const
 {
     return _redisDirectClient ? _redisDirectClient->isReadSessionConnected() && _redisDirectClient->isWriteSessionConnected() : false;

@@ -62,6 +62,8 @@ namespace BnD {
         virtual bool implStart() override;
         virtual bool implWorking() override;
         virtual void implStop() override;
+    protected:
+        void finalizeRedisSubscribe();
     public:
         bool isRedisCanReadWrite() const;
         B1String serviceName() const;
