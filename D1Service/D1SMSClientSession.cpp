@@ -116,18 +116,19 @@ B1String D1SMSClientSession::getOperationEncString(D1SMSProtocol::OPERATION oper
     return B1Encryptor::encryptSha256(B1String::formatAs("%d", operation), &result) ? result : "";
 }
 
-auto D1SMSClientSession::analyzeDataTypeBool(uint8* data, size_t size, size_t* pos, bool* value) const -> ANALYZE_RESULT
+auto D1SMSClientSession::analyzeDataTypeBool(uint8* data, size_t size, size_t* pos, bool* value, size_t* valuePos) const -> ANALYZE_RESULT
 {
     const size_t dataSize = sizeof(bool);
     if (size < dataSize) {
         return ANALYZE_RESULT_NOT_ENOUTH_DATA;
     }
     *value = (*data) == 1 ? true : false;
-    (*pos) += (dataSize);
+    *valuePos += dataSize;
+    *pos += dataSize;
     return ANALYZE_RESULT_SUCCESS;
 }
 
-auto D1SMSClientSession::analyzeDataTypeString(uint8* data, size_t size, size_t* pos, B1String* value) const -> ANALYZE_RESULT
+auto D1SMSClientSession::analyzeDataTypeString(uint8* data, size_t size, size_t* pos, B1String* value, size_t* valuePos) const -> ANALYZE_RESULT
 {
     uint32 stringLength = 0;
     const size_t stringLengthSize = sizeof(stringLength);
@@ -149,14 +150,17 @@ auto D1SMSClientSession::analyzeDataTypeString(uint8* data, size_t size, size_t*
         assert(false);
         return ANALYZE_RESULT_FAIL;
     }
-    (*pos) += (stringLengthSize + stringLength);
+    *valuePos += (stringLengthSize + stringLength);
+    *pos += (stringLengthSize + stringLength);
     return ANALYZE_RESULT_SUCCESS;
 }
 
 auto D1SMSClientSession::analyzeProtocolTypeHostAddressesRsp(uint8* data, size_t size, size_t* pos) -> ANALYZE_RESULT
 {
+    size_t valuePos = 0;
+
     B1String addressesString;
-    auto result = analyzeDataTypeString(data, size, pos, &addressesString);
+    auto result = analyzeDataTypeString(data, size, pos, &addressesString, &valuePos);
     if (result != ANALYZE_RESULT_SUCCESS) {
         return result;
     }
@@ -166,8 +170,10 @@ auto D1SMSClientSession::analyzeProtocolTypeHostAddressesRsp(uint8* data, size_t
 
 auto D1SMSClientSession::analyzeProtocolTypeHostNameRsp(uint8* data, size_t size, size_t* pos) -> ANALYZE_RESULT
 {
+    size_t valuePos = 0;
+
     B1String name;
-    auto result = analyzeDataTypeString(data, size, pos, &name);
+    auto result = analyzeDataTypeString(data, size, pos, &name, &valuePos);
     if (result != ANALYZE_RESULT_SUCCESS) {
         return result;
     }
@@ -177,8 +183,10 @@ auto D1SMSClientSession::analyzeProtocolTypeHostNameRsp(uint8* data, size_t size
 
 auto D1SMSClientSession::analyzeProtocolTypeSystemResourceUsagesRsp(uint8* data, size_t size, size_t* pos) -> ANALYZE_RESULT
 {
+    size_t valuePos = 0;
+
     B1String usages;
-    auto result = analyzeDataTypeString(data, size, pos, &usages);
+    auto result = analyzeDataTypeString(data, size, pos, &usages, &valuePos);
     if (result != ANALYZE_RESULT_SUCCESS) {
         return result;
     }
@@ -188,13 +196,15 @@ auto D1SMSClientSession::analyzeProtocolTypeSystemResourceUsagesRsp(uint8* data,
 
 auto D1SMSClientSession::analyzeProtocolTypeStartSystemServiceRsp(uint8* data, size_t size, size_t* pos) -> ANALYZE_RESULT
 {
+    size_t valuePos = 0;
+
     B1String name;
-    auto result = analyzeDataTypeString(data, size, pos, &name);
+    auto result = analyzeDataTypeString(data, size, pos, &name, &valuePos);
     if (result != ANALYZE_RESULT_SUCCESS) {
         return result;
     }
     bool startResult = false;
-    result = analyzeDataTypeBool(data + *pos, size - *pos, pos, &startResult);
+    result = analyzeDataTypeBool(data + valuePos, size - valuePos, pos, &startResult, &valuePos);
     if (result != ANALYZE_RESULT_SUCCESS) {
         return result;
     }
@@ -204,13 +214,15 @@ auto D1SMSClientSession::analyzeProtocolTypeStartSystemServiceRsp(uint8* data, s
 
 auto D1SMSClientSession::analyzeProtocolTypeStopSystemServiceRsp(uint8* data, size_t size, size_t* pos) -> ANALYZE_RESULT
 {
+    size_t valuePos = 0;
+
     B1String name;
-    auto result = analyzeDataTypeString(data, size, pos, &name);
+    auto result = analyzeDataTypeString(data, size, pos, &name, &valuePos);
     if (result != ANALYZE_RESULT_SUCCESS) {
         return result;
     }
     bool stopResult = false;
-    result = analyzeDataTypeBool(data + *pos, size - *pos, pos, &stopResult);
+    result = analyzeDataTypeBool(data + valuePos, size - valuePos, pos, &stopResult, &valuePos);
     if (result != ANALYZE_RESULT_SUCCESS) {
         return result;
     }
@@ -220,18 +232,20 @@ auto D1SMSClientSession::analyzeProtocolTypeStopSystemServiceRsp(uint8* data, si
 
 auto D1SMSClientSession::analyzeProtocolTypeStatusSystemServiceRsp(uint8* data, size_t size, size_t* pos) -> ANALYZE_RESULT
 {
+    size_t valuePos = 0;
+
     B1String name;
-    auto result = analyzeDataTypeString(data, size, pos, &name);
+    auto result = analyzeDataTypeString(data, size, pos, &name, &valuePos);
     if (result != ANALYZE_RESULT_SUCCESS) {
         return result;
     }
     bool statusResult = false;
-    result = analyzeDataTypeBool(data + *pos, size - *pos, pos, &statusResult);
+    result = analyzeDataTypeBool(data + valuePos, size - valuePos, pos, &statusResult, &valuePos);
     if (result != ANALYZE_RESULT_SUCCESS) {
         return result;
     }
     bool isActive = false;
-    result = analyzeDataTypeBool(data + *pos, size - *pos, pos, &isActive);
+    result = analyzeDataTypeBool(data + valuePos, size - valuePos, pos, &isActive, &valuePos);
     if (result != ANALYZE_RESULT_SUCCESS) {
         return result;
     }

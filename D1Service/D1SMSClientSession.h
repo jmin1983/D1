@@ -40,8 +40,8 @@ namespace BnD {
         D1SMSPacketMaker* packetMaker() const;
         D1SMSClientSessionListener* smsClientlistener() const;
         B1String getOperationEncString(D1SMSProtocol::OPERATION operation) const;
-        ANALYZE_RESULT analyzeDataTypeBool(uint8* data, size_t size, size_t* pos, bool* value) const;
-        ANALYZE_RESULT analyzeDataTypeString(uint8* data, size_t size, size_t* pos, B1String* value) const;
+        ANALYZE_RESULT analyzeDataTypeBool(uint8* data, size_t size, size_t* pos, bool* value, size_t* valuePos) const;
+        ANALYZE_RESULT analyzeDataTypeString(uint8* data, size_t size, size_t* pos, B1String* value, size_t* valuePos) const;
         ANALYZE_RESULT analyzeProtocolTypeHostAddressesRsp(uint8* data, size_t size, size_t* pos);
         ANALYZE_RESULT analyzeProtocolTypeHostNameRsp(uint8* data, size_t size, size_t* pos);
         ANALYZE_RESULT analyzeProtocolTypeSystemResourceUsagesRsp(uint8* data, size_t size, size_t* pos);
