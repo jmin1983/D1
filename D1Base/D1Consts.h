@@ -65,6 +65,7 @@ namespace BnD {
             SERVICE_ID_DWS, //  Database Writing Service.
             SERVICE_ID_WAS, //  Web Assistant Service.
             SERVICE_ID_SMS, //  System Management Service.
+            SERVICE_ID_UMS, //  Unit Management Service. connect to WAS when service_set_unit.
 
             SERVICE_ID_STAND_ALONE_END = SERVICE_ID_STAND_ALONE_BEGIN + 1000,
             // STAND_ALONE SERVICES END ///////////////////////////////////////////////////////////

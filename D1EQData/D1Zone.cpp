@@ -41,8 +41,8 @@ D1Zone::D1Zone(int32 D1ZoneID)
 
 void D1Zone::implInitializeAttributes(int32 serviceID, D1RedisClientInterface* redisReader, bool loadFromRedisAllData)
 {
-    _occupiedAttributes.reset(new D1ZoneOccupiedAttributes(zoneID(), serviceID, redisReader, NULL));
-    _stateAttributes.reset(new D1ZoneStateAttributes(zoneID(), serviceID, redisReader));
+    _occupiedAttributes = std::make_shared<D1ZoneOccupiedAttributes>(zoneID(), serviceID, redisReader, nullptr);
+    _stateAttributes = std::make_shared<D1ZoneStateAttributes>(zoneID(), serviceID, redisReader);
 }
 
 void D1Zone::implIitializePlugins(D1ZoneAttributePlugin* attributePlugin)

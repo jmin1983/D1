@@ -143,6 +143,12 @@ B1String D1MessageSender::updateZoneAttributesChannel(int32 ownerID)
     return B1String::formatAs("UpdateZoneAttributesChannel:%d", ownerID);
 }
 
+const B1String& D1MessageSender::updateUnitAttributesChannel()
+{
+    const static B1String s_updateUnitAttributesChannel("UpdateUnitAttributesChannel");
+    return s_updateUnitAttributesChannel;
+}
+
 const B1String& D1MessageSender::updateTransferInfoChannel()
 {
     const static B1String s_updateTransferInfoChannel("UpdateTransferInfoChannel");

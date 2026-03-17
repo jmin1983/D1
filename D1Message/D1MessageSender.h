@@ -48,6 +48,7 @@ namespace BnD {
         static       B1String  dcsSubscribingChannel(int32 dcsID);  //  The channel to which a particular DCS is subscribed.
         static       B1String  dcsPollingListKey(int32 dcsID);
         static       B1String  updateZoneAttributesChannel(int32 ownerID);  //  Channel to publish when zone attributes are being changed. Anyone who interested in the zone attributes must subscribe this channel. MS always subscribes(for redis_writing).
+        static const B1String& updateUnitAttributesChannel();       //  Channel to publish when unit attributes are being changed. Anyone who interested in the unit attributes must subscribe this channel. MS always subscribes(for redis_writing).
         static const B1String& updateTransferInfoChannel();         //  Channel to publish when TransferInfo changes. Anyone who interested in TransferInfo must subscribe this channel. MS always subscribes(for redis_writing).
         static const B1String& userCommandChannel();                //  Channel to publish when user want to notify something to system. ex) WAS(GUI) -> CUS/DWS/etc...
         static const B1String& userSubscribingChannel();            //  Channel to publish when system want to notify something to user. ex) CUS/DWS/etc... -> WAS(GUI)
