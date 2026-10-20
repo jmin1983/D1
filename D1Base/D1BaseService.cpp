@@ -98,10 +98,10 @@ bool D1BaseService::implStart()
         }
         _redisDirectClient.reset(redisDirectClient);
     }
-    _redisClientInterface.reset(new D1RedisClientInterface(_redisDirectClient.get()));
+    _redisClientInterface = std::make_shared<D1RedisClientInterface>(_redisDirectClient.get());
     uint32 perfInterval = performanceProfilerInterval();
     if (CONSTS_DISABLE_PERFORMANCE_CHECK != perfInterval) {
-        _performanceProfiler.reset(new B1PerformanceProfiler());
+        _performanceProfiler = std::make_shared<B1PerformanceProfiler>();
         if (_performanceProfiler->initialize()) {
             checkPerformance();
             _performanceCheckTimer.start(perfInterval);

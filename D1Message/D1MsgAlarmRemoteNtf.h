@@ -21,7 +21,7 @@
 namespace BnD {
     class D1MsgAlarmRemoteNtf : public D1BaseMessage {
     public:
-        D1MsgAlarmRemoteNtf(int64 taskID, int32 zoneID, int32 serviceID, int32 code, int32 reason);
+        D1MsgAlarmRemoteNtf(int64 taskID, int32 zoneID, int32 serviceID, int32 code, int32 reason, B1String&& carrierID = "");
         D1MsgAlarmRemoteNtf(D1BaseMessage&& baseMessage);
         virtual ~D1MsgAlarmRemoteNtf();
     protected:
@@ -30,6 +30,7 @@ namespace BnD {
         DataInt32 _serviceID;
         DataInt32 _code;
         DataInt32 _reason;
+        DataString _carrierID;
     protected:
         void archiveMessage(B1Archive* archive) const final;
         void unarchiveMessage(const B1Archive& archive) final;
@@ -41,6 +42,7 @@ namespace BnD {
         int32 serviceID() const { return _serviceID.second; }
         int32 code() const { return _code.second; }
         int32 reason() const { return _reason.second; }
+        const B1String& carrierID() const { return _carrierID.second; }
     public:
         static const B1String& messageString()
         {

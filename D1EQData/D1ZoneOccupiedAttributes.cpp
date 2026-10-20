@@ -51,9 +51,9 @@ void D1ZoneOccupiedAttributes::unarchiveFrom(const B1Archive& archive)
     readDataFromArchive(archive, &_reservedTaskID);
 }
 
-auto D1ZoneOccupiedAttributes::createMessageObject() const -> D1MessageObject*
+auto D1ZoneOccupiedAttributes::createMessageObject() const -> std::shared_ptr<D1MessageObject>
 {
-    return new D1ZoneOccupiedAttributesMsg(this);
+    return std::make_shared<D1ZoneOccupiedAttributesMsg>(this);
 }
 
 bool D1ZoneOccupiedAttributes::isValidToMakeRedisString() const
@@ -75,10 +75,9 @@ bool D1ZoneOccupiedAttributes::readRedisMap(const std::map<B1String, B1String>& 
 D1ZoneOccupiedAttributes& D1ZoneOccupiedAttributes::operator=(const D1ZoneOccupiedAttributes& d)
 {
     if (isWriteOperatorChangedLog()) {
-#define PRINT_ATTRIBUTE_MEMBER(m) tmp.appendf(", "#m"[%d->%d]", _##m.second, d._##m.second);
         B1String tmp;
         tmp.appendf("occupied_attribute changed by operator=: zoneID[%d]", zoneID());
-        PRINT_ATTRIBUTE_MEMBER(reservedTaskID);
+        tmp.appendf("reservedTaskID[%lld -> %lld]", _reservedTaskID.second, d._reservedTaskID.second);
         B1LOG(tmp.cString());
     }
     D1ZoneDynamicAttributes::operator=(d);

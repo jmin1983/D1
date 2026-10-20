@@ -37,7 +37,7 @@ namespace BnD {
     protected:
         D1SMSClientSessionListener* _listener;
     protected:
-        D1BasePacketMaker* createPacketMaker() final;
+        std::shared_ptr<D1BasePacketMaker> createPacketMaker() final;
         B1BaseClientSession* createD1BaseClientSession(B1ClientSocket* clientSocket, void* param) final;
     public:
         D1SMSPacketMaker* packetMaker() const;

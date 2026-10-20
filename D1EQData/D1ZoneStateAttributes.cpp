@@ -55,9 +55,9 @@ void D1ZoneStateAttributes::unarchiveFrom(const B1Archive& archive)
     readDataFromArchive(archive, &_alarmID);
 }
 
-auto D1ZoneStateAttributes::createMessageObject() const -> D1MessageObject*
+auto D1ZoneStateAttributes::createMessageObject() const -> std::shared_ptr<D1MessageObject>
 {
-    return new D1ZoneStateAttributesMsg(this);
+    return std::make_shared<D1ZoneStateAttributesMsg>(this);
 }
 
 bool D1ZoneStateAttributes::isValidToMakeRedisString() const
@@ -91,11 +91,11 @@ bool D1ZoneStateAttributes::readRedisMap(const std::map<B1String, B1String>& map
 D1ZoneStateAttributes& D1ZoneStateAttributes::operator=(const D1ZoneStateAttributes& d)
 {
     if (isWriteOperatorChangedLog()) {
-#define PRINT_ATTRIBUTE_MEMBER(m) tmp.appendf(", "#m"[%d->%d]", _##m.second, d._##m.second);
+#define PRINT_ATTRIBUTE_MEMBER(m) tmp.appendf(", "#m"[%d -> %d]", _##m.second, d._##m.second);
         B1String tmp;
         tmp.appendf("state_attribute changed by operator=: zoneID[%d]", zoneID());
         PRINT_ATTRIBUTE_MEMBER(zoneState);
-        tmp.appendf("alarmSerialNumber[%lld->%lld]", _alarmID.second, d._alarmID.second);
+        tmp.appendf("alarmSerialNumber[%lld -> %lld]", _alarmID.second, d._alarmID.second);
         B1LOG(tmp.cString());
     }
     D1ZoneDynamicAttributes::operator=(d);

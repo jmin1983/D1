@@ -14,13 +14,14 @@
 
 using namespace BnD;
 
-B1SECS2Data* D1AMHSDataManager::createOriginalData(B1SECS2DataBase::INDEX index) const
+auto D1AMHSDataManager::createOriginalData(B1SECS2DataBase::INDEX index) const -> std::shared_ptr<B1SECS2Data>
 {
-#define CREATE_AMHS_DATA(d) case B1SECS2DataBase::INDEX_##d: return new D1AMHSData##d()
+#define CREATE_AMHS_DATA(d) case B1SECS2DataBase::INDEX_##d: return std::make_shared<D1AMHSData##d>()
 #define CREATE_AMHS_SPECIFIC_DATA(d) case B1SECS2DataBase::INDEX_##d: return create##d()
     switch (index) {
         CREATE_AMHS_DATA(ACKC5);
         CREATE_AMHS_DATA(ACKC6);
+        CREATE_AMHS_DATA(ACKC10);
         CREATE_AMHS_DATA(ALCD);
         CREATE_AMHS_DATA(ALED);
         CREATE_AMHS_DATA(CEED);
@@ -40,7 +41,9 @@ B1SECS2Data* D1AMHSDataManager::createOriginalData(B1SECS2DataBase::INDEX index)
         CREATE_AMHS_DATA(OFLACK);
         CREATE_AMHS_DATA(ONLACK);
         CREATE_AMHS_DATA(RCMD);
+        CREATE_AMHS_DATA(TEXT);
         CREATE_AMHS_DATA(TIACK);
+        CREATE_AMHS_DATA(TID);
         CREATE_AMHS_DATA(TIME);
         CREATE_AMHS_DATA(UNITS);
 

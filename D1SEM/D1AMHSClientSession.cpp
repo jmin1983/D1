@@ -127,9 +127,9 @@ void D1AMHSClientSession::onRecvMessageS64F2(const std::vector<uint8>& systemByt
 {
 }
 
-auto D1AMHSClientSession::createSECS2DataManager() -> std::shared_ptr<B1SECS2DataManager>
+auto D1AMHSClientSession::createClientSECS2DataManager() -> std::shared_ptr<B1SECS2DataManager>
 {
-    return createAMHSDataManager();
+    return createClientAMHSDataManager();
 }
 
 void D1AMHSClientSession::onSelectCompleted()
@@ -147,7 +147,7 @@ void D1AMHSClientSession::implOnDisconnected(int32 reason)
     onAMHSDisconnected(reason);
 }
 
-const D1AMHSDataManager* D1AMHSClientSession::amhsDataManager() const
+const D1AMHSDataManager* D1AMHSClientSession::clientAmhsDataManager() const
 {
-    return static_cast<const D1AMHSDataManager*>(secs2DataManager());
+    return static_cast<const D1AMHSDataManager*>(clientSecs2DataManager());
 }

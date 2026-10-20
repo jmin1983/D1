@@ -93,6 +93,11 @@ bool D1Unit::readRedisMap(const std::map<B1String, B1String>& map)
     return true;
 }
 
+bool D1Unit::isValidToMakeRedisString() const
+{
+    return unitID() != D1Consts::ID_INVALID;
+}
+
 void D1Unit::initializeAttributes(D1RedisClientInterface* redisReader)
 {
     implInitializeAttributes(redisReader);

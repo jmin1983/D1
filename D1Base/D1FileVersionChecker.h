@@ -18,9 +18,29 @@
 
 namespace BnD {
     namespace D1FileVersionChecker {
+        enum class OS {
+            UNKNOWN = -1,
+
+            WINDOWS,
+            LINUX,
+        };
+        enum class ARCH {
+            UNKNOWN = -1,
+
+            X86,
+            X64,
+            ARM32,
+            ARM64,
+        };
+        struct BinaryInfo {
+            OS _os = OS::UNKNOWN;
+            ARCH _arch = ARCH::UNKNOWN;
+        };
         bool readVersionFile(const B1String& versionFilePath, int32* version, B1String* identifier, B1String* buildDate);
         bool writeVersionFile(int32 version, const B1String& identifier, const B1String& buildDate, const B1String& versionFilePath);
         bool getFileVersion(const B1String& filePath, int32* version, B1String* identifier, B1String* buildDate);
+        BinaryInfo getFileBinaryInfo(const B1String& filePath);
+        bool isSafeToExecuteOnSystem(const B1String& filePath);
     };
 }   //  !BnD
 

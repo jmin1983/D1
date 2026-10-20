@@ -36,7 +36,7 @@ namespace BnD {
     protected:
         D1SMSServerSessionDelegate* _smsServerDelegate;
     protected:
-        D1BasePacketMaker* createPacketMaker() final;
+        std::shared_ptr<D1BasePacketMaker> createPacketMaker() final;
         B1BaseServerSession* createSession(B1ServerSocket* serverSocket) final;
     };
 }   //  !BnD

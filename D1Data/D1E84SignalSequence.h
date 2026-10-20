@@ -48,8 +48,8 @@ namespace BnD {
         };
         enum TIMEOUT {
             TIMEOUT_TA1 = 0,    //  VALID_on ~ L_REQ(U_REQ)_on
-            //TIMEOUT_TA2,        //  TR_REQ_on ~ READY_on
-            //TIMEOUT_TA3,        //  COMPT_on ~ READY_off
+            TIMEOUT_TA2,        //  TR_REQ_on ~ READY_on
+            TIMEOUT_TA3,        //  COMPT_on ~ READY_off
             TIMEOUT_TP1,        //  L_REQ(U_REQ)_on ~ TR_REQ_on
             TIMEOUT_TP2,        //  READY_on ~ BUSY_on
             TIMEOUT_TP3,        //  BUSY_on ~ L_REQ(U_REQ)_off
@@ -124,30 +124,46 @@ namespace BnD {
         bool isSignalOn(SIGNAL signal) const;   //  use private only.
         bool isSignalOff(SIGNAL signal) const;  //  use private only.
     protected:
-        bool isSequenceSignalReadyToProceed(SEQUENCE sequence, bool isLoading) const;   //  return true if signal is ready to procceed to next _sequence.
+        bool isSequenceSignalReadyToProceed(SEQUENCE sequence, bool isLoading, bool ignorePassiveEarlyRest) const;   //  return true if signal is ready to procceed to next sequence.
         uint32 timeoutValue(TIMEOUT timeout) const;
-        TIMEOUT sequenceTimeoutType(SEQUENCE sequence) const;
+        TIMEOUT sequenceTimeoutType(SEQUENCE sequence, bool isActive) const;
+        bool isActiveSequenceSignalInvalid(bool isLoadingSequence, bool ignorePassiveEarlyRest) const;
+        bool isPassiveSequenceSignalInvalid() const;
     public:
         D1E84SignalSequence& operator=(const D1E84SignalSequence& r);
         bool operator==(const D1E84SignalSequence& r) const;
         bool operator!=(const D1E84SignalSequence& r) const { return operator==(r) != true; }
+    public: //  active only.    WARNING: do not seperate active/passive to seperate class.
+        bool activeNeedToTurnOnCS0() const { return sequence() == SEQUENCE_0; }
+        bool activeNeedToTurnOnVALID() const { return sequence() == SEQUENCE_1; }
+        bool activeNeedToTurnOnTRREQ() const { return sequence() == SEQUENCE_3; }
+        bool activeNeedToTurnOnBUSY() const { return sequence() == SEQUENCE_5; }
+        bool activeNeedToTurnOffBUSY() const { return sequence() == SEQUENCE_7; }
+        bool activeNeedToTurnOffTRREQ() const { return sequence() == SEQUENCE_8; }
+        bool activeNeedToTurnOnCOMPT() const { return sequence() == SEQUENCE_9; }
+        bool activeNeedToTurnOffCS0() const { return sequence() == SEQUENCE_11; }
+        bool activeNeedToTurnOffVALID() const { return sequence() == SEQUENCE_11; }
+        bool activeNeedToTurnOffCOMPT() const { return sequence() == SEQUENCE_11; }
+    public: //  passive only.   WARNING: do not seperate active/passive to seperate class.
+        bool passiveNeedToTurnOnLREQ(bool isLoadingSequence) const { return isLoadingSequence && sequence() == SEQUENCE_2; }
+        bool passiveNeedToTurnOnUREQ(bool isLoadingSequence) const { return isLoadingSequence != true && sequence() == SEQUENCE_2; }
+        bool passiveNeedToTurnOnREADY() const { return sequence() == SEQUENCE_4; }
+        bool passiveNeedToTurnOffLREQ(bool isLoadingSequence) const { return isLoadingSequence && sequence() == SEQUENCE_6; }
+        bool passiveNeedToTurnOffUREQ(bool isLoadingSequence) const { return isLoadingSequence != true && sequence() == SEQUENCE_6; }
+        bool passiveNeedToTurnOffREADY() const { return sequence() == SEQUENCE_10; }
     public:
         SEQUENCE sequence() const { return _sequence; }
         bool isInSequence() const { return sequence() != SEQUENCE_0; }
-        bool needToTurnOnLREQ(bool isLoadingSequence) const { return isLoadingSequence && sequence() == SEQUENCE_2; }
-        bool needToTurnOnUREQ(bool isLoadingSequence) const { return isLoadingSequence != true && sequence() == SEQUENCE_2; }
-        bool needToTurnOnREADY() const { return sequence() == SEQUENCE_4; }
-        bool needToTurnOffLREQ(bool isLoadingSequence) const { return isLoadingSequence && sequence() == SEQUENCE_6; }
-        bool needToTurnOffUREQ(bool isLoadingSequence) const { return isLoadingSequence != true && sequence() == SEQUENCE_6; }
-        bool needToTurnOffREADY() const { return sequence() == SEQUENCE_10; }
         bool isOn(SIGNAL signal) const;
         bool isOff(SIGNAL signal) const;
+        bool isTransferBeginSequence() const { return sequence() == SEQUENCE_6; }
+        bool isTransferEndSequence() const { return sequence() == SEQUENCE_10; }
         bool isCarrierDetectedSequence() const { return sequence() == SEQUENCE_7; }
         bool isCarrierRemovedSequence() const { return sequence() == SEQUENCE_7; }
         void resetSequence();                               //  WARNING. CRITICAL IF E84 SEQUENCE IN PROGRESS.
-        bool proceedNextSequence(bool isLoadingSequence);   //  return true if proceeded to next sequence.
-        bool isSequenceSignalInvalid() const;
-        TIMEOUT isSequenceTimedOut();
+        bool proceedNextSequence(bool isLoadingSequence, bool isActive = false, bool ignorePassiveEarlyRest = false);    //  return true if proceeded to next sequence.
+        bool isSequenceSignalInvalid(bool isLoadingSequence, bool isActive = false, bool ignorePassiveEarlyRest = false) const;
+        TIMEOUT isSequenceTimedOut(bool isActive = false);
         std::vector<bool>& signals() { return _signals; }
         B1String toString() const;
     public:

@@ -54,9 +54,9 @@ void D1TaskLocationInfo::unarchiveFrom(const B1Archive& archive)
     readDataFromArchive(_currentLocationKey, archive, &_currentLocation);
 }
 
-auto D1TaskLocationInfo::createMessageObject() const -> D1MessageObject*
+auto D1TaskLocationInfo::createMessageObject() const -> std::shared_ptr<D1MessageObject>
 {
-    return new D1TaskLocationInfoMsg(this);
+    return std::make_shared<D1TaskLocationInfoMsg>(this);
 }
 
 bool D1TaskLocationInfo::isValidToMakeRedisString() const

@@ -23,6 +23,7 @@ D1BaseMessage::D1BaseMessage()
     : B1Object()
     , _messageID("MessageID", "")
     , _baseTime("BaseTime", 0)
+    , _baseMicrosecond("BaseMicrosecond", 0)
 {
 }
 
@@ -30,6 +31,7 @@ D1BaseMessage::D1BaseMessage(D1BaseMessage&& base) noexcept
     : B1Object()
     , _messageID(base._messageID.first.copy(), std::move(base._messageID.second))
     , _baseTime(base._baseTime.first.copy(), std::move(base._baseTime.second))
+    , _baseMicrosecond(base._baseMicrosecond.first.copy(), std::move(base._baseMicrosecond.second))
 {
 }
 
@@ -43,6 +45,7 @@ void D1BaseMessage::archiveTo(B1Archive* archive) const
     B1Archive messageData;
     archiveMessage(&messageData);
     writeDataToArchive(_baseTime, &messageData);
+    writeDataToArchive(_baseMicrosecond, &messageData);
     archive->addSubArchive(_messageDataKey, messageData);
 }
 
@@ -54,7 +57,8 @@ void D1BaseMessage::unarchiveFrom(const B1Archive& archive)
     B1Archive messageData;
     archive.getSubArchive(_messageDataKey, &messageData);
     unarchiveMessage(messageData);
-    readDataFromArchive(messageData, &_baseTime);        
+    readDataFromArchive(messageData, &_baseTime);
+    readDataFromArchive(messageData, &_baseMicrosecond);
 }
 
 B1String D1BaseMessage::toString() const
@@ -62,6 +66,7 @@ B1String D1BaseMessage::toString() const
     if (baseTime() > 0) {
         B1String str = _messageID.second.copy();
         str.appendf(", baseTime[%s]", B1Time(baseTime()).toString().cString());
+        str.appendf(", baseMicrosecond[%s]", B1Time(baseMicrosecond()).toString().cString());
         return str;
     }
     else {

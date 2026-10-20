@@ -28,6 +28,7 @@ namespace BnD {
         const static B1String _messageDataKey;
         DataString _messageID;
         DataInt64 _baseTime;    //  local time(second).
+        DataInt32 _baseMicrosecond;
     protected:
         void archiveTo(B1Archive* archive) const final;
         void unarchiveFrom(const B1Archive& archive) final;
@@ -39,6 +40,7 @@ namespace BnD {
     public:
         const B1String& messageID() const { return _messageID.second; }
         int64 baseTime() const { return _baseTime.second; }
+        int32 baseMicrosecond() const { return _baseMicrosecond.second; }
         bool composeToJson(B1String* json) const;
         bool composeToJsonWithBaseTime(B1String* json);
         void setBaseTime(int64 baseTime) { _baseTime.second = baseTime; }

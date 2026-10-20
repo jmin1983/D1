@@ -13,12 +13,15 @@
 #include "D1TaskLocationInfoMsg.h"
 #include "D1TaskLocationInfo.h"
 
+#include <B1Base/B1Time.h>
+
 using namespace BnD;
 
 D1TaskLocationInfoMsg::D1TaskLocationInfoMsg(const D1TaskLocationInfo* objectToArchive)
     : D1MessageObject(objectToArchive)
 {
     _messageID.second = messageString().copy();
+    B1Time::getCurrentTime(&_baseTime.second, &_baseMicrosecond.second);
 }
 
 D1TaskLocationInfoMsg::D1TaskLocationInfoMsg(D1BaseMessage&& baseMessage)
@@ -30,9 +33,9 @@ D1TaskLocationInfoMsg::~D1TaskLocationInfoMsg()
 {
 }
 
-B1Object* D1TaskLocationInfoMsg::createObject()
+auto D1TaskLocationInfoMsg::createObject() -> std::shared_ptr<B1Object>
 {
-    return new D1TaskLocationInfo();
+    return std::make_shared<D1TaskLocationInfo>();
 }
 
 auto D1TaskLocationInfoMsg::toObject() const -> D1TaskLocationInfo*

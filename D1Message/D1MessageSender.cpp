@@ -149,6 +149,12 @@ const B1String& D1MessageSender::updateUnitAttributesChannel()
     return s_updateUnitAttributesChannel;
 }
 
+const B1String& D1MessageSender::updateEntityStateChannel()
+{
+    const static B1String s_updateEntityStateChannel("UpdateEntityStateChannel");
+    return s_updateEntityStateChannel;
+}
+
 const B1String& D1MessageSender::updateTransferInfoChannel()
 {
     const static B1String s_updateTransferInfoChannel("UpdateTransferInfoChannel");

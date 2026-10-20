@@ -41,10 +41,11 @@ bool D1MariaDBClient::initialize(B1String&& address, uint16 port, B1String&& dbN
     if (_pool) {
         return false;
     }
-    _pool.reset(new B1MariaDBConnectionPool());
+    _pool = std::make_shared<B1MariaDBConnectionPool>();
     if (_pool->initialize(std::move(address), port, std::move(dbName), std::move(user), std::move(password), connectionCount, useSSL) != true) {
         _pool->finalize();
         _pool.reset();
+        return false;
     }
     return true;
 }

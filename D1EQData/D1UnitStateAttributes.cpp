@@ -55,9 +55,9 @@ void D1UnitStateAttributes::unarchiveFrom(const B1Archive& archive)
     readDataFromArchive(archive, &_alarmID);
 }
 
-auto D1UnitStateAttributes::createMessageObject() const -> D1MessageObject*
+auto D1UnitStateAttributes::createMessageObject() const -> std::shared_ptr<D1MessageObject>
 {
-    return new D1UnitStateAttributesMsg(this);
+    return std::make_shared<D1UnitStateAttributesMsg>(this);
 }
 
 bool D1UnitStateAttributes::isValidToMakeRedisString() const

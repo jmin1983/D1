@@ -39,7 +39,7 @@ namespace BnD {
     protected:
         virtual void archiveTo(B1Archive* archive) const override;
         virtual void unarchiveFrom(const B1Archive& archive) override;
-        virtual D1MessageObject* createMessageObject() const override;
+        virtual std::shared_ptr<D1MessageObject> createMessageObject() const override;
     protected:
         virtual bool isValidToMakeRedisString() const override;
         virtual void makeRedisStringArgs(std::vector<B1String>* args) const override;

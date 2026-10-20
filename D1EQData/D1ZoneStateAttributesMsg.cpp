@@ -12,6 +12,7 @@
 #include "D1EQData.h"
 #include "D1ZoneStateAttributesMsg.h"
 #include "D1ZoneStateAttributes.h"
+#include <B1Base/B1Time.h>
 
 using namespace BnD;
 
@@ -19,6 +20,7 @@ D1ZoneStateAttributesMsg::D1ZoneStateAttributesMsg(const D1ZoneStateAttributes* 
     : D1MessageObject(objectToArchive)
 {
     _messageID.second = messageString().copy();
+    B1Time::getCurrentTime(&_baseTime.second, &_baseMicrosecond.second);
 }
 
 D1ZoneStateAttributesMsg::D1ZoneStateAttributesMsg(D1BaseMessage&& baseMessage)
@@ -30,9 +32,9 @@ D1ZoneStateAttributesMsg::~D1ZoneStateAttributesMsg()
 {
 }
 
-B1Object* D1ZoneStateAttributesMsg::createObject()
+auto D1ZoneStateAttributesMsg::createObject() -> std::shared_ptr<B1Object>
 {
-    return new D1ZoneStateAttributes();
+    return std::make_shared<D1ZoneStateAttributes>();
 }
 
 auto D1ZoneStateAttributesMsg::toObject() const -> D1ZoneStateAttributes*

@@ -41,9 +41,9 @@ namespace BnD {
     protected:
         virtual bool implInitialize() { return true; }
         virtual void implFinalize() {}
-        virtual D1BasePacketMaker* createPacketMaker();
+        virtual std::shared_ptr<D1BasePacketMaker> createPacketMaker();
     protected:
-        virtual B1BaseSessionManager* createSessionManager() override;
+        virtual std::shared_ptr<B1BaseSessionManager> createSessionManager() override;
         virtual B1BaseServerSession* createSession(B1ServerSocket* serverSocket) override;
     public:
         D1BaseServerHandleManager* handleManager() const { return _handleManager.get(); }

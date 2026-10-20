@@ -19,9 +19,14 @@
 #include <B1GEM/B1GEMServerSession.h>
 
 namespace BnD {
+    class D1AMHSServer;
     class D1AMHSServerSession : public B1GEMServerSession {
     public:
-        D1AMHSServerSession(B1ServerSocket* serverSocket, B1BaseServerSessionListener* listener, uint16 secs2SessionID, B1GEMServer* owner);
+        D1AMHSServerSession(B1ServerSocket* serverSocket, B1BaseServerSessionListener* listener, uint16 secs2SessionID, D1AMHSServer* owner,
+                            uint32 timeoutT3, uint32 timeoutT6, uint32 timeoutT7, uint32 timeoutT8, uint32 timeoutLinkTest);
+    protected:
+        D1AMHSServer* owner() const;
+        const class D1AMHSDataManager* serverAmhsDataManager() const;
     };
 }   //  !BnD
 

@@ -41,11 +41,11 @@ void D1MessageObject::archiveMessage(B1Archive* archive) const
 
 void D1MessageObject::unarchiveMessage(const B1Archive& archive)
 {
-    B1Object* object = createObject();
+    auto object = createObject();
     if (object) {
-        readDataFromArchive("ArchiveObject", archive, object);
+        readDataFromArchive("ArchiveObject", archive, object.get());
     }
-    _unArchivedObject.reset(object);
+    _unArchivedObject = object;
     _objectToArchive = _unArchivedObject.get();
 }
 

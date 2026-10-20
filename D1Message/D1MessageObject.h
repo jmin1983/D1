@@ -28,7 +28,7 @@ namespace BnD {
         const B1Object* _objectToArchive;
         std::shared_ptr<B1Object> _unArchivedObject;
     protected:
-        virtual B1Object* createObject() = 0;
+        virtual std::shared_ptr<B1Object> createObject() = 0;
     protected:
         virtual void archiveMessage(B1Archive* archive) const override;
         virtual void unarchiveMessage(const B1Archive& archive) override;

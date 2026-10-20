@@ -28,6 +28,7 @@ namespace BnD {
     DEFINE_MESSAGE_LISTENER_FUNC(D1MsgAlarmClearRsp) post_fix\
     DEFINE_MESSAGE_LISTENER_FUNC(D1MsgAlarmNtf) post_fix\
     DEFINE_MESSAGE_LISTENER_FUNC(D1MsgAlarmRemoteNtf) post_fix\
+    DEFINE_MESSAGE_LISTENER_FUNC(D1MsgChatNtf) post_fix\
     DEFINE_MESSAGE_LISTENER_FUNC(D1MsgEventNtf) post_fix\
     DEFINE_MESSAGE_LISTENER_FUNC(D1DCSMsgZoneInfosReq) post_fix\
     DEFINE_MESSAGE_LISTENER_FUNC(D1DCSMsgZoneInfosRsp) post_fix\

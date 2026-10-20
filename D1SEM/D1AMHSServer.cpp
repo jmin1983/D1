@@ -11,6 +11,7 @@
 
 #include "D1SEM.h"
 #include "D1AMHSServer.h"
+#include "D1AMHSDataManager.h"
 #include "D1AMHSServerSession.h"
 
 #include <B1SEM/B1AMHSCarrierTransferStateRepository.h>
@@ -99,6 +100,16 @@ void D1AMHSServer::implFinalize()
         _vehicleStateRepository.reset();
     }
     B1GEMServer::implFinalize();
+}
+
+auto D1AMHSServer::createServerSECS2DataManager() -> std::shared_ptr<B1SECS2DataManager>
+{
+    return createServerAMHSDataManager();
+}
+
+const D1AMHSDataManager* D1AMHSServer::serverAmhsDataManager() const
+{
+    return static_cast<const D1AMHSDataManager*>(serverSecs2DataManager());
 }
 
 bool D1AMHSServer::setCarrierStateWaitIn(int64 taskID)

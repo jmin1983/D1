@@ -37,10 +37,13 @@ namespace BnD {
             UNIT_TYPE_ID_RANGE_SERVICE_SET_MIN = UNIT_TYPE_ID_RANGE_BEGIN + 1,
             UNIT_TYPE_ID_RANGE_SERVICE_SET_MAX = UNIT_TYPE_ID_RANGE_SERVICE_SET_MIN + 1999,
 
-            UNIT_TYPE_ID_RANGE_NVR_MIN = UNIT_TYPE_ID_RANGE_SERVICE_SET_MAX,
+            UNIT_TYPE_ID_RANGE_NVR_MIN = UNIT_TYPE_ID_RANGE_SERVICE_SET_MAX + 1,
             UNIT_TYPE_ID_RANGE_NVR_MAX = UNIT_TYPE_ID_RANGE_NVR_MIN + 999,
 
-            UNIT_TYPE_ID_RANGE_END = UNIT_TYPE_ID_RANGE_NVR_MAX,
+            UNIT_TYPE_ID_RANGE_DATABASE_MIN = UNIT_TYPE_ID_RANGE_NVR_MAX + 1,
+            UNIT_TYPE_ID_RANGE_DATABASE_MAX = UNIT_TYPE_ID_RANGE_DATABASE_MIN + 999,
+
+            UNIT_TYPE_ID_RANGE_END = UNIT_TYPE_ID_RANGE_DATABASE_MAX,
         };
     private:
         DataInt32 _unitID;
@@ -60,6 +63,7 @@ namespace BnD {
     protected:
         virtual void makeRedisStringArgs(std::vector<B1String>* args) const override;
         virtual bool readRedisMap(const std::map<B1String, B1String>& map) override;
+        virtual bool isValidToMakeRedisString() const override;
     public:
         void initializeAttributes(D1RedisClientInterface* redisReader);
         int32 unitID() const { return _unitID.second; }
@@ -75,6 +79,11 @@ namespace BnD {
         bool isOffLine() const;
         bool isUnitTypeServiceSet() const;
         bool isUnitTypeNVR() const;
+
+        void setUser(B1String&& user) { _user.second = std::move(user); }
+        void setPassword(B1String&& password) { _password.second = std::move(password); }
+        void setServerAddress(B1String&& serverAddress) { _serverAddress.second = std::move(serverAddress); }
+        void setServerPort(uint16 serverPort) { _serverPort.second = serverPort; }
 
         D1UnitStateAttributes* stateAttributes() const { return _stateAttributes.get(); }
 

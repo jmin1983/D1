@@ -29,6 +29,7 @@ namespace BnD {
     class B1AMHSStorageLocationStateRepository;
     class B1AMHSTSSCStateRepository;
     class B1AMHSVehicleStateRepository;
+    class D1AMHSDataManager;
     class D1AMHSServer : protected B1AMHSCarrierTransferStateRepositoryListener
                        , protected B1AMHSPortStateRepositoryListener
                        , protected B1AMHSStorageLocationStateRepositoryListener
@@ -50,9 +51,13 @@ namespace BnD {
         virtual std::shared_ptr<B1AMHSStorageLocationStateRepository> implInitializeStorageLocationStateRepository();
         virtual std::shared_ptr<B1AMHSTSSCStateRepository> implInitializeTSSCStateRepository();
         virtual std::shared_ptr<B1AMHSVehicleStateRepository> implInitializeVehicleStateRepository();
+        virtual std::shared_ptr<D1AMHSDataManager> createServerAMHSDataManager() = 0;
     protected:
         virtual bool implInitialize(int32 port) override;
         virtual void implFinalize() override;
+        std::shared_ptr<B1SECS2DataManager> createServerSECS2DataManager() final;
+    public:
+        const D1AMHSDataManager* serverAmhsDataManager() const;
     public:
         bool setCarrierStateWaitIn(int64 taskID);
         bool setCarrierStateTransferring(int64 taskID);

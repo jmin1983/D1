@@ -12,6 +12,8 @@
 #include "D1Message.h"
 #include "D1MsgEventNtf.h"
 
+#include <B1Base/B1Time.h>
+
 #include <D1Base/D1Consts.h>
 
 using namespace BnD;
@@ -28,6 +30,7 @@ D1MsgEventNtf::D1MsgEventNtf(int32 code)
     , _carrierID("CarrierID", "")
 {
     _messageID.second = messageString().copy();
+    B1Time::getCurrentTime(&_baseTime.second, &_baseMicrosecond.second);
 }
 
 D1MsgEventNtf::D1MsgEventNtf(D1BaseMessage&& baseMessage)

@@ -53,6 +53,12 @@ namespace BnD {
         VALUE_NOT_ACCEPTED_ERROR = 1,   //  >0:Not accepted, error
     DEFINE_AMHS_DATA_END_ENUM;
 
+    DEFINE_AMHS_DATA_BEGIN_ENUM_BIN_SINGLE(ACKC10)
+        VALUE_ACCEPTED_FOR_DISPLAY = 0,
+        VALUE_MESSAGE_WILL_NOT_BE_DISPLAYED = 1,
+        VALUE_TERMINAL_NOT_AVAILABLE = 2,
+    DEFINE_AMHS_DATA_END_ENUM;
+
     DEFINE_AMHS_DATA_BEGIN(ALCD, BIN)  //  (Bit8:1 set alarm, Bit8 : 0 clear alarm)
         D1AMHSDataALCD(bool set = true) : B1SECS2DataBIN("ALCD") { setAlarm(set); }
         void setAlarm(bool set) { _data.resize(1); _data[0] = set ? 1 << 7 : 0; }
@@ -172,10 +178,17 @@ namespace BnD {
     //  SVID
     //  SVNAME
 
+    DEFINE_AMHS_DATA_ASCII(TEXT, -1);
+
     DEFINE_AMHS_DATA_BEGIN_ENUM_BIN_SINGLE(TIACK)
         VALUE_OK = 0,
         VALUE_ERROR_NOT_DONE = 1,
     DEFINE_AMHS_DATA_END_ENUM;
+
+    DEFINE_AMHS_DATA_BEGIN(TID, BIN)    //  (0: single or main terminal)
+        D1AMHSDataTID(uint8 id = 0) : B1SECS2DataBIN("TID") { _data.resize(1); setTerminalID(id); }
+        void setTerminalID(uint8 id) { _data[0] = id; }
+    DEFINE_AMHS_DATA_END;
 
     DEFINE_AMHS_DATA_ASCII(TIME, 16);  //  YYYYMMDDHHmmsscc
     DEFINE_AMHS_DATA_ASCII(UNITS, -1);

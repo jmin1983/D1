@@ -28,9 +28,9 @@ D1SMSClient::~D1SMSClient()
 {
 }
 
-auto D1SMSClient::createPacketMaker() -> D1BasePacketMaker*
+auto D1SMSClient::createPacketMaker() -> std::shared_ptr<D1BasePacketMaker>
 {
-    return new D1SMSPacketMaker();
+    return std::make_shared<D1SMSPacketMaker>();
 }
 
 auto D1SMSClient::createD1BaseClientSession(B1ClientSocket* clientSocket, void* param) -> B1BaseClientSession*

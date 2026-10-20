@@ -25,7 +25,7 @@ namespace BnD {
         D1NotifiableObject();
         virtual ~D1NotifiableObject();
     protected:
-        virtual D1MessageObject* createMessageObject() const = 0;
+        virtual std::shared_ptr<D1MessageObject> createMessageObject() const = 0;
     public:
         B1String toMessage() const;
     };

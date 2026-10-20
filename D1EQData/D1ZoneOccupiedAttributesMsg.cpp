@@ -10,6 +10,9 @@
 //
 
 #include "D1EQData.h"
+
+#include <B1Base/B1Time.h>
+
 #include "D1ZoneOccupiedAttributesMsg.h"
 #include "D1ZoneOccupiedAttributes.h"
 
@@ -19,6 +22,7 @@ D1ZoneOccupiedAttributesMsg::D1ZoneOccupiedAttributesMsg(const D1ZoneOccupiedAtt
     : D1MessageObject(objectToArchive)
 {
     _messageID.second = messageString().copy();
+    B1Time::getCurrentTime(&_baseTime.second, &_baseMicrosecond.second);
 }
 
 D1ZoneOccupiedAttributesMsg::D1ZoneOccupiedAttributesMsg(D1BaseMessage&& baseMessage)
@@ -30,9 +34,9 @@ D1ZoneOccupiedAttributesMsg::~D1ZoneOccupiedAttributesMsg()
 {
 }
 
-B1Object* D1ZoneOccupiedAttributesMsg::createObject()
+auto D1ZoneOccupiedAttributesMsg::createObject() -> std::shared_ptr<B1Object>
 {
-    return new D1ZoneOccupiedAttributes();
+    return std::make_shared<D1ZoneOccupiedAttributes>();
 }
 
 auto D1ZoneOccupiedAttributesMsg::toObject() const -> D1ZoneOccupiedAttributes*

@@ -32,9 +32,9 @@ D1BaseClient::~D1BaseClient()
 {
 }
 
-auto D1BaseClient::createPacketMaker() -> D1BasePacketMaker*
+auto D1BaseClient::createPacketMaker() -> std::shared_ptr<D1BasePacketMaker>
 {
-    return new D1BasePacketMaker();
+    return std::make_shared<D1BasePacketMaker>();
 }
 
 auto D1BaseClient::createD1BaseClientSession(B1ClientSocket* clientSocket, void* param) -> B1BaseClientSession*
@@ -42,9 +42,9 @@ auto D1BaseClient::createD1BaseClientSession(B1ClientSocket* clientSocket, void*
     return new D1BaseClientSession(_clientID, clientSocket, this, _packetMaker.get(), _maxAliveCount);
 }
 
-auto D1BaseClient::createSessionManager() -> B1BaseSessionManager*
+auto D1BaseClient::createSessionManager() -> std::shared_ptr<B1BaseSessionManager>
 {
-    return new B1BaseSessionManager(_aliveInterval);
+    return std::make_shared<B1BaseSessionManager>(_aliveInterval);
 }
 
 auto D1BaseClient::createSession(B1ClientSocket* clientSocket, void* param) -> B1BaseClientSession*
@@ -64,7 +64,7 @@ int32 D1BaseClient::connectionStatus(int32 id) const
 
 bool D1BaseClient::initialize()
 {
-    _packetMaker.reset(createPacketMaker());
+    _packetMaker = createPacketMaker();
     if (startup() != true) {
         return false;
     }

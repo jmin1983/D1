@@ -32,14 +32,14 @@ D1BaseServer::~D1BaseServer()
 {
 }
 
-auto D1BaseServer::createPacketMaker() -> D1BasePacketMaker*
+auto D1BaseServer::createPacketMaker() -> std::shared_ptr<D1BasePacketMaker>
 {
-    return new D1BasePacketMaker();
+    return std::make_shared<D1BasePacketMaker>();
 }
 
-auto D1BaseServer::createSessionManager() -> B1BaseSessionManager*
+auto D1BaseServer::createSessionManager() -> std::shared_ptr<B1BaseSessionManager>
 {
-    return new B1BaseSessionManager(_aliveInterval);
+    return std::make_shared<B1BaseSessionManager>(_aliveInterval);
 }
 
 auto D1BaseServer::createSession(B1ServerSocket* serverSocket) -> B1BaseServerSession*
@@ -49,7 +49,7 @@ auto D1BaseServer::createSession(B1ServerSocket* serverSocket) -> B1BaseServerSe
 
 bool D1BaseServer::initialize(int32 port)
 {
-    _packetMaker.reset(createPacketMaker());
+    _packetMaker = createPacketMaker();
     if (port < 1 || port > UINT16_MAX) {
         return false;
     }

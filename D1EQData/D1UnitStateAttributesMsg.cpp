@@ -30,9 +30,9 @@ D1UnitStateAttributesMsg::~D1UnitStateAttributesMsg()
 {
 }
 
-B1Object* D1UnitStateAttributesMsg::createObject()
+auto D1UnitStateAttributesMsg::createObject() -> std::shared_ptr<B1Object>
 {
-    return new D1UnitStateAttributes();
+    return std::make_shared<D1UnitStateAttributes>();
 }
 
 auto D1UnitStateAttributesMsg::toObject() const -> D1UnitStateAttributes*

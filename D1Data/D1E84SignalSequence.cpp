@@ -33,10 +33,13 @@ bool D1E84SignalSequence::isSignalOff(SIGNAL signal) const
     return _signals[signal] != true;
 }
 
-bool D1E84SignalSequence::isSequenceSignalReadyToProceed(SEQUENCE sequence, bool isLoading) const
+bool D1E84SignalSequence::isSequenceSignalReadyToProceed(SEQUENCE sequence, bool isLoading, bool ignorePassiveEarlyRest) const
 {
     if (_signals[SIGNAL_HO_AVBL] != true || _signals[SIGNAL_ES] != true) {
-        return false;
+        if (ignorePassiveEarlyRest != true ||
+            sequence != SEQUENCE_12 && sequence != SEQUENCE_13 && sequence != SEQUENCE_0) {
+            return false;
+        }
     }
     switch (sequence) {
         case SEQUENCE_0:
@@ -50,9 +53,7 @@ bool D1E84SignalSequence::isSequenceSignalReadyToProceed(SEQUENCE sequence, bool
                    isSignalOff(SIGNAL_READY) &&
                    isSignalOff(SIGNAL_BUSY) &&
                    isSignalOff(SIGNAL_COMPT) &&
-                   isSignalOff(SIGNAL_CONT) &&
-                   isSignalOn(SIGNAL_HO_AVBL) &&
-                   isSignalOn(SIGNAL_ES);
+                   isSignalOff(SIGNAL_CONT);
         case SEQUENCE_1:
             return isSignalOn(SIGNAL_CS_0);
         case SEQUENCE_2:
@@ -110,23 +111,30 @@ uint32 D1E84SignalSequence::timeoutValue(TIMEOUT timeout) const
     return timeout < TIMEOUT_COUNTS ? _timeouts[timeout] : CONSTS_DEFAULT_TIMEOUT;
 }
 
-auto D1E84SignalSequence::sequenceTimeoutType(SEQUENCE sequence) const -> TIMEOUT
+auto D1E84SignalSequence::sequenceTimeoutType(SEQUENCE sequence, bool isActive) const -> TIMEOUT
 {
+    if (isActive) {
+        switch (sequence) {
+            case SEQUENCE_2:
+                return TIMEOUT_TA1;
+            case SEQUENCE_4:
+                return TIMEOUT_TA2;
+            case SEQUENCE_10:
+                return TIMEOUT_TA3;
+            default:
+                break;
+        }
+    }
+
     switch (sequence) {
-        case SEQUENCE_2:
-            return TIMEOUT_TA1;
         case SEQUENCE_3:
             return TIMEOUT_TP1;
-        //case SEQUENCE_4:
-        //    return TIMEOUT_TA2;
         case SEQUENCE_5:
             return TIMEOUT_TP2;
         case SEQUENCE_6:
             return TIMEOUT_TP3;
         case SEQUENCE_7:
             return TIMEOUT_TP4;
-        //case SEQUENCE_10:
-        //    return TIMEOUT_TA3;
         case SEQUENCE_11:
             return TIMEOUT_TP5;
         default:
@@ -135,69 +143,53 @@ auto D1E84SignalSequence::sequenceTimeoutType(SEQUENCE sequence) const -> TIMEOU
     return TIMEOUT_NA;
 }
 
-D1E84SignalSequence& D1E84SignalSequence::operator=(const D1E84SignalSequence& r)
+bool D1E84SignalSequence::isActiveSequenceSignalInvalid(bool isLoadingSequence, bool ignorePassiveEarlyRest) const
 {
-    _sequence = r._sequence;
-    _signals = r._signals;
-    return *this;
-}
-
-bool D1E84SignalSequence::operator==(const D1E84SignalSequence& r) const
-{
-    return _sequence == r._sequence &&
-           _signals == r._signals;
-}
-
-bool D1E84SignalSequence::isOn(SIGNAL signal) const
-{
-    return signal < SIGNAL_COUNTS ? _signals[signal] : false;
-}
-
-bool D1E84SignalSequence::isOff(SIGNAL signal) const
-{
-    return signal < SIGNAL_COUNTS ? _signals[signal] != true : true;
-}
-
-void D1E84SignalSequence::resetSequence()
-{
-    _timer.stop();
-    _sequence = SEQUENCE_0;
-}
-
-bool D1E84SignalSequence::proceedNextSequence(bool isLoadingSequence)
-{
-    SEQUENCE nextSequence = SEQUENCE_0;
+    if (ignorePassiveEarlyRest != true ||
+        _sequence != SEQUENCE_11 && _sequence != SEQUENCE_12 && _sequence != SEQUENCE_13) {     // active check sequence 11 satisfy.
+        if (isSignalOff(SIGNAL_HO_AVBL)) {
+            B1LOG("E84_SEQUENCE invalid signal. HO_AVBL off: zoneID[%d], sequence[%d]", _zoneID, _sequence);
+            return true;
+        }
+        if (isSignalOff(SIGNAL_ES)) {
+            B1LOG("E84_SEQUENCE invalid signal. ES off: zoneID[%d], sequence[%d]", _zoneID, _sequence);
+            return true;
+        }
+    }
     switch (_sequence) {
-        case SEQUENCE_0: nextSequence = SEQUENCE_1; break;
-        case SEQUENCE_1: nextSequence = SEQUENCE_2; break;
-        case SEQUENCE_2: nextSequence = SEQUENCE_3; break;
-        case SEQUENCE_3: nextSequence = SEQUENCE_4; break;
-        case SEQUENCE_4: nextSequence = SEQUENCE_5; break;
-        case SEQUENCE_5: nextSequence = SEQUENCE_6; break;
-        case SEQUENCE_6: nextSequence = SEQUENCE_7; break;
-        case SEQUENCE_7: nextSequence = SEQUENCE_8; break;
-        case SEQUENCE_8: nextSequence = SEQUENCE_9; break;
-        case SEQUENCE_9: nextSequence = SEQUENCE_10; break;
-        case SEQUENCE_10: nextSequence = SEQUENCE_11; break;
-        case SEQUENCE_11: nextSequence = SEQUENCE_12; break;
-        case SEQUENCE_12: nextSequence = SEQUENCE_13; break;
-        case SEQUENCE_13: nextSequence = SEQUENCE_0; break;
-        default: return false;
+        case SEQUENCE_1:
+        case SEQUENCE_2:
+            break;
+        case SEQUENCE_3:
+        case SEQUENCE_4:
+            if (isLoadingSequence) {
+                if (isSignalOff(SIGNAL_L_REQ)) {
+                    B1LOG("E84_SEQUENCE invalid signal. L_REQ off: zoneID[%d], sequence[%d]", _zoneID, _sequence);
+                    return true;
+                }
+            }
+            else {
+                if (isSignalOff(SIGNAL_U_REQ)) {
+                    B1LOG("E84_SEQUENCE invalid signal. U_REQ off: zoneID[%d], sequence[%d]", _zoneID, _sequence);
+                    return true;
+                }
+            }
+            break;
+        case SEQUENCE_5:
+        case SEQUENCE_6: {
+            if (isSignalOff(SIGNAL_READY)) {
+                B1LOG("E84_SEQUENCE invalid signal. READY off: zoneID[%d], sequence[%d]", _zoneID, _sequence);
+                return true;
+            }
+            break;
+        }
+        default:
+            break;
     }
-    if (isSequenceSignalReadyToProceed(nextSequence, isLoadingSequence) != true) {
-        return false;
-    }
-    _timer.stop();
-    if (SEQUENCE_0 != nextSequence) {
-        auto timeoutInterval = timeoutValue(sequenceTimeoutType(nextSequence));
-        B1LOG("E84_SEQUENCE proceed to next_sequence: zoneID[%d], sequence[%d], timeoutInterval[%d]", _zoneID, nextSequence, timeoutInterval);
-        _timer.start(timeoutInterval);
-    }
-    _sequence = nextSequence;
-    return true;
+    return false;
 }
 
-bool D1E84SignalSequence::isSequenceSignalInvalid() const
+bool D1E84SignalSequence::isPassiveSequenceSignalInvalid() const
 {
     switch (_sequence) {
         case SEQUENCE_1: {
@@ -260,10 +252,82 @@ bool D1E84SignalSequence::isSequenceSignalInvalid() const
     return false;
 }
 
-auto D1E84SignalSequence::isSequenceTimedOut() -> TIMEOUT
+D1E84SignalSequence& D1E84SignalSequence::operator=(const D1E84SignalSequence& r)
+{
+    _sequence = r._sequence;
+    _signals = r._signals;
+    return *this;
+}
+
+bool D1E84SignalSequence::operator==(const D1E84SignalSequence& r) const
+{
+    return _sequence == r._sequence &&
+           _signals == r._signals;
+}
+
+bool D1E84SignalSequence::isOn(SIGNAL signal) const
+{
+    return signal < SIGNAL_COUNTS ? _signals[signal] : false;
+}
+
+bool D1E84SignalSequence::isOff(SIGNAL signal) const
+{
+    return signal < SIGNAL_COUNTS ? _signals[signal] != true : true;
+}
+
+void D1E84SignalSequence::resetSequence()
+{
+    _timer.stop();
+    _sequence = SEQUENCE_0;
+}
+
+bool D1E84SignalSequence::proceedNextSequence(bool isLoadingSequence, bool isActive, bool ignorePassiveEarlyRest)
+{
+    SEQUENCE nextSequence = SEQUENCE_0;
+    switch (_sequence) {
+        case SEQUENCE_0: nextSequence = SEQUENCE_1; break;
+        case SEQUENCE_1: nextSequence = SEQUENCE_2; break;
+        case SEQUENCE_2: nextSequence = SEQUENCE_3; break;
+        case SEQUENCE_3: nextSequence = SEQUENCE_4; break;
+        case SEQUENCE_4: nextSequence = SEQUENCE_5; break;
+        case SEQUENCE_5: nextSequence = SEQUENCE_6; break;
+        case SEQUENCE_6: nextSequence = SEQUENCE_7; break;
+        case SEQUENCE_7: nextSequence = SEQUENCE_8; break;
+        case SEQUENCE_8: nextSequence = SEQUENCE_9; break;
+        case SEQUENCE_9: nextSequence = SEQUENCE_10; break;
+        case SEQUENCE_10: nextSequence = SEQUENCE_11; break;
+        case SEQUENCE_11: nextSequence = SEQUENCE_12; break;
+        case SEQUENCE_12: nextSequence = SEQUENCE_13; break;
+        case SEQUENCE_13: nextSequence = SEQUENCE_0; break;
+        default: return false;
+    }
+    if (isSequenceSignalReadyToProceed(nextSequence, isLoadingSequence, ignorePassiveEarlyRest) != true) {
+        return false;
+    }
+    _timer.stop();
+    if (SEQUENCE_0 != nextSequence) {
+        auto timeoutInterval = timeoutValue(sequenceTimeoutType(nextSequence, isActive));
+        B1LOG("E84_SEQUENCE proceed to next_sequence: zoneID[%d], sequence[%d], timeoutInterval[%d]", _zoneID, nextSequence, timeoutInterval);
+        _timer.start(timeoutInterval);
+    }
+    _sequence = nextSequence;
+    return true;
+}
+
+bool D1E84SignalSequence::isSequenceSignalInvalid(bool isLoadingSequence, bool isActive, bool ignorePassiveEarlyRest) const
+{
+    if (isActive) {
+        return isActiveSequenceSignalInvalid(isLoadingSequence, ignorePassiveEarlyRest);
+    }
+    else {
+        return isPassiveSequenceSignalInvalid();
+    }
+}
+
+auto D1E84SignalSequence::isSequenceTimedOut(bool isActive) -> TIMEOUT
 {
     if (_timer.isTimeover(false)) {
-        return sequenceTimeoutType(_sequence);
+        return sequenceTimeoutType(_sequence, isActive);
     }
     return TIMEOUT_NA;
 }
@@ -319,6 +383,12 @@ B1String D1E84SignalSequence::toString() const
         switch (i) {
             case TIMEOUT_TA1:
                 msg.append(", TA1");
+                break;
+            case TIMEOUT_TA2:
+                msg.append(", TA2");
+                break;
+            case TIMEOUT_TA3:
+                msg.append(", TA3");
                 break;
             case TIMEOUT_TP1:
                 msg.append(", TP1");

@@ -41,7 +41,7 @@ namespace BnD {
             if (_fileLog != NULL) {
                 return false;
             }
-            _fileLog.reset(new B1FileLog());
+            _fileLog = std::make_shared<B1FileLog>();
             if (_fileLog->start(std::move(logFilePath), std::move(fileName), logCounts) != true) {
                 _fileLog.reset();
                 return false;
@@ -72,7 +72,7 @@ namespace BnD {
             }
         }
     protected:
-        virtual T* createMainService(std::shared_ptr<D1ProductIdentifier> productIdentifier) = 0;
+        virtual std::shared_ptr<T> createMainService(std::shared_ptr<D1ProductIdentifier> productIdentifier) = 0;
         virtual int32 getServiceID(D1RedisClientInterface* redisReader) = 0;
         virtual D1ProductIdentifier* createProductIdentifier(int32 serviceID) = 0;
         virtual void onMainServiceStartBefore() {}
@@ -136,7 +136,7 @@ namespace BnD {
                 B1LOG("cleanup product initializer -> disconnect sessions: site[%d], type[%d]", productIdentifier->site(), productIdentifier->type());
 #endif
                 client.finalize();
-                _service.reset(createMainService(productIdentifier));
+                _service = createMainService(productIdentifier);
             }
             if (_service == NULL) {
                 printf("create control service failed");

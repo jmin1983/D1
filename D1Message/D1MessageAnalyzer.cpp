@@ -17,6 +17,7 @@
 #include "D1MsgAlarmClearRsp.h"
 #include "D1MsgAlarmNtf.h"
 #include "D1MsgAlarmRemoteNtf.h"
+#include "D1MsgChatNtf.h"
 #include "D1MsgEventNtf.h"
 #include "D1DCSMsgZoneInfosReq.h"
 #include "D1DCSMsgZoneInfosRsp.h"
@@ -57,6 +58,7 @@ bool D1MessageAnalyzer::implInitialize()
     INSERT_TABLE_VALUE(D1MsgAlarmClearRsp);
     INSERT_TABLE_VALUE(D1MsgAlarmNtf);
     INSERT_TABLE_VALUE(D1MsgAlarmRemoteNtf);
+    INSERT_TABLE_VALUE(D1MsgChatNtf);
     INSERT_TABLE_VALUE(D1MsgEventNtf);
     INSERT_TABLE_VALUE(D1DCSMsgZoneInfosReq);
     INSERT_TABLE_VALUE(D1DCSMsgZoneInfosRsp);
@@ -88,6 +90,7 @@ auto D1MessageAnalyzer::implAnalyzeMessage(D1MessageAnalyzerListener* listener, 
         NOTIFY_LISTENER(D1MsgAlarmClearRsp);
         NOTIFY_LISTENER(D1MsgAlarmNtf);
         NOTIFY_LISTENER(D1MsgAlarmRemoteNtf);
+        NOTIFY_LISTENER(D1MsgChatNtf);
         NOTIFY_LISTENER(D1MsgEventNtf);
         NOTIFY_LISTENER(D1DCSMsgZoneInfosReq);
         NOTIFY_LISTENER(D1DCSMsgZoneInfosRsp);

@@ -17,6 +17,8 @@
 #include <B1Base/B1Thread.h>
 #include <B1Util/B1FileUtil.h>
 
+#include <fstream>
+
 using namespace BnD;
 
 bool D1FileVersionChecker::readVersionFile(const B1String& versionFilePath, int32* version, B1String* identifier, B1String* buildDate)
@@ -93,4 +95,92 @@ bool D1FileVersionChecker::getFileVersion(const B1String& filePath, int32* versi
     bool result = readVersionFile(versionFilePath, version, identifier, buildDate);
     B1SystemUtil::deleteFile(versionFilePath);
     return result;
+}
+
+auto D1FileVersionChecker::getFileBinaryInfo(const B1String& filePath) -> BinaryInfo
+{
+    BinaryInfo info;
+    std::ifstream file(filePath.cString(), std::ios::binary);
+    if (file.is_open() != true) {
+        return info;
+    }
+
+    uint8_t magic[4] = {0};
+    file.read(reinterpret_cast<char*>(magic), 4);
+    if (file.gcount() < 4) {
+        return info;
+    }
+
+    // linux ELF parsing.
+    if (magic[0] == 0x7F && magic[1] == 'E' && magic[2] == 'L' && magic[3] == 'F') {
+        info._os = OS::LINUX;
+        file.seekg(0x12, std::ios::beg);
+        uint16_t e_machine = 0;
+        file.read(reinterpret_cast<char*>(&e_machine), 2);
+
+        switch (e_machine) {
+            case 0x0003: info._arch = ARCH::X86; break;
+            case 0x003E: info._arch = ARCH::X64; break;
+            case 0x0028: info._arch = ARCH::ARM32; break;
+            case 0x00B7: info._arch = ARCH::ARM64; break;
+            default: break;
+        }
+    }
+    // Windows PE parsing.
+    else if (magic[0] == 'M' && magic[1] == 'Z') {
+        info._os = OS::WINDOWS;
+        file.seekg(0x3C, std::ios::beg);
+        uint32_t e_lfanew = 0;
+        file.read(reinterpret_cast<char*>(&e_lfanew), 4);
+
+        file.seekg(e_lfanew + 4, std::ios::beg);
+        uint16_t machine = 0;
+        file.read(reinterpret_cast<char*>(&machine), 2);
+
+        switch (machine) {
+            case 0x014C: info._arch = ARCH::X86; break;
+            case 0x8664: info._arch = ARCH::X64; break;
+            case 0x01C0: info._arch = ARCH::ARM32; break;
+            case 0xAA64: info._arch = ARCH::ARM64; break;
+            default: break;
+        }
+    }
+    return info;
+}
+
+bool D1FileVersionChecker::isSafeToExecuteOnSystem(const B1String& filePath)
+{
+    const OS systemOS = B1SystemUtil::isSystemWindows() ? OS::WINDOWS :
+                        B1SystemUtil::isSystemLinux() ? OS::LINUX : OS::UNKNOWN;
+    const ARCH systemArch = B1SystemUtil::isSystemX64() ? ARCH::X64 :
+                            B1SystemUtil::isSystemX86() ? ARCH::X86 :
+                            B1SystemUtil::isSystemARM32() ? ARCH::ARM32 :
+                            B1SystemUtil::isSystemARM64() ? ARCH::ARM64 : ARCH::UNKNOWN;
+
+    if (systemOS == OS::UNKNOWN || systemArch == ARCH::UNKNOWN) {
+        b1log("isSafeToExecuteOnSystem return fail unknown system os or architecture: systemOS[%d], systemArch[%d]", systemOS, systemArch);
+        return false;
+    }
+    BinaryInfo target = getFileBinaryInfo(filePath);
+    if (target._os == OS::UNKNOWN || target._arch == ARCH::UNKNOWN) {
+        b1log("isSafeToExecuteOnSystem return fail unknown target file os or architecture: targetOS[%d], targetArch[%d]", target._os, target._arch);
+        return false;
+    }
+
+    if (systemOS != target._os) {
+        b1log("isSafeToExecuteOnSystem return fail differernt os: systemOS[%d], systemArch[%d], targetOS[%d], targetArch[%d]",
+            systemOS, systemArch, target._os, target._arch);
+        return false;
+    }
+
+    if (systemArch == target._arch) {
+        return true;
+    }
+    if (systemOS == OS::WINDOWS && systemArch == ARCH::X64 && target._arch == ARCH::X86) {
+        return true;
+    }
+
+    b1log("isSafeToExecuteOnSystem return fail: systemOS[%d], systemArch[%d], targetOS[%d], targetArch[%d]",
+        systemOS, systemArch, target._os, target._arch);
+    return false;
 }

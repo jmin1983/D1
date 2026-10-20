@@ -29,23 +29,24 @@
 namespace BnD {
     class D1AMHSDataManager : public B1SECS2DataManager {
     protected:
-        B1SECS2Data* createOriginalData(B1SECS2DataBase::INDEX index) const final;
+        virtual std::shared_ptr<B1SECS2Data> createOriginalData(B1SECS2DataBase::INDEX index) const override;
     protected:
-        virtual B1SECS2Data* createALID() const = 0;
-        virtual B1SECS2Data* createALTX() const = 0;
-        virtual B1SECS2Data* createCEID() const = 0;
-        virtual B1SECS2Data* createECID() const = 0;
-        virtual B1SECS2Data* createECNAME() const = 0;
-        virtual B1SECS2Data* createMDLN() const = 0;
-        virtual B1SECS2Data* createRPTID() const = 0;
-        virtual B1SECS2Data* createSOFTREV() const = 0;
-        virtual B1SECS2Data* createSVID() const = 0;
-        virtual B1SECS2Data* createSVNAME() const = 0;
-        virtual B1SECS2Data* createVID() const = 0;
+        virtual std::shared_ptr<B1SECS2Data> createALID() const = 0;
+        virtual std::shared_ptr<B1SECS2Data> createALTX() const = 0;
+        virtual std::shared_ptr<B1SECS2Data> createCEID() const = 0;
+        virtual std::shared_ptr<B1SECS2Data> createECID() const = 0;
+        virtual std::shared_ptr<B1SECS2Data> createECNAME() const = 0;
+        virtual std::shared_ptr<B1SECS2Data> createMDLN() const = 0;
+        virtual std::shared_ptr<B1SECS2Data> createRPTID() const = 0;
+        virtual std::shared_ptr<B1SECS2Data> createSOFTREV() const = 0;
+        virtual std::shared_ptr<B1SECS2Data> createSVID() const = 0;
+        virtual std::shared_ptr<B1SECS2Data> createSVNAME() const = 0;
+        virtual std::shared_ptr<B1SECS2Data> createVID() const = 0;
     public:
 #define IMPL_AMHS_DATA_FUNCTION_BASE(d) IMPL_AMHS_DATA_FUNCTION(D1AMHSData, d)
         IMPL_AMHS_DATA_FUNCTION_BASE(ACKC5);
         IMPL_AMHS_DATA_FUNCTION_BASE(ACKC6);
+        IMPL_AMHS_DATA_FUNCTION_BASE(ACKC10);
         IMPL_AMHS_DATA_FUNCTION_BASE(ALCD);
         IMPL_AMHS_DATA_FUNCTION_BASE(ALED);
         IMPL_AMHS_DATA_FUNCTION_BASE(CEED);
@@ -65,7 +66,9 @@ namespace BnD {
         IMPL_AMHS_DATA_FUNCTION_BASE(OFLACK);
         IMPL_AMHS_DATA_FUNCTION_BASE(ONLACK);
         IMPL_AMHS_DATA_FUNCTION_BASE(RCMD);
+        IMPL_AMHS_DATA_FUNCTION_BASE(TEXT);
         IMPL_AMHS_DATA_FUNCTION_BASE(TIACK);
+        IMPL_AMHS_DATA_FUNCTION_BASE(TID);
         IMPL_AMHS_DATA_FUNCTION_BASE(TIME);
         IMPL_AMHS_DATA_FUNCTION_BASE(UNITS);
     };

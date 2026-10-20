@@ -26,7 +26,7 @@ namespace BnD {
         D1ZoneStateAttributesMsg(D1BaseMessage&& baseMessage);
         virtual ~D1ZoneStateAttributesMsg();
     protected:
-        virtual B1Object* createObject() override;
+        virtual std::shared_ptr<B1Object> createObject() override;
     public:
         D1ZoneStateAttributes* toObject() const;
     public:

@@ -40,6 +40,7 @@ namespace BnD {
             MAKE_MSG_ENUM(D1MsgAlarmClearRsp),
             MAKE_MSG_ENUM(D1MsgAlarmNtf),
             MAKE_MSG_ENUM(D1MsgAlarmRemoteNtf),
+            MAKE_MSG_ENUM(D1MsgChatNtf),
             MAKE_MSG_ENUM(D1MsgEventNtf),
             MAKE_MSG_ENUM(D1DCSMsgZoneInfosReq),
             MAKE_MSG_ENUM(D1DCSMsgZoneInfosRsp),

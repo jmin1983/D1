@@ -48,6 +48,8 @@ namespace BnD {
         bool nonBlockedCommand(const std::vector<B1String>& args, bool isEssential);
         bool hmset(const B1String& key, const B1String& field, const B1String& value, bool isEssential);
         bool hmset(const B1String& key, const std::map<B1String, B1String>& fieldValues, bool isEssential);
+        bool blockedHmset(const B1String& key, const B1String& field, const B1String& value);
+        bool blockedHmset(const B1String& key, const std::map<B1String, B1String>& fieldValues);
         bool hdel(const B1String& key, const B1String& field);  //  using _commandEssentials.
         bool del(const B1String& key);                          //  using _commandEssentials.
         bool sadd(const B1String& key, const B1String& value);  //  using _commandEssentials.

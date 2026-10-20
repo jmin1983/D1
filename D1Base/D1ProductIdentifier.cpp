@@ -153,6 +153,11 @@ B1String D1ProductIdentifier::serviceNameRS() const
     return "RS";
 }
 
+B1String D1ProductIdentifier::serviceNameUMS() const
+{
+    return "UMS";
+}
+
 B1String D1ProductIdentifier::serviceNameWAS() const
 {
     return "WAS";
@@ -232,6 +237,8 @@ B1String D1ProductIdentifier::serviceNameByID(int32 serviceID) const
             return serviceNameRS();
         case SERVICE_ID_SMS:
             return serviceNameSMS().copy();
+        case SERVICE_ID_UMS:
+            return serviceNameUMS();
         case SERVICE_ID_WAS:
             return serviceNameWAS();
         default:

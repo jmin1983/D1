@@ -40,10 +40,10 @@ namespace BnD {
     protected:
         virtual bool implInitialize() { return true; }
         virtual void implFinalize() {}
-        virtual D1BasePacketMaker* createPacketMaker();
+        virtual std::shared_ptr<D1BasePacketMaker> createPacketMaker();
         virtual B1BaseClientSession* createD1BaseClientSession(B1ClientSocket* clientSocket, void* param);
     protected:
-        virtual B1BaseSessionManager* createSessionManager() override;
+        virtual std::shared_ptr<B1BaseSessionManager> createSessionManager() override;
         virtual B1BaseClientSession* createSession(B1ClientSocket* clientSocket, void* param) override;
     protected:
         int32 connectionStatus(int32 id) const;

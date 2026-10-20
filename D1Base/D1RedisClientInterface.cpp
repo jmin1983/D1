@@ -179,6 +179,32 @@ bool D1RedisClientInterface::hmset(const B1String& key, const std::map<B1String,
     return false;
 }
 
+bool D1RedisClientInterface::blockedHmset(const B1String& key, const B1String& field, const B1String& value)
+{
+    std::vector<B1String> args(4);
+    args[0] = "HMSET";
+    args[1] = key.copy();
+    args[2] = field.copy();
+    args[3] = value.copy();
+    return blockedCommand(args);
+}
+
+bool D1RedisClientInterface::blockedHmset(const B1String& key, const std::map<B1String, B1String>& fieldValues)
+{
+    if (fieldValues.empty()) {
+        return false;
+    }
+    std::vector<B1String> args;
+    args.reserve(2 + fieldValues.size() * 2);
+    args.push_back("HMSET");
+    args.push_back(key.copy());
+    for (const auto& fieldValuesPair : fieldValues) {
+        args.push_back(fieldValuesPair.first.copy());
+        args.push_back(fieldValuesPair.second.copy());
+    }
+    return blockedCommand(args);
+}
+
 bool D1RedisClientInterface::hdel(const B1String& key, const B1String& field)
 {
     if (_redisDirectClient) {
