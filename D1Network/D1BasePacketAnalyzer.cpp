@@ -37,7 +37,7 @@ auto D1BasePacketAnalyzer::implAnalyzeData(const D1BaseProtocol::Header& header,
         case D1BaseProtocol::Header::TYPE_BINARY:
             return analyzeProtocolTypeBinary(data, size, pos);
         default:
-            B1LOG("Unknown type: size[%d], recvdBuffer_size[%d]", size, _recvdBuffer.size());
+            B1LOG("Unknown type: size[%u], recvdBuffer_size[%u]", size, _recvdBuffer.size());
             //assert(false);
             return ANALYZE_RESULT_FAIL;
     }
@@ -81,8 +81,12 @@ auto D1BasePacketAnalyzer::analyzeProtocolTypeTextMessage(uint8* data, size_t si
     }
     memcpy(&dataTextMessage._length, data, lengthSize);
     dataTextMessage._length = TO_UINT32_FOR_NETWORK(dataTextMessage._length);
-    if (size < lengthSize + dataTextMessage._length) {
+    if (size - lengthSize < dataTextMessage._length) {     //  subtraction: no overflow on 32bit.
         return ANALYZE_RESULT_NOT_ENOUTH_DATA;
+    }
+    if (dataTextMessage._length < 1 || data[lengthSize + dataTextMessage._length - 1] != 0) {
+        B1LOG("invalid data_text_message: no end of string in length[%u]", dataTextMessage._length);
+        return ANALYZE_RESULT_FAIL;
     }
     try {
         dataTextMessage._message.from((char*)data + lengthSize);
@@ -112,8 +116,12 @@ auto D1BasePacketAnalyzer::analyzeProtocolTypeTextMessageBunch(uint8* data, size
 
     memcpy(&dataTextMessage._length, data + indexSize + indexCountSize, dataTextLengthSize);
     dataTextMessage._length = TO_UINT32_FOR_NETWORK(dataTextMessage._length);
-    if (size < indexSize + indexCountSize + dataTextLengthSize + dataTextMessage._length) {
+    if (size - (indexSize + indexCountSize + dataTextLengthSize) < dataTextMessage._length) {    //  subtraction: no overflow on 32bit.
         return ANALYZE_RESULT_NOT_ENOUTH_DATA;
+    }
+    if (dataTextMessage._length < 1 || data[indexSize + indexCountSize + dataTextLengthSize + dataTextMessage._length - 1] != 0) {
+        B1LOG("invalid data_text_message_bunch: no end of string in length[%u]", dataTextMessage._length);
+        return ANALYZE_RESULT_FAIL;
     }
     memcpy(&index, data, indexSize);
     memcpy(&indexCount, data + indexSize, indexCountSize);
@@ -148,7 +156,7 @@ auto D1BasePacketAnalyzer::analyzeProtocolTypeBinary(uint8* data, size_t size, s
 
     memcpy(&dataLength, data + indexSize + indexCountSize, dataLengthSize);
     dataLength = TO_UINT32_FOR_NETWORK(dataLength);
-    if (size < indexSize + indexCountSize + dataLengthSize + dataLength) {
+    if (size - (indexSize + indexCountSize + dataLengthSize) < dataLength) {   //  subtraction: no overflow on 32bit.
         return ANALYZE_RESULT_NOT_ENOUTH_DATA;
     }
     memcpy(&index, data, indexSize);

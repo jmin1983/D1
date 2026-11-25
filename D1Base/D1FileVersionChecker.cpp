@@ -37,23 +37,27 @@ bool D1FileVersionChecker::readVersionFile(const B1String& versionFilePath, int3
     }
     memcpy(&identifierLengthData, &data[sizeof(versionData)], sizeof(identifierLengthData));
     int32 identifierLength = TO_INT32_FOR_NETWORK(identifierLengthData);
-    if (data.size() < sizeof(versionData) + sizeof(identifierLengthData) + sizeof(buildDateLengthData) + identifierLength) {
+    if (identifierLength < 0) {
+        return false;
+    }
+    const size_t identifierPos = sizeof(versionData) + sizeof(identifierLengthData);
+    if (data.size() < identifierPos + identifierLength + sizeof(buildDateLengthData)) {
         return false;
     }
     if (identifier) {
-        std::vector<char> temp(data.begin() + sizeof(versionData) + sizeof(identifierLengthData), data.end());
-        temp.push_back(0);
-        identifier->from(&temp[0]);
+        identifier->from(std::string(data.begin() + identifierPos, data.begin() + identifierPos + identifierLength));
     }
-    memcpy(&buildDateLengthData, &data[sizeof(versionData) + sizeof(identifierLengthData) + identifierLength], sizeof(buildDateLengthData));
+    memcpy(&buildDateLengthData, &data[identifierPos + identifierLength], sizeof(buildDateLengthData));
     int32 buildDateLength = TO_INT32_FOR_NETWORK(buildDateLengthData);
-    if (data.size() < sizeof(versionData) + sizeof(identifierLengthData) + sizeof(buildDateLengthData) + identifierLength + buildDateLength) {
+    if (buildDateLength < 0) {
+        return false;
+    }
+    const size_t buildDatePos = identifierPos + identifierLength + sizeof(buildDateLengthData);
+    if (data.size() < buildDatePos + buildDateLength) {
         return false;
     }
     if (buildDate) {
-        std::vector<char> temp(data.begin() + sizeof(versionData) + sizeof(identifierLengthData) + identifierLength + sizeof(buildDateLengthData), data.end());
-        temp.push_back(0);
-        buildDate->from(&temp[0]);
+        buildDate->from(std::string(data.begin() + buildDatePos, data.begin() + buildDatePos + buildDateLength));
     }
     return true;
 }
@@ -158,18 +162,18 @@ bool D1FileVersionChecker::isSafeToExecuteOnSystem(const B1String& filePath)
                             B1SystemUtil::isSystemARM64() ? ARCH::ARM64 : ARCH::UNKNOWN;
 
     if (systemOS == OS::UNKNOWN || systemArch == ARCH::UNKNOWN) {
-        b1log("isSafeToExecuteOnSystem return fail unknown system os or architecture: systemOS[%d], systemArch[%d]", systemOS, systemArch);
+        b1log("isSafeToExecuteOnSystem return fail unknown system os or architecture: systemOS[%d], systemArch[%d]", static_cast<int32>(systemOS), static_cast<int32>(systemArch));
         return false;
     }
     BinaryInfo target = getFileBinaryInfo(filePath);
     if (target._os == OS::UNKNOWN || target._arch == ARCH::UNKNOWN) {
-        b1log("isSafeToExecuteOnSystem return fail unknown target file os or architecture: targetOS[%d], targetArch[%d]", target._os, target._arch);
+        b1log("isSafeToExecuteOnSystem return fail unknown target file os or architecture: targetOS[%d], targetArch[%d]", static_cast<int32>(target._os), static_cast<int32>(target._arch));
         return false;
     }
 
     if (systemOS != target._os) {
         b1log("isSafeToExecuteOnSystem return fail differernt os: systemOS[%d], systemArch[%d], targetOS[%d], targetArch[%d]",
-            systemOS, systemArch, target._os, target._arch);
+            static_cast<int32>(systemOS), static_cast<int32>(systemArch), static_cast<int32>(target._os), static_cast<int32>(target._arch));
         return false;
     }
 
@@ -181,6 +185,6 @@ bool D1FileVersionChecker::isSafeToExecuteOnSystem(const B1String& filePath)
     }
 
     b1log("isSafeToExecuteOnSystem return fail: systemOS[%d], systemArch[%d], targetOS[%d], targetArch[%d]",
-        systemOS, systemArch, target._os, target._arch);
+        static_cast<int32>(systemOS), static_cast<int32>(systemArch), static_cast<int32>(target._os), static_cast<int32>(target._arch));
     return false;
 }

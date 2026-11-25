@@ -66,7 +66,7 @@ B1String D1BaseMessage::toString() const
     if (baseTime() > 0) {
         B1String str = _messageID.second.copy();
         str.appendf(", baseTime[%s]", B1Time(baseTime()).toString().cString());
-        str.appendf(", baseMicrosecond[%s]", B1Time(baseMicrosecond()).toString().cString());
+        str.appendf(", baseMicrosecond[%d]", baseMicrosecond());
         return str;
     }
     else {

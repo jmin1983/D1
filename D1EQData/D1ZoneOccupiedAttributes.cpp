@@ -192,7 +192,7 @@ bool D1ZoneOccupiedAttributes::setReserved(int64 taskID, D1RedisClientInterface*
                 }
                 B1String candidates;
                 for (auto& reserveCandidatesPair : _reserveCandidates) {
-                    candidates.format("[%lld]", reserveCandidatesPair.first);
+                    candidates.appendf("[%lld]", reserveCandidatesPair.first);
                 }
                 _lock->unlock();
                 B1LOG("END_LOCK(fail) for reserve zone: taskID[%lld], zoneID[%d], candidates%s", taskID, zoneID(), candidates.cString());
@@ -232,7 +232,7 @@ bool D1ZoneOccupiedAttributes::setReserved(int64 taskID, D1RedisClientInterface*
                         }
                         B1String candidates;
                         for (const auto& reserveCandidatesPair : _reserveCandidates) {
-                            candidates.format("[%d]", reserveCandidatesPair.first);
+                            candidates.appendf("[%lld]", reserveCandidatesPair.first);
                         }
                         _lock->unlock();
                         B1LOG("END_LOCK(fail_other_priority) for reserve zone: taskID[%lld], zoneID[%d], CANDIDATES%s", taskID, zoneID(), candidates.cString());

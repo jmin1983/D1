@@ -63,7 +63,7 @@ namespace BnD {
         virtual bool implWorking() override;
         virtual void implStop() override;
     protected:
-        void finalizeRedisSubscribe();
+        void finalizeRedisSubscribe();  //  stop redis subscribe and polling. call first in implStop() of derived class: no message callback runs after this.
     public:
         bool isRedisCanReadWrite() const;
         B1String serviceName() const;

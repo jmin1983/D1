@@ -63,7 +63,7 @@ B1String D1GUIMsgZoneInfosRsp::toString() const
     str.appendf(", index[%d]", index());
     str.appendf(", indexCount[%d]", indexCount());
     str.appendf(", type[%d]", type());
-    str.appendf(", zoneStrings_count[%d]", zoneStrings().size());
-    str.appendf(", zoneGUIDataStrings_count[%d]", zoneGUIDataStrings().size());
+    str.appendf(", zoneStrings_count[%u]", zoneStrings().size());
+    str.appendf(", zoneGUIDataStrings_count[%u]", zoneGUIDataStrings().size());
     return str;
 }

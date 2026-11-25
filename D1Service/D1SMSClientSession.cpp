@@ -138,8 +138,12 @@ auto D1SMSClientSession::analyzeDataTypeString(uint8* data, size_t size, size_t*
 
     memcpy(&stringLength, data, stringLengthSize);
     stringLength = TO_UINT32_FOR_NETWORK(stringLength);
-    if (size < stringLengthSize + stringLength) {
+    if (size - stringLengthSize < stringLength) {   //  subtraction: no overflow on 32bit.
         return ANALYZE_RESULT_NOT_ENOUTH_DATA;
+    }
+    if (stringLength < 1 || data[stringLengthSize + stringLength - 1] != 0) {
+        B1LOG("invalid string: no end of string in length[%u]", stringLength);
+        return ANALYZE_RESULT_FAIL;
     }
 
     try {

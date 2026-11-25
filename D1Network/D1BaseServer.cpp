@@ -87,7 +87,7 @@ auto D1BaseServer::sendTextMessage(int32 id, const B1String& message) -> SEND_RE
 auto D1BaseServer::sendTextMessageBunch(int32 id, int32 index, int32 indexCount, const B1String& message) -> SEND_RESULT
 {
     const int32 handleID = _handleManager->getServerHandleID(id);
-    if (auto session = sessionManager()->getSessionByHandleID<D1BaseServerSession>(id)) {
+    if (auto session = sessionManager()->getSessionByHandleID<D1BaseServerSession>(handleID)) {
         if (session->sendData(packetMaker()->makeDataTextMessageBunch(index, indexCount, message)) != true) {
             return SEND_RESULT_NETWORK_ERROR;
         }
@@ -130,7 +130,7 @@ void D1BaseServer::sendTextMessageToAllSessions(const B1String& message, std::se
 auto D1BaseServer::sendBinary(int32 id, int32 index, int32 indexCount, const std::vector<uint8>& binaryData) -> SEND_RESULT
 {
     const int32 handleID = _handleManager->getServerHandleID(id);
-    if (auto session = sessionManager()->getSessionByHandleID<D1BaseServerSession>(id)) {
+    if (auto session = sessionManager()->getSessionByHandleID<D1BaseServerSession>(handleID)) {
         if (session->sendData(packetMaker()->makeDataBinary(index, indexCount, binaryData)) != true) {
             return SEND_RESULT_NETWORK_ERROR;
         }

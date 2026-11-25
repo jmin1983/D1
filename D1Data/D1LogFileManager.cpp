@@ -48,7 +48,7 @@ auto D1LogFileManager::getLogFileList() const -> std::vector<std::vector<B1Strin
         return result;
     }
 
-    const size_t size = files.size() / CONSTS_LOG_FILE_LIST_BUNCH_SIZE + 1;
+    const size_t size = (files.size() + CONSTS_LOG_FILE_LIST_BUNCH_SIZE - 1) / CONSTS_LOG_FILE_LIST_BUNCH_SIZE;
     std::vector<std::vector<B1String> > result;
     result.resize(size);
     for (auto& r : result) {

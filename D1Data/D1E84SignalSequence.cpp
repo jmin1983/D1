@@ -374,7 +374,7 @@ B1String D1E84SignalSequence::toString() const
                 msg.append(", ES");
                 break;
             default:
-                msg.append(", SIGNAL_UNKNOWN_%d", i);
+                msg.appendf(", SIGNAL_UNKNOWN_%u", i);
                 break;
         }
         msg.appendf("[%d]", _signals[i]);
@@ -406,7 +406,7 @@ B1String D1E84SignalSequence::toString() const
                 msg.append(", TP5");
                 break;
             default:
-                msg.append(", TIMEOUT_UNKNOWN_%d", i);
+                msg.appendf(", TIMEOUT_UNKNOWN_%u", i);
                 break;
         }
         msg.appendf("[%d]", _timeouts[i]);

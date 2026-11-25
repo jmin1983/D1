@@ -137,16 +137,21 @@ void D1BaseService::implStop()
         _performanceProfiler->finalize();
         _performanceProfiler.reset();
     }
-    _redisClientInterface.reset();
     if (_redisDirectClient) {
+        finalizeRedisSubscribe();   //  in case derived class did not call it.
         _redisDirectClient->finalize();
-        _redisDirectClient.reset();
     }
+    //  _redisClientInterface and _redisDirectClient are released in destructor.
+    //  threads of derived class can call redisClientInterface() until they are finalized. the calls fail after finalize().
 }
 
 void D1BaseService::finalizeRedisSubscribe()
 {
-    _redisDirectClient->closeSubscribeSession();
+    if (_redisDirectClient) {
+        _redisDirectClient->resetMessageListener(); //  no redis message callback runs after this.
+        _redisDirectClient->stopPolling();
+        _redisDirectClient->closeSubscribeSession();
+    }
 }
 
 bool D1BaseService::isRedisCanReadWrite() const

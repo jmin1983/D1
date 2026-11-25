@@ -97,10 +97,10 @@ B1String D1MsgPerformanceCheckNtf::toString() const
     str.appendf(", memAvailable[%lld]", memAvailable());
     str.appendf(", memUsage[%lld]", memUsage());
     str.appendf(", memCurrentProcessUsage[%lld]", memCurrentProcessUsage());
-    str.appendf(", memTotal[%d]", memTotal());
+    str.appendf(", memTotal[%lld]", memTotal());
     str.appendf(", vmemUsage[%lld]", vmemUsage());
     str.appendf(", vmemCurrentProcessUsage[%lld]", vmemCurrentProcessUsage());
-    str.appendf(", vmemTotal[%d]", vmemTotal());
+    str.appendf(", vmemTotal[%lld]", vmemTotal());
     str.appendf(", cpuUsagePercent[%lf]", cpuUsagePercent());
     str.appendf(", cpuTemperature[%lf]", cpuTemperature());
     return str;
