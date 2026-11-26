@@ -45,7 +45,7 @@ namespace BnD {
         std::shared_ptr<B1AMHSStorageLocationStateRepository> _storageLocationStateRepository;
         std::shared_ptr<B1AMHSTSSCStateRepository> _tsscStateRepository;
         std::shared_ptr<B1AMHSVehicleStateRepository> _vehicleStateRepository;
-    protected:  //  return NULL if not used.
+    protected:  //  return nullptr if not used.
         virtual std::shared_ptr<B1AMHSCarrierTransferStateRepository> implInitializeCarrierTransferStateRepository();
         virtual std::shared_ptr<B1AMHSPortStateRepository> implInitializePortStateRepository();
         virtual std::shared_ptr<B1AMHSStorageLocationStateRepository> implInitializeStorageLocationStateRepository();

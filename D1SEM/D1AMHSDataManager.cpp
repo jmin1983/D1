@@ -61,5 +61,5 @@ auto D1AMHSDataManager::createOriginalData(B1SECS2DataBase::INDEX index) const -
         default:
             break;
     }
-    return NULL;
+    return nullptr;
 }

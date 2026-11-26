@@ -50,13 +50,13 @@ namespace BnD {
         bool operator!=(const D1ZoneOccupiedAttributes& d) const { return operator==(d) != true; }
     public:
         int64 reservedTaskID() const;
-        bool isReserved(int64 taskID = -1, int64* reservedTaskID = NULL) const;
+        bool isReserved(int64 taskID = -1, int64* reservedTaskID = nullptr) const;
 
         //  'set' is only available for owner.
-        bool swapReserved(int64 taskID, D1RedisClientInterface* delayedCommander = NULL);
-        bool setReserved(int64 taskID, D1RedisClientInterface* delayedCommander = NULL, bool useCandidate = true);  //  return true if reserve successed.
+        bool swapReserved(int64 taskID, D1RedisClientInterface* delayedCommander = nullptr);
+        bool setReserved(int64 taskID, D1RedisClientInterface* delayedCommander = nullptr, bool useCandidate = true);  //  return true if reserve successed.
         bool immediateClearReserved();  //  to clear reservation in advance before a reservation cancellation notification from a remote dcs.
-        void clearReserved(D1RedisClientInterface* delayedCommander = NULL);
+        void clearReserved(D1RedisClientInterface* delayedCommander = nullptr);
     };
 }
 

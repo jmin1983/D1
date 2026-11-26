@@ -38,7 +38,7 @@ namespace BnD {
     protected:
         bool initFileLog(int32 serviceID, B1String&& logFilePath, B1String&& fileName, int32 logCounts)
         {
-            if (_fileLog != NULL) {
+            if (_fileLog != nullptr) {
                 return false;
             }
             _fileLog = std::make_shared<B1FileLog>();
@@ -52,7 +52,7 @@ namespace BnD {
         void deinitFileLog()
         {
             if (_fileLog) {
-                setLogger(NULL, 0);
+                setLogger(nullptr, 0);
                 _fileLog->stop();
                 _fileLog.reset();
             }
@@ -86,7 +86,7 @@ namespace BnD {
                 return false;
             }
             {
-                B1RedisDirectClient client(NULL);
+                B1RedisDirectClient client(nullptr);
                 if (client.initializeReadOnly(address, port, db) != true) {
                     B1String errorMessage(B1String::formatAs("unable to connect Administration Service: address[%s], port[%d], db[%d]", address.cString(), port, db));
                     printf("%s\n", errorMessage.cString());
@@ -138,7 +138,7 @@ namespace BnD {
                 client.finalize();
                 _service = createMainService(productIdentifier);
             }
-            if (_service == NULL) {
+            if (_service == nullptr) {
                 printf("create control service failed");
                 assert(false);
                 return false;

@@ -32,7 +32,7 @@ using namespace BnD;
 
 D1MessageAnalyzer::D1MessageAnalyzer()
     : _messageTable()
-    , _listener(NULL)
+    , _listener(nullptr)
 {
 }
 
@@ -110,7 +110,7 @@ bool D1MessageAnalyzer::initialize(D1MessageAnalyzerListener* listener)
 {
     _listener = listener;
     if (implInitialize() != true) {
-        _listener = NULL;
+        _listener = nullptr;
         return false;
     }
     if (_messageTable.size() != messageCount()) {
@@ -122,13 +122,13 @@ bool D1MessageAnalyzer::initialize(D1MessageAnalyzerListener* listener)
 
 void D1MessageAnalyzer::finalize()
 {
-    _listener = NULL;
+    _listener = nullptr;
     implFinalize();
 }
 
 auto D1MessageAnalyzer::analyzeMessage(const B1String& message, int32 from) const -> MESSAGE_RESULT
 {
-    assert(_listener != NULL);
+    assert(_listener != nullptr);
     return analyzeMessage(_listener, 0, 1, message, from);
 }
 

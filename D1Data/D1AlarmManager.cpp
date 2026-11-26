@@ -27,7 +27,7 @@
 using namespace BnD;
 
 D1AlarmReader::D1AlarmReader()
-    : _redisClientInterface(NULL)
+    : _redisClientInterface(nullptr)
 {
 }
 
@@ -42,7 +42,7 @@ void D1AlarmReader::implInitialize(D1RedisClientInterface* redisClientInterface)
 
 void D1AlarmReader::implFinalize()
 {
-    _redisClientInterface = NULL;
+    _redisClientInterface = nullptr;
 }
 
 void D1AlarmReader::initialize(D1RedisClientInterface* redisClientInterface)
@@ -110,7 +110,7 @@ int64 D1AlarmWriter::makeNewSerialNumber()
 
 bool D1AlarmWriter::addAlarm(int32 code, int32 serviceID, int64 taskID, int32 reason)
 {
-    return addAlarm(code, serviceID, taskID, reason, NULL);
+    return addAlarm(code, serviceID, taskID, reason, nullptr);
 }
 
 bool D1AlarmWriter::addAlarm(int32 code, int32 serviceID, int64 taskID, int32 reason, const D1Zone* zone)
@@ -136,7 +136,7 @@ bool D1AlarmWriter::addAlarm(int32 code, int32 serviceID, int64 taskID, int32 re
             if (zone->stateAttributes()->isAlarmed()) {
                 return false;
             }
-            zone->stateAttributes()->setAlarmed(serialNumber, NULL);
+            zone->stateAttributes()->setAlarmed(serialNumber, nullptr);
         }
         zone->stateAttributes()->notifyAttributesChanged(_redisClientInterface, true);
     }
@@ -157,7 +157,7 @@ bool D1AlarmWriter::addAlarm(int32 code, int32 serviceID, int64 taskID, int32 re
 
 bool D1AlarmWriter::clearAlarm(int64 serialNumber, int32 serviceID, B1String&& resolvedby)
 {
-    return clearAlarm(serialNumber, serviceID, NULL, std::move(resolvedby));
+    return clearAlarm(serialNumber, serviceID, nullptr, std::move(resolvedby));
 }
 
 bool D1AlarmWriter::clearAlarm(int64 serialNumber, int32 serviceID, const D1Zone* zone, B1String&& resolvedby)
@@ -194,7 +194,7 @@ bool D1AlarmWriter::clearAlarm(int64 serialNumber, int32 serviceID, const D1Zone
     if (zone) {
         {
             B1AutoLock al(*_alarmLock);
-            zone->stateAttributes()->clearAlarmed(NULL);
+            zone->stateAttributes()->clearAlarmed(nullptr);
         }
         zone->stateAttributes()->notifyAttributesChanged(_redisClientInterface, true);
     }

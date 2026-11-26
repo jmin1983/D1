@@ -23,7 +23,7 @@ D1MessageObject::D1MessageObject(const B1Object* objectToArchive)
 
 D1MessageObject::D1MessageObject(D1BaseMessage&& baseMessage)
     : D1BaseMessage(std::move(baseMessage)) 
-    , _objectToArchive(NULL)
+    , _objectToArchive(nullptr)
     , _unArchivedObject()
 {
 }

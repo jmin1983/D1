@@ -93,7 +93,7 @@ bool D1BaseService::implStart()
 {
     {
         auto redisDirectClient = initializeRedisClient();
-        if (NULL == redisDirectClient) {
+        if (nullptr == redisDirectClient) {
             return false;
         }
         _redisDirectClient.reset(redisDirectClient);
@@ -131,6 +131,11 @@ bool D1BaseService::implWorking()
     return true;
 }
 
+void D1BaseService::implBeforeStop()
+{
+    finalizeRedisSubscribe();
+}
+
 void D1BaseService::implStop()
 {
     if (_performanceProfiler) {
@@ -138,7 +143,7 @@ void D1BaseService::implStop()
         _performanceProfiler.reset();
     }
     if (_redisDirectClient) {
-        finalizeRedisSubscribe();   //  in case derived class did not call it.
+        finalizeRedisSubscribe();   //  in case implBeforeStop() of derived class did not call D1BaseService::implBeforeStop().
         _redisDirectClient->finalize();
     }
     //  _redisClientInterface and _redisDirectClient are released in destructor.

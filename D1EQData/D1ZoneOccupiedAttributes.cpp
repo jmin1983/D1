@@ -22,7 +22,7 @@ using namespace BnD;
 
 D1ZoneOccupiedAttributes::D1ZoneOccupiedAttributes()
     : D1ZoneDynamicAttributes()
-    , _lock(NULL)
+    , _lock(nullptr)
     , _reserveCandidates()
     , _reservedTaskID("ReservedTaskID", D1Consts::ID_INVALID)
 {

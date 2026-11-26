@@ -55,13 +55,13 @@ namespace BnD {
         bool isOffline() const { return unitState() == UNIT_STATE_OFFLINE; }
 
         //  'set' is only available for ums.
-        void setUnitState(UNIT_STATE state, D1RedisClientInterface* delayedCommander = NULL, bool forced = false);
+        void setUnitState(UNIT_STATE state, D1RedisClientInterface* delayedCommander = nullptr, bool forced = false);
         void setUnitStateValidIfUnknownState(D1RedisClientInterface* delayedCommander);
-        void setUnitStateInService(D1RedisClientInterface* delayedCommander = NULL, bool forced = false) { setUnitState(UNIT_STATE_IN_SERVICE, delayedCommander, forced); }
-        void setUnitStateOutOfService(D1RedisClientInterface* delayedCommander = NULL, bool forced = false) { setUnitState(UNIT_STATE_OUT_OF_SERVICE, delayedCommander, forced); }
-        void setUnitStateOffline(D1RedisClientInterface* delayedCommander = NULL, bool forced = false) { setUnitState(UNIT_STATE_OFFLINE, delayedCommander, forced); }
-        void setAlarmed(int64 id, D1RedisClientInterface* delayedCommander = NULL);
-        void clearAlarmed(D1RedisClientInterface* delayedCommander = NULL);
+        void setUnitStateInService(D1RedisClientInterface* delayedCommander = nullptr, bool forced = false) { setUnitState(UNIT_STATE_IN_SERVICE, delayedCommander, forced); }
+        void setUnitStateOutOfService(D1RedisClientInterface* delayedCommander = nullptr, bool forced = false) { setUnitState(UNIT_STATE_OUT_OF_SERVICE, delayedCommander, forced); }
+        void setUnitStateOffline(D1RedisClientInterface* delayedCommander = nullptr, bool forced = false) { setUnitState(UNIT_STATE_OFFLINE, delayedCommander, forced); }
+        void setAlarmed(int64 id, D1RedisClientInterface* delayedCommander = nullptr);
+        void clearAlarmed(D1RedisClientInterface* delayedCommander = nullptr);
     };
 }
 

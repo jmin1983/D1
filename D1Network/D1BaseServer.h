@@ -25,7 +25,7 @@ namespace BnD {
     class D1BasePacketMaker;
     class D1BaseServer : protected B1BaseServer {
     public:
-        D1BaseServer(int32 maxAliveCount, int32 aliveInterval);  //  aliveInterval alive 검사. maxAliveCount를 넘어서면 timedout처리.
+        D1BaseServer(int32 maxAliveCount, int32 aliveInterval);  //  alive check every aliveInterval. timed out if exceeds maxAliveCount.
         virtual ~D1BaseServer();
     public:
         enum SEND_RESULT {
@@ -54,7 +54,7 @@ namespace BnD {
         SEND_RESULT sendTextMessageBunch(int32 id, int32 index, int32 indexCount, const B1String& message);
         int32 aliveInterval() const { return _aliveInterval; }
         bool containsID(int32 id) const;
-        void sendTextMessageToAllSessions(const B1String& message, std::set<int32>* sentIDs = NULL);
+        void sendTextMessageToAllSessions(const B1String& message, std::set<int32>* sentIDs = nullptr);
         SEND_RESULT sendBinary(int32 id, int32 index, int32 indexCount, const std::vector<uint8>& binaryData);
     };
 }   //  !BnD

@@ -130,7 +130,7 @@ bool D1RedisClientInterface::time(uint64* seconds, uint32* microseconds, bool ig
 bool D1RedisClientInterface::blockedCommand(const std::vector<B1String>& args, B1String* out)
 {
     if (_redisDirectClient) {
-        if (NULL == out) {
+        if (nullptr == out) {
             return _redisDirectClient->blockedCommand(args);
         }
         else {

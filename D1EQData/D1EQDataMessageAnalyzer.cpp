@@ -28,7 +28,7 @@ int32 D1EQDataMessageAnalyzer::messageCount() const
 
 bool D1EQDataMessageAnalyzer::implInitialize()
 {
-    if (_listener && dynamic_cast<D1EQDataMessageAnalyzerListener*>(_listener) == NULL) {
+    if (_listener && dynamic_cast<D1EQDataMessageAnalyzerListener*>(_listener) == nullptr) {
         assert(false);
         return false;
     }
@@ -56,7 +56,7 @@ auto D1EQDataMessageAnalyzer::implAnalyzeMessage(D1MessageAnalyzerListener* list
     D1EQDataMessageAnalyzerListener* eqdataListener =
 #if defined(_DEBUG)
         dynamic_cast<D1EQDataMessageAnalyzerListener*>(listener);
-    if (NULL == eqdataListener) {
+    if (nullptr == eqdataListener) {
         assert(false);
         return result;
     }

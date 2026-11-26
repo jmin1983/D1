@@ -32,7 +32,7 @@ namespace BnD {
             const D1MariaDBClient* _owner;
             std::shared_ptr<B1MariaDBHandle> _handle;
         public:
-            bool isValid() const { return _handle != NULL; }
+            bool isValid() const { return _handle != nullptr; }
             B1MariaDBHandle* handle() const { return _handle.get(); }
         }; 
     private:
@@ -44,8 +44,8 @@ namespace BnD {
         bool initialize(B1String&& address, uint16 port, B1String&& dbName, B1String&& user, B1String&& password, uint32 connectionCount, bool useSSL = false);
         void finalize();
         void checkConnections();
-        bool execute(const B1String& sql, B1MariaDBResult* result = NULL) const;
-        bool executeBatch(const B1String& sql, B1MariaDBResult* result = NULL) const;
+        bool execute(const B1String& sql, B1MariaDBResult* result = nullptr) const;
+        bool executeBatch(const B1String& sql, B1MariaDBResult* result = nullptr) const;
     };
 }   //  !BnD
 

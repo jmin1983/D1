@@ -29,7 +29,7 @@ D1ZoneDynamicAttributes::D1ZoneDynamicAttributes()
     , D1RedisHashmapObject()
     , _serviceID(D1Consts::SERVICE_ID_INVALID)
     , _zoneID("ZoneID", D1Consts::ID_INVALID)
-    , _plugin(NULL)
+    , _plugin(nullptr)
 {
 }
 
@@ -38,7 +38,7 @@ D1ZoneDynamicAttributes::D1ZoneDynamicAttributes(int32 zoneID, int32 serviceID)
     , D1RedisHashmapObject()
     , _serviceID(serviceID)
     , _zoneID("ZoneID", zoneID)
-    , _plugin(NULL)
+    , _plugin(nullptr)
 {
 }
 

@@ -72,7 +72,7 @@ void D1EntityState::reloadStates(D1RedisClientInterface* redisReader)
 
 void D1EntityState::notifyAttributesChanged(D1RedisClientInterface* delayedCommander, bool isEssential) const
 {
-    assert(delayedCommander != NULL);
+    assert(delayedCommander != nullptr);
     const auto notifyString = toMessage();
     if (delayedCommander) {
         delayedCommander->publish(D1MessageSender::updateEntityStateChannel(), notifyString, isEssential);

@@ -20,7 +20,7 @@ using namespace BnD;
 
 D1SMSClient::D1SMSClient(int32 clientID)
     : D1BaseClient(clientID, CONSTS_ALIVE_COUNT, CONSTS_ALIVE_INTERVAL)
-    , _listener(NULL)
+    , _listener(nullptr)
 {
 }
 
@@ -47,11 +47,11 @@ bool D1SMSClient::initialize(const B1String& address, uint16 port, D1SMSClientSe
 {
     _listener = listener;
     if (D1BaseClient::initialize() != true) {
-        _listener = NULL;
+        _listener = nullptr;
         return false;
     }
     if (D1BaseClient::connect(address.copy(), port, _clientID) != true) {
-        _listener = NULL;
+        _listener = nullptr;
         return false;
     }
     return true;
@@ -60,7 +60,7 @@ bool D1SMSClient::initialize(const B1String& address, uint16 port, D1SMSClientSe
 void D1SMSClient::finalize()
 {
     D1BaseClient::finalize();
-    _listener = NULL;
+    _listener = nullptr;
 }
 
 bool D1SMSClient::isDisconnected() const

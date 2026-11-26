@@ -20,7 +20,7 @@
 using namespace BnD;
 
 D1EventManager::D1EventManager()
-    : _redisClientInterface(NULL)
+    : _redisClientInterface(nullptr)
 {
 }
 
@@ -35,7 +35,7 @@ void D1EventManager::initialize(D1RedisClientInterface* redisClientInterface)
 
 void D1EventManager::finalize()
 {
-    _redisClientInterface = NULL;
+    _redisClientInterface = nullptr;
 }
 
 bool D1EventManager::addEvent(int32 code, int32 serviceID, bool isEssential)
